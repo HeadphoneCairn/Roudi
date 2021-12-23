@@ -1,0 +1,7 @@
+{
+    "programmer": "USBasp",
+    "board": "Blokas:avr:midiboy",
+    "sketch": "Roudi.ino",
+    "port": "COM5",
+    "output": "../Roudi-build"
+}

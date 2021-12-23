@@ -1,0 +1,21 @@
+
+ ┐│││┌
+█ o o █
+ └┐^┌┘
+ 
+
+
+
+HEAD    ┐│││┌ 
+PHONE  █ o o █
+CAIRN   └┐^┌┘ 
+
+
+selecteer de tekening, kopieer ze
+open command prompt:
+> copy con uit
+paste
+screen grab dat => logo.png
+ 
+ 
+ 

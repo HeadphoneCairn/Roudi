@@ -1,0 +1,62 @@
+Name              Hex values           Decimal       Data bytes
+                  (channels 1-16)      values        
+--- Channel specific ---                                                     
+Note Off          80-8F                128-143       2 (note number, velocity)
+Note On           90-9F                144-159       2 (note number, velocity)
+Key Pressure      A0-AF                160-175       2 (note number, pressure)
+Control Change    B0-BF                176-191       2 (controller number, value)
+  (continuous controller)                               00: bank select (met program change erna)
+                                                        01: modulation wheel
+                                                        07: volume pedal
+                                                        20-39 LSB versie van 00-19, die MSB is
+                                                        40: sustain pedal
+                                                        78: All Sound Off
+                                                        79: Reset all Controllers
+                                                        7A: Local Control
+                                                        7B: All Notes Off
+                                                        7C: Omni Off
+                                                        7D: Omni On
+                                                        7E: Mone Off
+                                                        7F: Mono On
+Program Change    C0-CF                192-207       1 (program number)
+Channel Pressure  D0-DF                208-223       1 (pressure)
+Pitch Bend        E0-EF                224-239       2 (LSB, MSB)
+
+--- System Exclusive ---
+System Exclusive  F0                   240           variable (manufactor id, whatever)
+End of System Ex  F7                   247           0
+
+--- System Common --- => common to all receiving devices.
+MIDI Time Code 1/4 Frame   F1          241           1 (timecode nibble)
+Song Position Pointer      F2          242           2 (MSB, LSB)
+Song Select                F3          243           1 (song number)
+Tune Request               F6          246           0
+
+--- System real time! ---
+Timing Clock      F8                   248
+Start             FA                   250
+Continue          FB                   251
+Stop              FC                   252
+Active Sensing    FE                   254
+System Reset      FF                   255
+
+Command bytes always start with a 1, so >= 80 (80 - FF)
+Data bytes always start with a 0, so <80 (00 - 7F)
+So only 7 bits available for the real data = 0..127
+
+Channel is in second nibble of comands 8.-E.
+Channel in command is 0..15, but is called 1 to 16 in real life
+
+Remarks:
+- Note on with velocity 00 is the same as note off.
+- Oppassen voor te weinig ontvangen data bytes voor een commando!
+- Oppassen voor RUNNING STATUS = te veel bytes voor een commando:
+  command byte + data bytes + data bytes + data bytes 
+  bvb: channel aftertouch
+       notes on (en on met velocity=00)
+- Oppassen voor System Real Time
+   They can be inserted into the MIDI data stream at any time, even in the
+   middle of another message, and they can even pop up in the middle of Running Status without
+   interrupting it (i.e., they are not interpreted as new Command bytes).
+- MSB = most significant byte, LSB = least significant byte
+
