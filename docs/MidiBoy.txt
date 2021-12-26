@@ -559,28 +559,97 @@ Ik gebruik 24 tekens, laatse 8 pixels is voor cursor
 ...
 >None
 
+--------------------------------------------------------------------------------
 
-·========= MULTI =========·
-·01. Piano               │·
-·02.                     │·
-·03.                     │·
-·04.                      ·
-·05. Dreadbox             ·
-·06. iPad                 ·
-·07.                      ·
-···························
+======== SINGLE =========
+01. Piano               │
+02.                     │
+03.                     │
+04.                      
+05. Dreadbox             
+06. iPad                 
+07.                      
+...
+16.
 
 
- 01. Dreadbox    oct: +1 
-     pb/con: on  vel: 100   
- 05. 0123456789  oct: +1 
-     pb/con: on  vel: 0
- split C0-B4 [C4]-C8
- layer C0-C8 C0-C8
- user  [C0]-[B4] [C4]-[C8]
- > Save
- > Save as
- > Rename
- > Left
- > Right
+========= 1. MULTI =========
+01. Dreadbox    oct: +1 
+    pb/cc: off  vel: 100   
+05. 0123456789  oct: +1 
+    pb/cc: on   vel: 0
+split    split note: C4        of layer
+> Save
+> Save as
+> Rename
+> Left
+> Right
  
+========= ABOUT =========
+Roudi by Headphone Cairn
+parts by Blokas, ...  
+
+- push A or B to switch 
+between pages 
+- push ^, v to switch
+between fields,
+<, > to change values
+- push A+B to switch
+to midi monitor and 
+settings
+
+--------------------------------------------------------------------------------
+========= DEBUG =========
+free memory
+size menus
+
+======== MONITOR ========
+.....
+
+======== SETTINGS =======
+input channel         01
+output channels      ...
+velocity curve      soft/medium/hard
+program change     block/allow
+screen brightness      1
+
+======= UTILITIES =======
+panic!
+
+--------------------------------------------------------------------------------
+
+Switching between menus is possible using A and B.
+Switching between 
+
+
+In this menu, the input channel is blocked
+
+
+
+
+The MIDI is always being routed, in all menus. So the MIDI monitor shows
+the messages coming in and going out (double when split)
+Note that in the About Menu, the input channels is not routed to out.
+
+Wer are doing autosave, which means:
+- If the user stays in the same menu for the amount of time and has made a
+  change, that menu will be saved.
+- If the user switches from menu X to menu Y and had changed menu X, it will
+  be saved.
+- Same goes for settings. Upon switch (or timeout of 5 minutes), they will 
+  be saved.
+- We have 100.000 erase/write cycles, so, that's quite good.
+
+In memory:
+- current menu
+  selected field in all menus 
+  the midi routing data 
+  all settings
+- number of bytes single: 1
+  number of bytes multi: 10 
+
+Max channel name: 10 bytes
+
+
+How to react when midi setting  is changed.
+Meaning, what do to with already playing notes, sysex, ...  

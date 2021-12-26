@@ -16,7 +16,7 @@ namespace Screen
   //   Current font is 4x7 (we truncate 5x7 font at 4)
   //   - CanvasComplete, 0..127: 1 + 25 * (4 + 1) = 126 pixels, 2 left unused
   //   - CanvasScrollbar, 0..122: 1 + 24 * (4 + 1) = 121 pixels, 2 left unused, 5 pixel empty 
-  // - If column > possible chars on cavas, we wrap
+  // - If column > possible chars on canvas, we wrap
   //   if row > possible lines (8), we wrap
   // - Too long text is cut off
   void Print(
