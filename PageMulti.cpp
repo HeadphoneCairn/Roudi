@@ -26,11 +26,10 @@ namespace
 
 
 PSTRING(PSTR_page_multi, " MULTI "); 
+PSTRING(PSTR_left,       "Left is good.");
+PSTRING(PSTR_right,      "Right is bad. ");
+PSTRING(PSTR_split,      "Split note!");
 #if 0
-PSTRING(PSTR_left,       " Left: ");
-PSTRING(PSTR_right,      "Right: ");
-PSTRING(PSTR_octave,     "       ");
-PSTRING(PSTR_split,      "Split note: ");
 
 
 void line_left_channel(NewParsPars& pars)
@@ -91,7 +90,7 @@ PageMulti::PageMulti():
   m_lines[3].Init(line_right_octave,  &g_values.right_octave);  // must be initted to 2!
   m_lines[4].Init(line_split_note,    &g_values.split_note);
 #endif
-  SetNumberOfLines(40, g_selected_line, g_first_line);
+  SetNumberOfLines(20, g_selected_line, g_first_line);
 
   SettingsValues settings;
   EE::GetSettings(settings);
@@ -138,10 +137,22 @@ Page::LineResult DumbLine(Page::LineFunction func, uint8_t line, uint8_t field)
 }
 
 
+Page::LineResult TextLine(Page::LineFunction func, const char* pstring)
+{
+  return Page::LineResult{1, GetPString(pstring), all, false};
+}
+
+
 Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
 {
-  if (line == 1)
+  if (line == 0 || line == 9 || line == 18 || line == 19)
     return Line1(func, field);
+  else if (line==3)
+    return TextLine(func, PSTR_left);
+  else if (line==4)
+    return TextLine(func, PSTR_right);
+  else if (line==5)
+    return TextLine(func, PSTR_split);
   else
     return DumbLine(func, line, field);
 }

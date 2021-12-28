@@ -24,7 +24,7 @@ namespace Screen
 
   enum InversionStyle {
     InvertNone,
-    InvertGiven,
+    InvertGiven,  
     InvertAll
   };
 
