@@ -21,8 +21,11 @@ TODO
 #include "Logo.h"
 #include "Menus.h"
 #include "MidiProcessing.h"
+#include "PageMulti.h"
 
 NextMidiConfiguration g_next_midi_config;
+
+PageMulti multi;
 
 void setup()
 {
@@ -32,9 +35,11 @@ void setup()
   EE::Init(); // Create the EEPROM data if it doesn't exist yet.
   MidiProcessing::Init(); // Initialize the MIDI processing subsystem
 
-  ShowLogo();
-  delay(1000);
-  Menus::Start(); // Start showing the menus
+  //ShowLogo();
+  //delay(1000);
+  //Menus::Start(); // Start showing the menus
+  multi.Start();  
+
 
   // For some reason, after boot of the program, the input
   // event queue thinks button A was released. So before
@@ -67,11 +72,11 @@ void loop()
   }
   if (last_A && last_A + max_A_B_diff < now) {
     last_A = 0;
-    Menus::ButtonA();
+    //Menus::ButtonA();
   }
   if (last_B && last_B + max_A_B_diff < now) {
     last_B = 0;
-    Menus::ButtonB();
+    //Menus::ButtonB();
   }
 
   MidiboyInput::Event event;
@@ -83,16 +88,16 @@ void loop()
       switch (event.m_button)
       {
       case MidiboyInput::BUTTON_UP:
-        Menus::ButtonUp();
+        multi.Up(); //Menus::ButtonUp();
         break;
       case MidiboyInput::BUTTON_DOWN:
-        Menus::ButtonDown();
+        multi.Down(); //Menus::ButtonDown();
         break;
       case MidiboyInput::BUTTON_LEFT:
-        Menus::ButtonLeft();
+        multi.Left(); //Menus::ButtonLeft();
         break;
       case MidiboyInput::BUTTON_RIGHT:
-        Menus::ButtonRight();
+        multi.Right(); //Menus::ButtonRight();
         break;
       default:
         break;

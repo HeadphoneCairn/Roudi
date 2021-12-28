@@ -646,10 +646,47 @@ In memory:
   the midi routing data 
   all settings
 - number of bytes single: 1
-  number of bytes multi: 10 
+  number of bytes multi: 10
 
 Max channel name: 10 bytes
 
 
 How to react when midi setting  is changed.
 Meaning, what do to with already playing notes, sysex, ...  
+
+
+
+=== Menu ===
+
+GetNumberOfFields(line)
+  returns number of selectable fields of the line, typical 1
+GetLine(line, field=0, 1, None)
+  returns the text and if field is selected, the range to invert
+OnLine->OnField(line, field, action)
+  act on action = SELECT, LEFT, RIGHT
+
+nog altijd combiline gebruiken om waardes te genereren en huidige waarde te bewaren
+
+
+- line1 = struct van 3 combilines + string
+  + GetNumberOfFields()
+  + GetLine(field)
+  + Onfield()
+
+dus in split constructor:
+- line1.channel.value = &channel
+        octave  = &octave
+
+in GetNumberOfFields:
+-   
+
+GetLine(line, field, what=nrfields/text/, out)
+  if what = nrfields
+     out.nr = 3
+  if what = text
+     sprintf(.......)
+     out.p = text
+     out.selected = selected
+  if field = 0 && what = selected
+     if field = ....
+     out.redraw = ... 
