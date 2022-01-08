@@ -642,7 +642,7 @@ Wer are doing autosave, which means:
 
 In memory:
 - current menu
-  selected field in all menus 
+  selected field in all menus
   the midi routing data 
   all settings
 - number of bytes single: 1

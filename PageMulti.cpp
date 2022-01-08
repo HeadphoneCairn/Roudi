@@ -4,6 +4,7 @@
 #include "Menus.h"
 #include "Roudi.h"
 #include "Utils.h"
+#include "Debug.h"
 
 namespace 
 {
@@ -29,6 +30,24 @@ PSTRING(PSTR_page_multi, " MULTI ");
 PSTRING(PSTR_left,       "Left is good.");
 PSTRING(PSTR_right,      "Right is bad. ");
 PSTRING(PSTR_split,      "Split note!");
+
+
+
+namespace {
+
+  PSTRING(PSTR_octave,     "octave: ");
+  NewCombiline g_ui_octave;
+  void g_par_octave(NewParsPars& pars)
+    {
+    pars.types = TypePString|TypeFunction; 
+    pars.name = (void*) PSTR_octave;
+    pars.number_of_values = GetNumberOfOctaves(); 
+    pars.values = (void*) GetOctaveName;
+    }
+
+}
+
+
 #if 0
 
 
@@ -83,6 +102,9 @@ PageMulti::PageMulti():
   }
 
   gValues_ChannelValueToChannelIndex();
+  g_values.left_octave = 0;
+  g_ui_octave.Init(g_par_octave, &g_values.left_octave);
+
 #if 0
   m_lines[0].Init(line_left_channel,  &g_values.left_channel);
   m_lines[1].Init(line_left_octave,   &g_values.left_octave);   // must be initted to 2!
@@ -104,8 +126,7 @@ const char* PageMulti::GetTitle()
   return GetPString(PSTR_page_multi);
 }
 
-
-Screen::Inversion none = {Screen::InvertNone, 0, 0};
+Screen::Inversion none = {Screen::InvertNone, 0, 0};  // TODO put somewhere centrally
 Screen::Inversion all = {Screen::InvertAll, 0, 0};
 
 Page::LineResult Line1(Page::LineFunction func, uint8_t field)
@@ -125,6 +146,40 @@ Page::LineResult Line1(Page::LineFunction func, uint8_t field)
 
   return Page::LineResult{2, nullptr, none, false};
 }
+
+Page::LineResult Line2(Page::LineFunction func, uint8_t field)
+{
+  if (func == Page::GET_NUMBER_OF_FIELDS)
+    return Page::LineResult{1, nullptr, none, false};
+  if (func == Page::GET_TEXT) {
+    //char* text = Screen::buffer;
+    //sprintf(text, "dit is test");
+
+
+    const char* text = g_ui_octave.GetText();
+    Screen::Inversion inversion = g_ui_octave.GetInversion();
+    return Page::LineResult{1, text, inversion, false};
+
+
+//    Screen::Inversion inversion = g_ui_octave.GetInversion();
+//    return Page::LineResult{1, text, inversion, false};
+    
+    //Screen::Inversion inversion = none;
+    //if (field == 0)
+    //  inversion = { Screen::InvertGiven, 6, 9};
+    //else if (field == 1)
+    //  inversion = { Screen::InvertGiven, 18, 21};
+    //return Page::LineResult{2, text, inversion, false};
+  }
+  if (func == Page::DO_LEFT)
+    return Page::LineResult{1, nullptr, none, g_ui_octave.OnLeft()};
+  if (func == Page::DO_RIGHT)
+    return Page::LineResult{1, nullptr, none, g_ui_octave.OnRight()};
+
+  return Page::LineResult{1, nullptr, none, false};
+}
+
+
 
 Page::LineResult DumbLine(Page::LineFunction func, uint8_t line, uint8_t field)
 {
@@ -147,6 +202,8 @@ Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
 {
   if (line == 0 || line == 9 || line == 18 || line == 19)
     return Line1(func, field);
+  if (line == 1)
+    return Line2(func, field);
   else if (line==3)
     return TextLine(func, PSTR_left);
   else if (line==4)

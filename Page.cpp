@@ -125,6 +125,7 @@ void Page::Right()
 
 void Page::Draw(uint8_t from, uint8_t to) // from..to are the lines to draw 
 {
+  //Debug::Beep();
   const Screen::Inversion no_inversion = { Screen::InvertNone, 0, 0 };
   if (from == 0)
     Screen::Print(Screen::CanvasComplete, 0, 0xFF, GetTitle(), Screen::LineEmphasis, no_inversion);
@@ -178,6 +179,10 @@ void NewCombiline::Init(NewCombilineParameters par_function, uint8_t* selected_v
 
 const char* NewCombiline::GetText() 
 {
+  Debug::Print("%p", m_par_function);
+  //Debug::Beep();
+  //delay(500);
+  //Debug::Beep();
   // ----
   NewParsPars m;
   m_par_function(m);
