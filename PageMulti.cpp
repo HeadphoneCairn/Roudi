@@ -6,6 +6,8 @@
 #include "Utils.h"
 #include "Debug.h"
 
+// TODO: Remove all global variables here. Danger of incorrect initiation order!!!
+
 namespace 
 {
   bool g_first_run = true;
@@ -36,7 +38,6 @@ PSTRING(PSTR_split,      "Split note!");
 namespace {
 
   PSTRING(PSTR_octave,     "octave: ");
-  NewCombiline g_ui_octave;
   void g_par_octave(NewParsPars& pars)
     {
     pars.types = TypePString|TypeFunction; 
@@ -94,7 +95,9 @@ void line_split_note(NewParsPars& pars)
 
 
 PageMulti::PageMulti(): 
-  Page()
+  Page() {}
+
+void PageMulti::OnStart()
 {
   if (g_first_run) {
     g_first_run = false;
@@ -103,7 +106,8 @@ PageMulti::PageMulti():
 
   gValues_ChannelValueToChannelIndex();
   g_values.left_octave = 0;
-  g_ui_octave.Init(g_par_octave, &g_values.left_octave);
+  m_ui_octave.Init(g_par_octave, &g_values.left_octave);
+  m_ui_channel_1.Init(g_par_octave, &g_values.right_octave);
 
 #if 0
   m_lines[0].Init(line_left_channel,  &g_values.left_channel);
@@ -129,10 +133,10 @@ const char* PageMulti::GetTitle()
 Screen::Inversion none = {Screen::InvertNone, 0, 0};  // TODO put somewhere centrally
 Screen::Inversion all = {Screen::InvertAll, 0, 0};
 
-Page::LineResult Line1(Page::LineFunction func, uint8_t field)
+Page::LineResult PageMulti::Line1(LineFunction func, uint8_t field)
 {
   if (func == Page::GET_NUMBER_OF_FIELDS)
-    return Page::LineResult{2, nullptr, none, false};
+    return LineResult{2, nullptr, none, false};
   if (func == Page::GET_TEXT) {
     char* text = Screen::buffer;
     sprintf(text, "par1: %s, par2: %s", "val1", "val2");
@@ -141,13 +145,13 @@ Page::LineResult Line1(Page::LineFunction func, uint8_t field)
       inversion = { Screen::InvertGiven, 6, 9};
     else if (field == 1)
       inversion = { Screen::InvertGiven, 18, 21};
-    return Page::LineResult{2, text, inversion, false};
+    return LineResult{2, text, inversion, false};
   }
 
-  return Page::LineResult{2, nullptr, none, false};
+  return LineResult{2, nullptr, none, false};
 }
 
-Page::LineResult Line2(Page::LineFunction func, uint8_t field)
+Page::LineResult PageMulti::Line2(LineFunction func, uint8_t field)
 {
   if (func == Page::GET_NUMBER_OF_FIELDS)
     return Page::LineResult{1, nullptr, none, false};
@@ -156,12 +160,12 @@ Page::LineResult Line2(Page::LineFunction func, uint8_t field)
     //sprintf(text, "dit is test");
 
 
-    const char* text = g_ui_octave.GetText();
-    Screen::Inversion inversion = g_ui_octave.GetInversion();
+    const char* text = m_ui_octave.GetText();
+    Screen::Inversion inversion = m_ui_octave.GetInversion();
     return Page::LineResult{1, text, inversion, false};
 
 
-//    Screen::Inversion inversion = g_ui_octave.GetInversion();
+//    Screen::Inversion inversion = m_ui_octave.GetInversion();
 //    return Page::LineResult{1, text, inversion, false};
     
     //Screen::Inversion inversion = none;
@@ -172,13 +176,30 @@ Page::LineResult Line2(Page::LineFunction func, uint8_t field)
     //return Page::LineResult{2, text, inversion, false};
   }
   if (func == Page::DO_LEFT)
-    return Page::LineResult{1, nullptr, none, g_ui_octave.OnLeft()};
+    return Page::LineResult{1, nullptr, none, m_ui_octave.OnLeft()};
   if (func == Page::DO_RIGHT)
-    return Page::LineResult{1, nullptr, none, g_ui_octave.OnRight()};
+    return Page::LineResult{1, nullptr, none, m_ui_octave.OnRight()};
 
   return Page::LineResult{1, nullptr, none, false};
 }
 
+
+Page::LineResult PageMulti::Line3(LineFunction func, uint8_t field)
+{
+  if (func == Page::GET_NUMBER_OF_FIELDS)
+    return Page::LineResult{1, nullptr, none, false};
+  if (func == Page::GET_TEXT) {
+    const char* text = m_ui_channel_1.GetText();
+    Screen::Inversion inversion = m_ui_channel_1.GetInversion();
+    return Page::LineResult{1, text, inversion, false};
+  }
+  if (func == Page::DO_LEFT)
+    return Page::LineResult{1, nullptr, none, m_ui_channel_1.OnLeft()};
+  if (func == Page::DO_RIGHT)
+    return Page::LineResult{1, nullptr, none, m_ui_channel_1.OnRight()};
+
+  return Page::LineResult{1, nullptr, none, false};
+}
 
 
 Page::LineResult DumbLine(Page::LineFunction func, uint8_t line, uint8_t field)
@@ -202,8 +223,10 @@ Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
 {
   if (line == 0 || line == 9 || line == 18 || line == 19)
     return Line1(func, field);
-  if (line == 1)
+  else if (line == 1)
     return Line2(func, field);
+  else if (line == 2)
+    return Line3(func, field);
   else if (line==3)
     return TextLine(func, PSTR_left);
   else if (line==4)

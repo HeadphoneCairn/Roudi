@@ -56,6 +56,7 @@ void Page::SetNumberOfLines(uint8_t i_number_of_lines, uint8_t i_selected_line, 
 
 void Page::Start()
 {
+  OnStart();
   Screen::Clear();
   Draw(0, 7);
 }
@@ -177,12 +178,14 @@ void NewCombiline::Init(NewCombilineParameters par_function, uint8_t* selected_v
   m_selected_value = selected_value;
 }
 
+
+PSTRING(PSTR_combiline_nullptr, "COMBILINE IS NULL!"); 
+
 const char* NewCombiline::GetText() 
 {
-  Debug::Print("%p", m_par_function);
-  //Debug::Beep();
-  //delay(500);
-  //Debug::Beep();
+  if (!m_par_function) // This should never happen
+    return GetPString(PSTR_combiline_nullptr);
+
   // ----
   NewParsPars m;
   m_par_function(m);
@@ -229,6 +232,9 @@ Screen::Inversion NewCombiline::GetInversion()
 //       but the program will not crash, because this is solved by the Screen::Print
 // TODO: combine GetText with GetInversion
 {
+  if (!m_par_function) // This should never happen
+    return {Screen::InvertAll, 0, 0};
+
   // ----
   NewParsPars m;
   m_par_function(m);

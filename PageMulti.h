@@ -18,4 +18,12 @@ private:
 private:
   bool ChangeSplitNote(uint8_t& note_value, bool left);
   void SetMidiConfiguration();
+private:
+  NewCombiline m_ui_channel_1;
+  NewCombiline m_ui_octave;
+
+  LineResult Line1(LineFunction func, uint8_t field);
+  LineResult Line2(LineFunction func, uint8_t field);
+  LineResult Line3(LineFunction func, uint8_t field);
+
 };

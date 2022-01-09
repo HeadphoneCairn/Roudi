@@ -25,7 +25,7 @@ TODO
 
 NextMidiConfiguration g_next_midi_config;
 
-PageMulti* g_multi;
+PageMulti multi;
 
 void setup()
 {
@@ -38,8 +38,8 @@ void setup()
   //ShowLogo();
   //delay(1000);
   //Menus::Start(); // Start showing the menus
-  g_multi = new PageMulti();
-  g_multi->Start();  
+  multi.Start();  
+  Debug::Print("%d", sizeof(multi));
 
 
   // For some reason, after boot of the program, the input
@@ -89,16 +89,16 @@ void loop()
       switch (event.m_button)
       {
       case MidiboyInput::BUTTON_UP:
-        g_multi->Up(); //Menus::ButtonUp();
+        multi.Up(); //Menus::ButtonUp();
         break;
       case MidiboyInput::BUTTON_DOWN:
-        g_multi->Down(); //Menus::ButtonDown();
+        multi.Down(); //Menus::ButtonDown();
         break;
       case MidiboyInput::BUTTON_LEFT:
-        g_multi->Left(); //Menus::ButtonLeft();
+        multi.Left(); //Menus::ButtonLeft();
         break;
       case MidiboyInput::BUTTON_RIGHT:
-        g_multi->Right(); //Menus::ButtonRight();
+        multi.Right(); //Menus::ButtonRight();
         break;
       default:
         break;

@@ -1,0 +1,13 @@
+
+- Pas op voor de volgorde waarin globale variabelen worden geinitialiseerd!!!
+- Doe geen geavanceerde dingen in constructors van global variabelen,
+  bvb delay, beep, midi dingen, ... doe enkel inits van variabele of iets dergelijk!
+- string scratchpads:
+     progmem_string_buffer: only used for GetPString => NEVER USE MANUALLY
+     Screen::buffer: typically used to pass a string to the Menu for writing to the Screen
+     data_scratch: for extra intermediate text things
+- don't store too much in memory as the RAM is extremely limited,
+  instead write everything out in functions
+  (this is completely opposite of what I normally do)
+- Limit the number of virtual functions needs to be because each function
+  requires an extra 2 bytes of dynamic memory, for each subclass! 
