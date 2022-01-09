@@ -46,6 +46,23 @@ namespace {
     pars.values = (void*) GetOctaveName;
     }
 
+
+  PSTRING(PSTR_numformat, "%d");
+  const char* GetNumberPlusOne(uint8_t selected_value)
+  {
+    sprintf(data_scratch, GetPString(PSTR_numformat), selected_value + 1);
+    return data_scratch;
+  }
+
+  PSTRING(PSTR_channel,     "ch: ");
+  void g_par_channel(NewParsPars& pars)
+  {
+    pars.types = TypePString|TypeFunction;
+    pars.name = (void*) PSTR_channel;
+    pars.number_of_values = 16;
+    pars.values = (void*) GetNumberPlusOne;
+  }
+
 }
 
 
@@ -106,8 +123,10 @@ void PageMulti::OnStart()
 
   gValues_ChannelValueToChannelIndex();
   g_values.left_octave = 0;
-  m_ui_octave.Init(g_par_octave, &g_values.left_octave);
-  m_ui_channel_1.Init(g_par_octave, &g_values.right_octave);
+  m_ui_channel_1.Init(g_par_channel, &g_values.left_channel);
+  m_ui_channel_2.Init(g_par_channel, &g_values.right_channel);
+  m_ui_octave_1.Init(g_par_octave, &g_values.left_octave);
+  m_ui_octave_2.Init(g_par_octave, &g_values.right_octave);
 
 #if 0
   m_lines[0].Init(line_left_channel,  &g_values.left_channel);
@@ -133,6 +152,43 @@ const char* PageMulti::GetTitle()
 Screen::Inversion none = {Screen::InvertNone, 0, 0};  // TODO put somewhere centrally
 Screen::Inversion all = {Screen::InvertAll, 0, 0};
 
+
+Page::LineResult PageMulti::LineChannel1a(LineFunction func, uint8_t field)
+{
+  if (func == Page::GET_NUMBER_OF_FIELDS)
+    return Page::LineResult{1, nullptr, none, false};
+  if (func == Page::GET_TEXT) {
+    const char* text = m_ui_channel_1.GetText();
+    Screen::Inversion inversion = m_ui_channel_1.GetInversion();
+    return Page::LineResult{1, text, inversion, false};
+  }
+  if (func == Page::DO_LEFT)
+    return Page::LineResult{1, nullptr, none, m_ui_channel_1.OnLeft()};
+  if (func == Page::DO_RIGHT)
+    return Page::LineResult{1, nullptr, none, m_ui_channel_1.OnRight()};
+
+  return Page::LineResult{1, nullptr, none, false};
+}
+
+Page::LineResult PageMulti::LineChannel1b(LineFunction func, uint8_t field)
+{
+  if (func == Page::GET_NUMBER_OF_FIELDS)
+    return LineResult{2, nullptr, none, false};
+  if (func == Page::GET_TEXT) {
+    char* text = Screen::buffer;
+    sprintf(text, "par1: %s, par2: %s", "val1", "val2");
+    Screen::Inversion inversion = none;
+    if (field == 0)
+      inversion = { Screen::InvertGiven, 6, 9};
+    else if (field == 1)
+      inversion = { Screen::InvertGiven, 18, 21};
+    return LineResult{2, text, inversion, false};
+  }
+
+  return LineResult{2, nullptr, none, false};
+}
+
+/*
 Page::LineResult PageMulti::Line1(LineFunction func, uint8_t field)
 {
   if (func == Page::GET_NUMBER_OF_FIELDS)
@@ -200,7 +256,7 @@ Page::LineResult PageMulti::Line3(LineFunction func, uint8_t field)
 
   return Page::LineResult{1, nullptr, none, false};
 }
-
+*/
 
 Page::LineResult DumbLine(Page::LineFunction func, uint8_t line, uint8_t field)
 {
@@ -222,11 +278,14 @@ Page::LineResult TextLine(Page::LineFunction func, const char* pstring)
 Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
 {
   if (line == 0 || line == 9 || line == 18 || line == 19)
-    return Line1(func, field);
-  else if (line == 1)
-    return Line2(func, field);
-  else if (line == 2)
-    return Line3(func, field);
+    return LineChannel1a(func, field);
+  if (line == 1)
+    return LineChannel1b(func, field);
+
+//  else if (line == 1)
+//    return Line2(func, field);
+//  else if (line == 2)
+//    return Line3(func, field);
   else if (line==3)
     return TextLine(func, PSTR_left);
   else if (line==4)

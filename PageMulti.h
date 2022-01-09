@@ -19,11 +19,22 @@ private:
   bool ChangeSplitNote(uint8_t& note_value, bool left);
   void SetMidiConfiguration();
 private:
-  NewCombiline m_ui_channel_1;
-  NewCombiline m_ui_octave;
+  NewCombiline m_ui_channel_1, m_ui_octave_1;
+  NewCombiline m_ui_pbcc_1,    m_ui_velocity_1;
+  NewCombiline m_ui_channel_2, m_ui_octave_2;
+  NewCombiline m_ui_pbcc_2,    m_ui_velocity_2;
+  NewCombiline m_ui_mode,      m_ui_split_note;
 
-  LineResult Line1(LineFunction func, uint8_t field);
-  LineResult Line2(LineFunction func, uint8_t field);
-  LineResult Line3(LineFunction func, uint8_t field);
+/*
+01. Dreadbox    oct: +1 
+    pb/cc: off  vel: 100   
+05. 0123456789  oct: +1 
+    pb/cc: on   vel: 0
+split    split note: C4        of layer
+*/
+
+  LineResult LineChannel1a(LineFunction func, uint8_t field);
+  LineResult LineChannel1b(LineFunction func, uint8_t field);
+  
 
 };
