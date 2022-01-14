@@ -68,7 +68,7 @@ class NewCombiline
 public:
   NewCombiline();
   void Init(NewCombilineParameters par_function, uint8_t* selected_value);
-  const char* GetText();
+  void GetText(char* text, Screen::Inversion& inversion, uint8_t start = 0, uint8_t max = Screen::MaxCharsCanvasScrollbar);
   Screen::Inversion GetInversion();
   uint8_t* GetSelectedValue();
   bool OnLeft();

@@ -37,10 +37,10 @@ PSTRING(PSTR_split,      "Split note!");
 
 namespace {
 
-  PSTRING(PSTR_octave,     "octave: ");
+  PSTRING(PSTR_octave,     "oct: ");
   void g_par_octave(NewParsPars& pars)
     {
-    pars.types = TypePString|TypeFunction; 
+    pars.types = TypePString|TypeFunction; //|TypeRAlign; 
     pars.name = (void*) PSTR_octave;
     pars.number_of_values = GetNumberOfOctaves(); 
     pars.values = (void*) GetOctaveName;
@@ -155,19 +155,24 @@ Screen::Inversion all = {Screen::InvertAll, 0, 0};
 
 Page::LineResult PageMulti::LineChannel1a(LineFunction func, uint8_t field)
 {
+  const uint8_t nbr_fields = 2;
   if (func == Page::GET_NUMBER_OF_FIELDS)
-    return Page::LineResult{1, nullptr, none, false};
+    return Page::LineResult{nbr_fields, nullptr, none, false};
   if (func == Page::GET_TEXT) {
-    const char* text = m_ui_channel_1.GetText();
-    Screen::Inversion inversion = m_ui_channel_1.GetInversion();
-    return Page::LineResult{1, text, inversion, false};
+    char* text = Screen::buffer;
+    Screen::Inversion ch_inversion, oct_inversion;
+    m_ui_channel_1.GetText(text, ch_inversion, 0, 14);
+    strcat(text, "  ");
+    m_ui_octave_1.GetText(text, oct_inversion, strlen(text), 7);
+    Debug::Print("%d, %d", ch_inversion.start, ch_inversion.stop);
+    return Page::LineResult{nbr_fields, text, field==0 ? ch_inversion : oct_inversion, false};
   }
   if (func == Page::DO_LEFT)
-    return Page::LineResult{1, nullptr, none, m_ui_channel_1.OnLeft()};
+    return Page::LineResult{nbr_fields, nullptr, none, field==0 ? m_ui_channel_1.OnLeft() : m_ui_octave_1.OnLeft()};
   if (func == Page::DO_RIGHT)
-    return Page::LineResult{1, nullptr, none, m_ui_channel_1.OnRight()};
+    return Page::LineResult{nbr_fields, nullptr, none, field==0 ? m_ui_channel_1.OnRight() : m_ui_octave_1.OnRight()};
 
-  return Page::LineResult{1, nullptr, none, false};
+  return Page::LineResult{nbr_fields, nullptr, none, false};
 }
 
 Page::LineResult PageMulti::LineChannel1b(LineFunction func, uint8_t field)

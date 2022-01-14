@@ -70,7 +70,7 @@ void Page::Up()
 {
   if (OnUpDown(UP)) {
     Draw(1, 7);
-    Line(DO_SELECTED, m_selected_line, 0);       
+    Line(DO_SELECTED, m_selected_line, m_selected_field);       
   }
 }
 
@@ -78,7 +78,7 @@ void Page::Down()
 {
   if (OnUpDown(DOWN)) {
     Draw(1, 7);
-    Line(DO_SELECTED, m_selected_line, 0);       
+    Line(DO_SELECTED, m_selected_line, m_selected_field);       
   }
 }
 
@@ -114,13 +114,13 @@ bool Page::OnUpDown(UpDownAction action)
 
 void Page::Left()
 {
-  if (Line(DO_LEFT, m_selected_line, 0).redraw)
+  if (Line(DO_LEFT, m_selected_line, m_selected_field).redraw)
     Draw(1, 7); // TODO: should draw only one selected line!!!, well not really for undo of page a complete redraw is necessary
 }
 
 void Page::Right()
 {
-  if (Line(DO_RIGHT, m_selected_line, 0).redraw)
+  if (Line(DO_RIGHT, m_selected_line, m_selected_field).redraw)
     Draw(1, 7); // TODO: should draw only one selected line!!!, well not really for undo of page a complete redraw is necessary
 }
 
@@ -181,18 +181,30 @@ void NewCombiline::Init(NewCombilineParameters par_function, uint8_t* selected_v
 
 PSTRING(PSTR_combiline_nullptr, "COMBILINE IS NULL!"); 
 
-const char* NewCombiline::GetText() 
+void NewCombiline::GetText(char* text, Screen::Inversion& inversion, uint8_t start, uint8_t max) 
+/*
+Fills is text and inversion.
+Make sure your text variable has at least max_text space!!!
+
+
+TODO: RAlign!!!
+  Fouten opvangen. Outofbounds enzo.
+
+*/
 {
-  if (!m_par_function) // This should never happen
-    return GetPString(PSTR_combiline_nullptr);
+  inversion = {Screen::InvertAll, 0, 0};
+  text += start; // we start writing to text at the start position
+
+  // Do some checks
+  if (!m_par_function) { 
+      strncpy(text, GetPString(PSTR_combiline_nullptr), max);
+      return;
+    }
 
   // ----
   NewParsPars m;
   m_par_function(m);
   // ----
-
-  char* text = Screen::buffer;
-  const uint8_t max_text = Screen::MaxCharsCanvasScrollbar; // 24, (so without zero)
 
   // Key:
   const char* key = "";  // TODO this "" does not take extra memory, so could remove PSTRING_EMPTY
@@ -201,8 +213,8 @@ const char* NewCombiline::GetText()
   } else if (m.types & TypePString) {
     key = GetPString(static_cast<const char*>(m.name));
   }
-  strncpy(text, key, max_text);
-  text[max_text] = 0;
+  strncpy(text, key, max);
+  text[max] = 0;
 
   // Value
   if (m.number_of_values != 0) {
@@ -214,49 +226,24 @@ const char* NewCombiline::GetText()
       NewCombiLineFunction function = (NewCombiLineFunction)m.values;
       value = function(*m_selected_value);
     }
+    uint8_t inv_start = 0, inv_stop = 0;
     if (m.types & TypeRAlign) {
-      memset(text + strlen(text), ' ', max_text-strlen(text)); // Pad end with spaces
-      const uint8_t pos = max_text - strlen(value); // We expect the length of value to be < 24
+      memset(text + strlen(text), ' ', max-strlen(text)); // Pad end with spaces
+      const uint8_t pos = max - strlen(value); // We expect the length of value to be < 24
       strcpy(text + pos, value);
+      inv_start = pos;
     } else {
-      const uint8_t freechar = max_text - strlen(text);
+      inv_start = strlen(text);
+      const uint8_t freechar = max - strlen(text);
       strncat(text, value, freechar); // no need to terminate with zero, because already done above
+      inv_stop = strlen(text) - 1;
     }
-  }
+    inversion = {Screen::InvertGiven, inv_start + start, inv_stop + start};
+  } 
 
-  return text;
+  return;
 }
 
-Screen::Inversion NewCombiline::GetInversion()
-// NOTE: When the values are too long, the start and stop will be wrong
-//       but the program will not crash, because this is solved by the Screen::Print
-// TODO: combine GetText with GetInversion
-{
-  if (!m_par_function) // This should never happen
-    return {Screen::InvertAll, 0, 0};
-
-  // ----
-  NewParsPars m;
-  m_par_function(m);
-  // ---
-
-  // --- No value ---
-  if (m.number_of_values == 0)
-    return {Screen::InvertAll, 0, 0};
-  // --- Left aligned ---
-  uint8_t start = (m.types & TypeCString) ? strlen(static_cast<const char*>(m.name)) :
-                                            strlen(GetPString(static_cast<const char*>(m.name)));
-  const char* value = (m.types & TypePTable) ? GetPStringFromPTable(static_cast<const char *const *>(m.values), *m_selected_value) :
-                                               ((NewCombiLineFunction)m.values)(*m_selected_value);
-  uint8_t stop = start + strlen(value);
-  // --- Right aligned ---
-  if (m.types & TypeRAlign) {
-    start = Screen::MaxCharsCanvasScrollbar - strlen(value);
-    stop = Screen::MaxCharsCanvasScrollbar - 1;
-  }
-
-  return {Screen::InvertGiven, start, stop};
-}
 
 uint8_t* NewCombiline::GetSelectedValue()
 {
