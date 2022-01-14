@@ -149,15 +149,12 @@ const char* PageMulti::GetTitle()
   return GetPString(PSTR_page_multi);
 }
 
-Screen::Inversion none = {Screen::InvertNone, 0, 0};  // TODO put somewhere centrally
-Screen::Inversion all = {Screen::InvertAll, 0, 0};
-
 
 Page::LineResult PageMulti::LineChannel1a(LineFunction func, uint8_t field)
 {
   const uint8_t nbr_fields = 2;
   if (func == Page::GET_NUMBER_OF_FIELDS)
-    return Page::LineResult{nbr_fields, nullptr, none, false};
+    return Page::LineResult{nbr_fields, nullptr, Screen::inversion_none, false};
   if (func == Page::GET_TEXT) {
     char* text = Screen::buffer;
     const uint8_t text_len = Screen::buffer_len;
@@ -167,21 +164,21 @@ Page::LineResult PageMulti::LineChannel1a(LineFunction func, uint8_t field)
     return Page::LineResult{nbr_fields, text, field==0 ? ch_inversion : oct_inversion, false};
   }
   if (func == Page::DO_LEFT)
-    return Page::LineResult{nbr_fields, nullptr, none, field==0 ? m_ui_channel_1.OnLeft() : m_ui_octave_1.OnLeft()};
+    return Page::LineResult{nbr_fields, nullptr, Screen::inversion_none, field==0 ? m_ui_channel_1.OnLeft() : m_ui_octave_1.OnLeft()};
   if (func == Page::DO_RIGHT)
-    return Page::LineResult{nbr_fields, nullptr, none, field==0 ? m_ui_channel_1.OnRight() : m_ui_octave_1.OnRight()};
+    return Page::LineResult{nbr_fields, nullptr, Screen::inversion_none, field==0 ? m_ui_channel_1.OnRight() : m_ui_octave_1.OnRight()};
 
-  return Page::LineResult{nbr_fields, nullptr, none, false};
+  return Page::LineResult{nbr_fields, nullptr, Screen::inversion_none, false};
 }
 
 Page::LineResult PageMulti::LineChannel1b(LineFunction func, uint8_t field)
 {
   if (func == Page::GET_NUMBER_OF_FIELDS)
-    return LineResult{2, nullptr, none, false};
+    return LineResult{2, nullptr, Screen::inversion_none, false};
   if (func == Page::GET_TEXT) {
     char* text = Screen::buffer;
     sprintf(text, "par1: %s, par2: %s", "val1", "val2");
-    Screen::Inversion inversion = none;
+    Screen::Inversion inversion = Screen::inversion_none;
     if (field == 0)
       inversion = { Screen::InvertGiven, 6, 9};
     else if (field == 1)
@@ -189,7 +186,7 @@ Page::LineResult PageMulti::LineChannel1b(LineFunction func, uint8_t field)
     return LineResult{2, text, inversion, false};
   }
 
-  return LineResult{2, nullptr, none, false};
+  return LineResult{2, nullptr, Screen::inversion_none, false};
 }
 
 /*
@@ -265,17 +262,17 @@ Page::LineResult PageMulti::Line3(LineFunction func, uint8_t field)
 Page::LineResult DumbLine(Page::LineFunction func, uint8_t line, uint8_t field)
 {
   if (func == Page::GET_NUMBER_OF_FIELDS)
-    return Page::LineResult{1, nullptr, none, false};
+    return Page::LineResult{1, nullptr, Screen::inversion_none, false};
   if (func == Page::GET_TEXT)
-    return Page::LineResult{1, GetPStringLoadPreset(line), field==0 ? all : none, false};
+    return Page::LineResult{1, GetPStringLoadPreset(line), field==0 ? Screen::inversion_all : Screen::inversion_none, false};
 
-  return Page::LineResult{1, nullptr, none, false};
+  return Page::LineResult{1, nullptr, Screen::inversion_none, false};
 }
 
 
 Page::LineResult TextLine(Page::LineFunction func, const char* pstring)
 {
-  return Page::LineResult{1, GetPString(pstring), all, false};
+  return Page::LineResult{1, GetPString(pstring), Screen::inversion_all, false};
 }
 
 
@@ -309,13 +306,13 @@ void PageMulti::GetLine(uint8_t line, const char*& text, Screen::Inversion& inve
     inversion = m_lines[line].GetInversion();
   } else if (line >= m_number_of_combilines + 1 && line <= m_number_of_combilines + 3) { // Load presets
     text = GetPStringLoadPreset(line - m_number_of_combilines);
-    inversion = {Screen::InvertAll, 0, 0};
+    inversion = Screen::inversion_all;
   } else if (line >= m_number_of_combilines + 4 && line <= m_number_of_combilines + 6) {  // Save presets
     text = GetPStringSavePreset(line - (m_number_of_combilines + 3));
-    inversion = {Screen::InvertAll, 0, 0};
+    inversion = Screen::inversion_all;
   } else if (line == m_number_of_combilines + 7) {
     text = GetPStringMonitor();
-    inversion = {Screen::InvertAll, 0, 0};
+    inversion = Screen::inversion_all;
   } else {
     text = GetPStringEmpty();
     inversion = {Screen::InvertGiven, 0, 0};

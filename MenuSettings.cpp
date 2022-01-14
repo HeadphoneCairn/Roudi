@@ -181,7 +181,7 @@ void MenuSettings::GetLine(uint8_t line, const char*& text, Screen::Inversion& i
     inversion = {Screen::InvertGiven, 0, 0};
   } else {
     text = GetPStringUndo();
-    inversion = {Screen::InvertAll, 0, 0};
+    inversion = Screen::inversion_all;
   }
 }
 

@@ -37,5 +37,5 @@ void MenuDebug::GetLine(uint8_t line, const char*& text, Screen::Inversion& inve
     Screen::buffer[0] = 0;
   }
   text = Screen::buffer;
-  inversion = {Screen::InvertAll, 0, 0};
+  inversion = Screen::inversion_all;
 }

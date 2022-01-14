@@ -29,7 +29,7 @@ const char* MenuNameChannel::GetTitle()
 
 void MenuNameChannel::GetLine(uint8_t line, const char*& text, Screen::Inversion& inversion)
 {
-  inversion = {Screen::InvertNone, 0, 0};
+  inversion = Screen::inversion_none;
   if (line == 1) {
     text = Screen::buffer;
     uint8_t start = m_position; // NAME

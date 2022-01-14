@@ -119,9 +119,8 @@ void Menu::Right()
 
 void Menu::Draw(uint8_t from, uint8_t to) // from..to are the lines to draw 
 {
-  const Screen::Inversion no_inversion = { Screen::InvertNone, 0, 0 };
   if (from == 0)
-    Screen::Print(Screen::CanvasComplete, 0, 0xFF, GetTitle(), Screen::LineEmphasis, no_inversion);
+    Screen::Print(Screen::CanvasComplete, 0, 0xFF, GetTitle(), Screen::LineEmphasis, Screen::inversion_none);
   for (uint8_t i = 1; i <= 7; i++) {      
     if (i >= from && i <= to) {
       uint8_t line_to_show = m_first_line + i - 1;
@@ -129,7 +128,7 @@ void Menu::Draw(uint8_t from, uint8_t to) // from..to are the lines to draw
         const char* text; 
         Screen::Inversion text_inversion;
         GetLine(line_to_show, text, text_inversion);
-        Screen::Print(Screen::CanvasScrollbar, i, 0, text, Screen::LineClear, line_to_show == m_selected_line ? text_inversion : no_inversion);
+        Screen::Print(Screen::CanvasScrollbar, i, 0, text, Screen::LineClear, line_to_show == m_selected_line ? text_inversion : Screen::inversion_none);
       }
     }
   }
@@ -226,7 +225,7 @@ Screen::Inversion Combiline::GetInversion()
 
   // --- No value ---
   if (m.number_of_values == 0)
-    return {Screen::InvertAll, 0, 0};
+    return Screen::inversion_all;
   // --- Left aligned ---
   uint8_t start = (m.types & TypeCString) ? strlen(static_cast<const char*>(m.name)) :
                                             strlen(GetPString(static_cast<const char*>(m.name)));

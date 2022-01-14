@@ -38,7 +38,7 @@ void MenuChannels::GetLine(uint8_t line, const char*& text, Screen::Inversion& i
     inversion = { Screen::InvertGiven, 6, 6 + strlen(channel_name) - 1 };
   } else {
     text = GetPStringAccept();
-    inversion = { Screen::InvertAll, 0, 0 };
+    inversion = Screen::inversion_all;
   }
 }
 

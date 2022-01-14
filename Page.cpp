@@ -127,16 +127,15 @@ void Page::Right()
 void Page::Draw(uint8_t from, uint8_t to) // from..to are the lines to draw 
 {
   //Debug::Beep();
-  const Screen::Inversion no_inversion = { Screen::InvertNone, 0, 0 };
   if (from == 0)
-    Screen::Print(Screen::CanvasComplete, 0, 0xFF, GetTitle(), Screen::LineEmphasis, no_inversion);
+    Screen::Print(Screen::CanvasComplete, 0, 0xFF, GetTitle(), Screen::LineEmphasis, Screen::inversion_none);
   for (uint8_t i = 1; i <= 7; i++) {      
     if (i >= from && i <= to) {
       uint8_t line_to_show = m_first_line + i - 1;
       if (line_to_show < m_number_of_lines) {
         const char* text; 
         LineResult res = Line(GET_TEXT, line_to_show, line_to_show == m_selected_line ? m_selected_field : -1);       
-        Screen::Print(Screen::CanvasScrollbar, i, 0, res.text, Screen::LineClear, line_to_show == m_selected_line ? res.text_inversion : no_inversion);
+        Screen::Print(Screen::CanvasScrollbar, i, 0, res.text, Screen::LineClear, line_to_show == m_selected_line ? res.text_inversion : Screen::inversion_none);
       }
     }
   }
@@ -197,7 +196,7 @@ TODO: RAlign!!!
 
 */
 {
-  inversion = {Screen::InvertAll, 0, 0};
+  inversion = Screen::inversion_all;
 
   // Do some checks
   if (!m_par_function || start + len + extra_padding > text_len ) { 

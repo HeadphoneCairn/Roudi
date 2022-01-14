@@ -93,9 +93,9 @@ namespace Menus
     if (max_menu_size != gMenuBufferSize) {
       Screen::Clear();
       sprintf(Screen::buffer, GetPString(PSTR_bad_buffer_1), gMenuBufferSize);
-      Screen::Print(Screen::CanvasComplete, 3, 0xFF, Screen::buffer, Screen::LineClear, {Screen::InvertNone, 0, 0});
+      Screen::Print(Screen::CanvasComplete, 3, 0xFF, Screen::buffer, Screen::LineClear, Screen::inversion_none);
       sprintf(Screen::buffer, GetPString(PSTR_bad_buffer_2), max_menu_size);
-      Screen::Print(Screen::CanvasComplete, 4, 0xFF, Screen::buffer, Screen::LineClear, {Screen::InvertNone, 0, 0});
+      Screen::Print(Screen::CanvasComplete, 4, 0xFF, Screen::buffer, Screen::LineClear, Screen::inversion_none);
     } else {
       ShowMenu(MENU_SINGLE);
     }

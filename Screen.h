@@ -36,6 +36,9 @@ namespace Screen
     uint8_t stop;   // tell which part of the text needs to be inverted
   };
 
+  const Inversion inversion_none = {Screen::InvertNone, 0, 0};
+  const Inversion inversion_all = {Screen::InvertAll, 0, 0};
+
   // Print text to screen
   void Print(
     CanvasType canvas_type,

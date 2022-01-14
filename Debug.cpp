@@ -22,7 +22,7 @@ namespace Debug
     va_start (args, format);
     vsprintf (buffer, format, args);
     va_end (args);
-    Screen::Print(Screen::CanvasComplete, 0, 0, buffer, Screen::LineClear, {Screen::InvertNone, 0, 0});
+    Screen::Print(Screen::CanvasComplete, 0, 0, buffer, Screen::LineClear, Screen::inversion_none);
   }
 
   // =============================================================================

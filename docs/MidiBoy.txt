@@ -589,6 +589,8 @@ split    split note: C4        of layer
 Roudi by Headphone Cairn
 parts by Blokas, ...  
 
+Roudi = ROUter for miDI messages
+
 - push A or B to switch 
 between pages 
 - push ^, v to switch

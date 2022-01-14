@@ -101,13 +101,13 @@ void MenuLayer::GetLine(uint8_t line, const char*& text, Screen::Inversion& inve
     inversion = m_lines[line].GetInversion();
   } else if (line >= m_number_of_combilines + 1 && line <= m_number_of_combilines + 3) {
     text = GetPStringLoadPreset(line - m_number_of_combilines);
-    inversion = {Screen::InvertAll, 0, 0};
+    inversion = Screen::inversion_all;
   } else if (line >= m_number_of_combilines + 4 && line <= m_number_of_combilines + 6) {
     text = GetPStringSavePreset(line - (m_number_of_combilines + 3));
-    inversion = {Screen::InvertAll, 0, 0};
+    inversion = Screen::inversion_all;
   } else if (line == m_number_of_combilines + 7) {
     text = GetPStringMonitor();
-    inversion = {Screen::InvertAll, 0, 0};
+    inversion = Screen::inversion_all;
   } else {
     text = GetPStringEmpty();
     inversion = {Screen::InvertGiven, 0, 0};

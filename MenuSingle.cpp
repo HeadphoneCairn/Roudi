@@ -26,7 +26,7 @@ const char* MenuSingle::GetTitle()
 
 void MenuSingle::GetLine(uint8_t line, const char*& text, Screen::Inversion& inversion)
 {
-  inversion = {Screen::InvertAll, 0, 0};
+  inversion = Screen::inversion_all;
   if (line < m_number_of_channels) {
     text = EE::GetChannelNameFormatted(line);
   } else {
