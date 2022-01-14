@@ -177,3 +177,16 @@ void Bitfield::GetInternalPosition(uint8_t position, uint8_t& byte, uint8_t& byt
   const uint8_t bit = 7 - (position - (byte << 3));
   byte_value = 1 << bit;
 }
+
+//==============================================================================
+//
+//                     S T R I N G   F U N C T I O N S
+//
+//==============================================================================
+
+void PadRight(char* text, uint8_t len, char c)
+{
+  text = text + strlen(text);
+  memset(text, c, len);
+  text[len]=0;
+}

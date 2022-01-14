@@ -31,3 +31,7 @@ private:
   void GetInternalPosition(uint8_t position, uint8_t& byte, uint8_t& byte_value);
   uint8_t m_values[16]; // 16 * 8 = 128 bits
 };
+
+// --- String functions ---
+// Pad string 'text' with 'len' * 'c' characters
+void PadRight(char* text, uint8_t len, char c = ' '); 

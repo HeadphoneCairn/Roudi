@@ -179,27 +179,32 @@ void NewCombiline::Init(NewCombilineParameters par_function, uint8_t* selected_v
 }
 
 
-PSTRING(PSTR_combiline_nullptr, "COMBILINE IS NULL!"); 
+PSTRING(PSTR_combiline_error, "ERROR"); 
 
-void NewCombiline::GetText(char* text, Screen::Inversion& inversion, uint8_t start, uint8_t max) 
+void NewCombiline::GetText(char* text, uint8_t text_len, Screen::Inversion& inversion, uint8_t start, uint8_t len, uint8_t extra_padding) 
 /*
-Fills is text and inversion.
-Make sure your text variable has at least max_text space!!!
+- text: this function will write to this string
+- text_len: this should be the length of the text* buffer (not including \0), it is a safety feature 
+- inversion: this will be filled by this function
+- start: we will start writing at text[start] .. 
+- len: ... for length len, if there are not enough chars to be written, spaces are written
+- extra_padding: number of extra space to be added at the end
 
-
+Why did I put RAlign in ParPars. Shouldn't it be display specific??
 TODO: RAlign!!!
   Fouten opvangen. Outofbounds enzo.
 
 */
 {
   inversion = {Screen::InvertAll, 0, 0};
-  text += start; // we start writing to text at the start position
 
   // Do some checks
-  if (!m_par_function) { 
-      strncpy(text, GetPString(PSTR_combiline_nullptr), max);
+  if (!m_par_function || start + len + extra_padding > text_len ) { 
+      strncpy(text, GetPString(PSTR_combiline_error), text_len);
       return;
     }
+
+  text += start; // we start writing to text at the start position
 
   // ----
   NewParsPars m;
@@ -213,8 +218,8 @@ TODO: RAlign!!!
   } else if (m.types & TypePString) {
     key = GetPString(static_cast<const char*>(m.name));
   }
-  strncpy(text, key, max);
-  text[max] = 0;
+  strncpy(text, key, len);
+  text[len] = 0;
 
   // Value
   if (m.number_of_values != 0) {
@@ -228,18 +233,22 @@ TODO: RAlign!!!
     }
     uint8_t inv_start = 0, inv_stop = 0;
     if (m.types & TypeRAlign) {
-      memset(text + strlen(text), ' ', max-strlen(text)); // Pad end with spaces
-      const uint8_t pos = max - strlen(value); // We expect the length of value to be < 24
+      PadRight(text, len - strlen(text), ':'); // Pad end with spaces
+      const uint8_t pos = len - strlen(value); // We expect the length of value to be < 24
       strcpy(text + pos, value);
       inv_start = pos;
     } else {
       inv_start = strlen(text);
-      const uint8_t freechar = max - strlen(text);
+      const uint8_t freechar = len - strlen(text); // can never be negative
       strncat(text, value, freechar); // no need to terminate with zero, because already done above
       inv_stop = strlen(text) - 1;
+      PadRight(text, len - strlen(text), '|'); // Pad end with spaces
     }
     inversion = {Screen::InvertGiven, inv_start + start, inv_stop + start};
   } 
+
+  // Add extra_padding 
+  PadRight(text, extra_padding, '-');
 
   return;
 }
@@ -273,4 +282,9 @@ bool NewCombiline::OnRight()
   } else {
     return false;
   }
+}
+
+void NewCombiline::UnitTest()
+{
+
 }

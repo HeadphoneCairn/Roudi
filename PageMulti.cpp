@@ -160,11 +160,10 @@ Page::LineResult PageMulti::LineChannel1a(LineFunction func, uint8_t field)
     return Page::LineResult{nbr_fields, nullptr, none, false};
   if (func == Page::GET_TEXT) {
     char* text = Screen::buffer;
+    const uint8_t text_len = Screen::buffer_len;
     Screen::Inversion ch_inversion, oct_inversion;
-    m_ui_channel_1.GetText(text, ch_inversion, 0, 14);
-    strcat(text, "  ");
-    m_ui_octave_1.GetText(text, oct_inversion, strlen(text), 7);
-    Debug::Print("%d, %d", ch_inversion.start, ch_inversion.stop);
+    m_ui_channel_1.GetText(text, text_len, ch_inversion, 0, 14, 2);
+    m_ui_octave_1.GetText(text, text_len, oct_inversion, strlen(text), 7);
     return Page::LineResult{nbr_fields, text, field==0 ? ch_inversion : oct_inversion, false};
   }
   if (func == Page::DO_LEFT)
