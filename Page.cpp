@@ -181,7 +181,7 @@ void NewCombiline::Init(NewCombilineParameters par_function, uint8_t* selected_v
 
 PSTRING(PSTR_combiline_error, "ERROR"); 
 
-void NewCombiline::GetText(char* text, uint8_t text_len, Screen::Inversion& inversion, uint8_t start, uint8_t len, uint8_t extra_padding) 
+void NewCombiline::GetText(char* text, uint8_t text_len, Screen::Inversion& inversion, uint8_t start, uint8_t len, uint8_t extra_padding, bool right_align) 
 /*
 - text: this function will write to this string
 - text_len: this should be the length of the text* buffer (not including \0), it is a safety feature 
@@ -189,6 +189,7 @@ void NewCombiline::GetText(char* text, uint8_t text_len, Screen::Inversion& inve
 - start: we will start writing at text[start] .. 
 - len: ... for length len, if there are not enough chars to be written, spaces are written
 - extra_padding: number of extra space to be added at the end
+- right_align: if enabled, value is aligned to the right
 
 Why did I put RAlign in ParPars. Shouldn't it be display specific??
 TODO: RAlign!!!
@@ -232,11 +233,12 @@ TODO: RAlign!!!
       value = function(*m_selected_value);
     }
     uint8_t inv_start = 0, inv_stop = 0;
-    if (m.types & TypeRAlign) {
+    if (right_align) {
       PadRight(text, len - strlen(text), ':'); // Pad end with spaces
       const uint8_t pos = len - strlen(value); // We expect the length of value to be < 24
       strcpy(text + pos, value);
       inv_start = pos;
+      inv_stop = len - 1;
     } else {
       inv_start = strlen(text);
       const uint8_t freechar = len - strlen(text); // can never be negative

@@ -40,7 +40,7 @@ namespace {
   PSTRING(PSTR_octave,     "oct: ");
   void g_par_octave(NewParsPars& pars)
     {
-    pars.types = TypePString|TypeFunction; //|TypeRAlign; 
+    pars.types = TypePString|TypeFunction; 
     pars.name = (void*) PSTR_octave;
     pars.number_of_values = GetNumberOfOctaves(); 
     pars.values = (void*) GetOctaveName;
@@ -162,7 +162,7 @@ Page::LineResult PageMulti::LineChannel1a(LineFunction func, uint8_t field)
     char* text = Screen::buffer;
     const uint8_t text_len = Screen::buffer_len;
     Screen::Inversion ch_inversion, oct_inversion;
-    m_ui_channel_1.GetText(text, text_len, ch_inversion, 0, 14, 2);
+    m_ui_channel_1.GetText(text, text_len, ch_inversion, 0, 14, 2, true);
     m_ui_octave_1.GetText(text, text_len, oct_inversion, strlen(text), 7);
     return Page::LineResult{nbr_fields, text, field==0 ? ch_inversion : oct_inversion, false};
   }

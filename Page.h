@@ -52,7 +52,6 @@ extern Page* g_page;
 #define TypePString  0b00000010 // The key is a ptr to a PROGMEM string
 #define TypePTable   0b00010000 // The values is a ptr to a PROGMEM table
 #define TypeFunction 0b00100000 // The values is a function ptr of type CombiLineFunction 
-#define TypeRAlign   0b10000000 // Align value to the right
 
 struct NewParsPars {
   uint8_t types;
@@ -68,7 +67,7 @@ class NewCombiline
 public:
   NewCombiline();
   void Init(NewCombilineParameters par_function, uint8_t* selected_value);
-  void GetText(char* text, uint8_t text_len, Screen::Inversion& inversion, uint8_t start, uint8_t len, uint8_t extra_padding=0);
+  void GetText(char* text, uint8_t text_len, Screen::Inversion& inversion, uint8_t start, uint8_t len, uint8_t extra_padding=0, bool right_align=false);
   Screen::Inversion GetInversion();
   uint8_t* GetSelectedValue();
   bool OnLeft();
