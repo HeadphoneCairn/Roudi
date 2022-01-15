@@ -54,13 +54,18 @@ namespace {
     return data_scratch;
   }
 
-  PSTRING(PSTR_channel,     "ch: ");
+
+
+
+
+  PSTRING(PSTR_channel,     "");
+
   void g_par_channel(NewParsPars& pars)
   {
     pars.types = TypePString|TypeFunction;
     pars.name = (void*) PSTR_channel;
     pars.number_of_values = 16;
-    pars.values = (void*) GetNumberPlusOne;
+    pars.values = (void*) GetChannelNameBrol;
   }
 
 }
@@ -122,7 +127,7 @@ void PageMulti::OnStart()
   }
 
   gValues_ChannelValueToChannelIndex();
-  g_values.left_octave = 0;
+  g_values.left_octave = OctaveDeltaToOctaveValue(0);
   m_ui_channel_1.Init(g_par_channel, &g_values.left_channel);
   m_ui_channel_2.Init(g_par_channel, &g_values.right_channel);
   m_ui_octave_1.Init(g_par_octave, &g_values.left_octave);
@@ -159,8 +164,8 @@ Page::LineResult PageMulti::LineChannel1a(LineFunction func, uint8_t field)
     char* text = Screen::buffer;
     const uint8_t text_len = Screen::buffer_len;
     Screen::Inversion ch_inversion, oct_inversion;
-    m_ui_channel_1.GetText(text, text_len, ch_inversion, 0, 14, 2, true);
-    m_ui_octave_1.GetText(text, text_len, oct_inversion, strlen(text), 7);
+    m_ui_channel_1.GetText(text, text_len, ch_inversion, 0, 14, 2);
+    m_ui_octave_1.GetText(text, text_len, oct_inversion, strlen(text), 7, true);
     return Page::LineResult{nbr_fields, text, field==0 ? ch_inversion : oct_inversion, false};
   }
   if (func == Page::DO_LEFT)

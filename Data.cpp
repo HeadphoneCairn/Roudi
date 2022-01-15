@@ -73,7 +73,7 @@ uint8_t GetNumberOfOctaves()
 {
   return MAX_OCTAVES * 2 + 1;
 }
-PSTRING(PSTR_octave_0, "untransposed");
+PSTRING(PSTR_octave_0, " 0");
 PSTRING(PSTR_octave,   "%+d octave");
 const char* GetOctaveName(uint8_t octave_value)
 {
@@ -492,3 +492,58 @@ namespace EE
   }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+PSTRING(PSTR_channel_00, "Piano");
+PSTRING(PSTR_channel_01, "Moog");
+PSTRING(PSTR_channel_02, "");
+PSTRING(PSTR_channel_03, "Typhon");
+PSTRING(PSTR_channel_04, "Er3bus");
+PSTRING(PSTR_channel_05, "iPad");
+PSTRING(PSTR_channel_06, "");
+PSTRING(PSTR_channel_07, "");
+PSTRING(PSTR_channel_08, "Computer");
+PSTRING(PSTR_channel_09, "");
+PSTRING(PSTR_channel_10, "");
+PSTRING(PSTR_channel_11, "");
+PSTRING(PSTR_channel_12, "");
+PSTRING(PSTR_channel_13, "");
+PSTRING(PSTR_channel_14, "");
+PSTRING(PSTR_channel_15, "");
+
+PTABLE(PTAB_channel_names,
+       PSTR_channel_00,
+       PSTR_channel_01,
+       PSTR_channel_02,
+       PSTR_channel_03,
+       PSTR_channel_04,
+       PSTR_channel_05,
+       PSTR_channel_06,
+       PSTR_channel_07,
+       PSTR_channel_08,
+       PSTR_channel_09,
+       PSTR_channel_10,
+       PSTR_channel_11,
+       PSTR_channel_12,
+       PSTR_channel_13,
+       PSTR_channel_14,
+       PSTR_channel_15);
+
+PSTRING(PSTR_channel_name_brol_formatting, "%02d. ");
+
+const char* GetChannelNameBrol(uint8_t channel)
+{
+  channel = channel % 16;
+  sprintf(data_scratch, GetPString(PSTR_channel_name_brol_formatting), channel + 1);
+  strcat(data_scratch, GetPStringFromPTable(PTAB_channel_names, channel));
+  return data_scratch;
+}

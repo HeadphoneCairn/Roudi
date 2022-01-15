@@ -149,3 +149,5 @@ namespace EE
 }
 
 
+
+const char* GetChannelNameBrol(uint8_t channel);

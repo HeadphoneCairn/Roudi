@@ -588,6 +588,7 @@ split    split note: C4        of layer
 ========= ABOUT =========
 Roudi by Headphone Cairn
 parts by Blokas, ...  
+(c) 2021-2022
 
 Roudi = ROUter for miDI messages
 
@@ -599,6 +600,8 @@ between fields,
 - push A+B to switch
 to midi monitor and 
 settings
+
+Memory usage: ....
 
 --------------------------------------------------------------------------------
 ========= DEBUG =========

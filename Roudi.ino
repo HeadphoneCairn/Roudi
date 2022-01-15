@@ -39,7 +39,7 @@ void setup()
   //delay(1000);
   //Menus::Start(); // Start showing the menus
   multi.Start();  
-  Debug::Print("%d", sizeof(multi));
+  //Debug::Print("%d", sizeof(multi));
 
 
   // For some reason, after boot of the program, the input
