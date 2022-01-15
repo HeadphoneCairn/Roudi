@@ -179,30 +179,21 @@ const char* PageMulti::GetTitle()
 
 Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
 {
-  if (line == 0)
-    return DoubleCombiline(func, field, m_ui_channel_1, 14, 2, false, m_ui_octave_1,  7, 0, false);
-  else if (line == 1)
-    return DoubleCombiline(func, field, m_ui_pitchbend_1, 14, 2, false, m_ui_velocity_1,  8, 0, false);
-  else if (line == 2)
-    return DoubleCombiline(func, field, m_ui_channel_2, 14, 2, false, m_ui_octave_2,  7, 0, false);
-  else if (line == 3)
-    return DoubleCombiline(func, field, m_ui_pitchbend_2, 14, 2, false, m_ui_velocity_2,  8, 0, false);
-  else if (line == 4)
-    return DoubleCombiline(func, field, m_ui_mode, 10, 4, false, m_ui_split_note, 10, 0, false);
-  else if (line == 5)
-    return DefaultLine(func);
-  else if (line == 6)
-    return TextLine(func, PSTR_save);
-  else if (line == 7)
-    return TextLine(func, PSTR_save_as);
-  else if (line == 8)
-    return TextLine(func, PSTR_rename);
-  else if (line == 9)
-    return TextLine(func, PSTR_move_left);
-  else if (line == 10)
-    return TextLine(func, PSTR_move_right);
-  else
-    return DefaultLine(func);
+  switch (line)
+  {
+    case 0: return DoubleCombiline(func, field, m_ui_channel_1, 14, 2, false, m_ui_octave_1,  7, 0, false);
+    case 1: return DoubleCombiline(func, field, m_ui_pitchbend_1, 14, 2, false, m_ui_velocity_1,  8, 0, false);
+    case 2: return DoubleCombiline(func, field, m_ui_channel_2, 14, 2, false, m_ui_octave_2,  7, 0, false);
+    case 3: return DoubleCombiline(func, field, m_ui_pitchbend_2, 14, 2, false, m_ui_velocity_2,  8, 0, false);
+    case 4: return DoubleCombiline(func, field, m_ui_mode, 10, 4, false, m_ui_split_note, 10, 0, false);
+    case 5: return DefaultLine(func);
+    case 6: return TextLine(func, PSTR_save);
+    case 7: return TextLine(func, PSTR_save_as);
+    case 8: return TextLine(func, PSTR_rename);
+    case 9: return TextLine(func, PSTR_move_left);
+    case 10: return TextLine(func, PSTR_move_right);
+    default: return DefaultLine(func);
+  }
 }
 
 
