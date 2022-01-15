@@ -113,6 +113,12 @@ namespace {
     pars.values = (void*) GetNoteName;
     }
 
+  PSTRING(PSTR_save, "> Save");
+  PSTRING(PSTR_save_as, "> Save As");
+  PSTRING(PSTR_rename, "> Rename");
+  PSTRING(PSTR_move_left, "> Move left");
+  PSTRING(PSTR_move_right, "> Move right");
+
 }
 
 
@@ -170,21 +176,6 @@ const char* PageMulti::GetTitle()
   return GetPString(PSTR_page_multi);
 }
 
-Page::LineResult TextLine(Page::LineFunction func, const char* pstring)
-{
-  return Page::LineResult{1, GetPString(pstring), Screen::inversion_all, false};
-}
-
-Page::LineResult DumbLine(Page::LineFunction func, uint8_t line, uint8_t field)
-{
-  if (func == Page::GET_NUMBER_OF_FIELDS)
-    return Page::LineResult{1, nullptr, Screen::inversion_none, false};
-  if (func == Page::GET_TEXT)
-    return Page::LineResult{1, GetPStringLoadPreset(line), field==0 ? Screen::inversion_all : Screen::inversion_none, false};
-
-  return Page::LineResult{1, nullptr, Screen::inversion_none, false};
-}
-
 
 Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
 {
@@ -199,13 +190,19 @@ Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
   else if (line == 4)
     return DoubleCombiline(func, field, m_ui_mode, 10, 4, false, m_ui_split_note, 10, 0, false);
   else if (line == 5)
-    return TextLine(func, PSTR_left);
+    return DefaultLine(func);
   else if (line == 6)
-    return TextLine(func, PSTR_right);
+    return TextLine(func, PSTR_save);
   else if (line == 7)
-    return TextLine(func, PSTR_split);
+    return TextLine(func, PSTR_save_as);
+  else if (line == 8)
+    return TextLine(func, PSTR_rename);
+  else if (line == 9)
+    return TextLine(func, PSTR_move_left);
+  else if (line == 10)
+    return TextLine(func, PSTR_move_right);
   else
-    return DumbLine(func, line, field);
+    return DefaultLine(func);
 }
 
 

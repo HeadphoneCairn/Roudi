@@ -164,6 +164,26 @@ Page* g_page = (Page*)page_buffer;
 //
 //==============================================================================
 
+Page::LineResult DefaultLine(Page::LineFunction func)
+{
+  return Page::LineResult{1, GetPStringEmpty(), Screen::inversion_none, false};
+}
+
+Page::LineResult TextLine(Page::LineFunction func, const char* pstring)
+{
+  return Page::LineResult{1, GetPString(pstring), Screen::inversion_all, false};
+}
+
+Page::LineResult DumbLine(Page::LineFunction func, uint8_t line, uint8_t field)
+{
+  if (func == Page::GET_NUMBER_OF_FIELDS)
+    return Page::LineResult{1, nullptr, Screen::inversion_none, false};
+  if (func == Page::GET_TEXT)
+    return Page::LineResult{1, GetPStringLoadPreset(line), field==0 ? Screen::inversion_all : Screen::inversion_none, false};
+
+  return Page::LineResult{1, nullptr, Screen::inversion_none, false};
+}
+
 
 Page::LineResult DoubleCombiline(
   Page::LineFunction func, uint8_t field, 
