@@ -31,29 +31,6 @@ namespace
 
 
 
-Page::LineResult LineDoubleField(
-  Page::LineFunction func, uint8_t field, 
-  NewCombiline& combiline_1, uint8_t len_1, uint8_t extra_padding_1, bool right_align_1, 
-  NewCombiline& combiline_2, uint8_t len_2, uint8_t extra_padding_2, bool right_align_2 
-)
-{
-  if (func == Page::GET_NUMBER_OF_FIELDS)
-    return {2, nullptr, Screen::inversion_none, false};
-  if (func == Page::GET_TEXT) {
-    char* text = Screen::buffer;
-    const uint8_t text_len = Screen::buffer_len;
-    Screen::Inversion inversion_1, inversion_2;
-    combiline_1.GetText(text, text_len, inversion_1, 0, len_1, extra_padding_1, right_align_1);
-    combiline_2.GetText(text, text_len, inversion_2, strlen(text), len_2, extra_padding_2, right_align_2);
-    return {2, text, field==0 ? inversion_1 : inversion_2, false};
-  }
-  if (func == Page::DO_LEFT)
-    return {2, nullptr, Screen::inversion_none, field==0 ? combiline_1.OnLeft() : combiline_2.OnLeft()};
-  if (func == Page::DO_RIGHT)
-    return {2, nullptr, Screen::inversion_none, field==0 ? combiline_1.OnRight() : combiline_2.OnRight()};
-
-  return {2, nullptr, Screen::inversion_none, false};  
-}
 
 }
 
@@ -184,13 +161,13 @@ Page::LineResult DumbLine(Page::LineFunction func, uint8_t line, uint8_t field)
 Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
 {
   if (line == 0)
-    return LineDoubleField(func, field, m_ui_channel_1, 14, 2, false, m_ui_octave_1,  7, 0, false);
+    return DoubleCombiline(func, field, m_ui_channel_1, 14, 2, false, m_ui_octave_1,  7, 0, false);
   else if (line == 1)
-    return LineDoubleField(func, field, m_ui_pitchbend_1, 14, 2, false, m_ui_velocity_1,  8, 0, false);
+    return DoubleCombiline(func, field, m_ui_pitchbend_1, 14, 2, false, m_ui_velocity_1,  8, 0, false);
   else if (line == 2)
-    return LineDoubleField(func, field, m_ui_channel_2, 14, 2, false, m_ui_octave_2,  7, 0, false);
+    return DoubleCombiline(func, field, m_ui_channel_2, 14, 2, false, m_ui_octave_2,  7, 0, false);
   else if (line == 3)
-    return LineDoubleField(func, field, m_ui_pitchbend_2, 14, 2, false, m_ui_velocity_2,  8, 0, false);
+    return DoubleCombiline(func, field, m_ui_pitchbend_2, 14, 2, false, m_ui_velocity_2,  8, 0, false);
   else if (line == 4)
     return TextLine(func, PSTR_left);
   else if (line == 5)
