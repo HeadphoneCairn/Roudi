@@ -16,7 +16,6 @@ protected:
 private:
   uint8_t m_split_delta_from_settings;
 private:
-  bool ChangeSplitNote(uint8_t& note_value, bool left);
   void SetMidiConfiguration();
 private:
   NewCombiline m_ui_channel_1, m_ui_octave_1;

@@ -480,7 +480,7 @@ x maak scrollbar voor menu
   andere kanalen: block of send (maar niet voor actieve output kanalen)
 - A+B samen => midi monitor
 - about knop in settings met:
-   Roudi by
+   RouDi by
    Headphone Cairn
    2021
 - make timer om onveranderde menus auto te saven
@@ -536,7 +536,7 @@ A440 tuning, that is the A note above middle C.
 
 
 ============
- Midihead 2 -> Roudi
+ Midihead 2 -> RouDi
 ============
 
 
@@ -586,11 +586,11 @@ split    split note: C4        of layer
 > Right
  
 ========= ABOUT =========
-Roudi by Headphone Cairn
+RouDi by Headphone Cairn
 parts by Blokas, ...  
 (c) 2021-2022
 
-Roudi = ROUter for miDI messages
+RouDi = ROUter for miDI messages
 
 - push A or B to switch 
 between pages 

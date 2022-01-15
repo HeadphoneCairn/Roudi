@@ -28,7 +28,7 @@ namespace
 
   uint8_t g_pitchbend_1 = 0, g_pitchbend_2 =1;
   uint8_t g_velocity_1 = 3, g_velocity_2 = 8;
-
+  uint8_t g_mode = 0, g_split_note = 100;
 
 
 
@@ -87,6 +87,31 @@ namespace {
     pars.values = (void*) GetPercentage;
     }
 
+  PSTRING(PSTR_mode_split, "SPLIT mode");
+  PSTRING(PSTR_mode_layer, "LAYER mode");
+  const char* GetMode(uint8_t mode)
+  {
+    return GetPString(mode ? PSTR_mode_layer : PSTR_mode_split);
+  }
+
+  PSTRING(PSTR_mode, "");
+  void g_par_mode(NewParsPars& pars)
+    {
+    pars.types = TypePString|TypeFunction; 
+    pars.name = (void*) PSTR_mode;
+    pars.number_of_values = 2; 
+    pars.values = (void*) GetMode;
+    }
+  // todo verander in ptab
+
+  PSTRING(PSTR_split_note, "split: ");
+  void g_par_split_note(NewParsPars& pars)
+    {
+    pars.types = TypePString|TypeFunction; 
+    pars.name = (void*) PSTR_split_note;
+    pars.number_of_values = 128; 
+    pars.values = (void*) GetNoteName;
+    }
 
 }
 
@@ -127,6 +152,9 @@ void PageMulti::OnStart()
   m_ui_octave_2.Init(g_par_octave, &g_values.right_octave);
   m_ui_pitchbend_2.Init(g_par_pitchbend, &g_pitchbend_2);
   m_ui_velocity_2.Init(g_par_velocity, &g_velocity_2);
+
+  m_ui_mode.Init(g_par_mode, &g_mode);
+  m_ui_split_note.Init(g_par_split_note, &g_split_note);
 
   SetNumberOfLines(20, g_selected_line, g_first_line);
 
@@ -169,10 +197,12 @@ Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
   else if (line == 3)
     return DoubleCombiline(func, field, m_ui_pitchbend_2, 14, 2, false, m_ui_velocity_2,  8, 0, false);
   else if (line == 4)
-    return TextLine(func, PSTR_left);
+    return DoubleCombiline(func, field, m_ui_mode, 10, 4, false, m_ui_split_note, 10, 0, false);
   else if (line == 5)
-    return TextLine(func, PSTR_right);
+    return TextLine(func, PSTR_left);
   else if (line == 6)
+    return TextLine(func, PSTR_right);
+  else if (line == 7)
     return TextLine(func, PSTR_split);
   else
     return DumbLine(func, line, field);
@@ -222,59 +252,6 @@ void PageMulti::OnStop(uint8_t selected_line, uint8_t first_line)
   g_first_line = first_line;
 }
 
-
-static bool IsC(int16_t value)
-// 0 - c octave: 0, 12, 24, 36, ...
-{
-  return (value % 12 == 0);
-}
-
-static bool IsCEA(int16_t value)
-// 1 - c e a:  0, 4, 9,   12, 16, 21,  ... 
-{
-  int16_t mod = (value + 12) % 12;
-  return (mod == 0 || mod == 4 || mod ==9);
-}
-
-static bool IsCDEFGAB(int16_t value)
-// 2 - c major: 0, 2, 4, 5, 7, 9, 11,   
-{
-  int16_t mod = (value + 12) % 12;
-  return !(mod == 1 || mod == 3 || mod == 6 || mod == 8 || mod == 10); 
-}
-
-static bool IsSemitone(int16_t value)
-// 3 - semitone
-{
-  return true;
-}
-
-bool PageMulti::ChangeSplitNote(uint8_t& note_value, bool left)
-{ 
-  int16_t value = static_cast<int16_t>(note_value);
-
-  // Increment/Decrement
-  bool (*allowed_value)(int16_t value);
-  switch (m_split_delta_from_settings) {
-    case 0: allowed_value = IsC; break; 
-    case 1: allowed_value = IsCEA; break; 
-    case 2: allowed_value = IsCDEFGAB; break;
-    default: allowed_value = IsSemitone; break;
-  };
-  if (left) {
-    do { value--; } while (!allowed_value(value));
-  } else {
-    do { value++; } while (!allowed_value(value));
-  }
-
-  // Trim
-  uint8_t new_note_value = static_cast<uint8_t>(constrain(value, 0, 127));
-  if (new_note_value != note_value) {
-    note_value = new_note_value;
-    return true;
-  } else
-    return false;
-} 
 
 void PageMulti::SetMidiConfiguration()
 // Left channel will play on notes [0, split_note - 1], right on notes [split_note, 127]
