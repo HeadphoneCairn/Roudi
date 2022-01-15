@@ -232,7 +232,7 @@ NOTE: Wanted to use sprintf with "%*.*s", but the variable width specifiers don'
     }
     uint8_t inv_start = 0, inv_stop = 0;
     if (right_align) {
-      PadRight(text, len - strlen(text), '_'); // Pad end with spaces
+      PadRight(text, len - strlen(text)); // Pad end with spaces
       const uint8_t pos = len - strlen(value); // We expect the length of value to be < 24
       strcpy(text + pos, value);
       inv_start = pos;
@@ -242,13 +242,13 @@ NOTE: Wanted to use sprintf with "%*.*s", but the variable width specifiers don'
       const uint8_t freechar = len - strlen(text); // can never be negative
       strncat(text, value, freechar); // no need to terminate with zero, because already done above
       inv_stop = strlen(text) - 1;
-      PadRight(text, len - strlen(text), '_'); // Pad end with spaces
+      PadRight(text, len - strlen(text)); // Pad end with spaces
     }
     inversion = {Screen::InvertGiven, inv_start + start, inv_stop + start};
   } 
 
   // Add extra_padding 
-  PadRight(text, extra_padding, '_');
+  PadRight(text, extra_padding);
 
   return;
 }

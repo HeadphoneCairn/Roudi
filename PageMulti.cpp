@@ -26,7 +26,7 @@ namespace
     g_values.right_channel = EE::ChannelValueToChannelIndex(g_values.right_channel);
   }
 
-  uint8_t g_controller_1 = 0, g_controller_2 =1;
+  uint8_t g_pitchbend_1 = 0, g_pitchbend_2 =1;
   uint8_t g_velocity_1 = 3, g_velocity_2 = 8;
 }
 
@@ -58,11 +58,11 @@ namespace {
     pars.values = (void*) GetOctaveName;
     }
 
-  PSTRING(PSTR_controller, "    pb/cc: ");
-  void g_par_controller(NewParsPars& pars)
+  PSTRING(PSTR_pitchbend, "    pb/cc: ");
+  void g_par_pitchbend(NewParsPars& pars)
     {
     pars.types = TypePString|TypeFunction; 
-    pars.name = (void*) PSTR_controller;
+    pars.name = (void*) PSTR_pitchbend;
     pars.number_of_values = 2; 
     pars.values = (void*) GetOnOff;
     }
@@ -116,12 +116,12 @@ void PageMulti::OnStart()
   // Bind ui elements to values
   m_ui_channel_1.Init(g_par_channel, &g_values.left_channel);
   m_ui_octave_1.Init(g_par_octave, &g_values.left_octave);
-  m_ui_controller_1.Init(g_par_controller, &g_controller_1);
+  m_ui_pitchbend_1.Init(g_par_pitchbend, &g_pitchbend_1);
   m_ui_velocity_1.Init(g_par_velocity, &g_velocity_1);
 
   m_ui_channel_2.Init(g_par_channel, &g_values.right_channel);
   m_ui_octave_2.Init(g_par_octave, &g_values.right_octave);
-  m_ui_controller_2.Init(g_par_controller, &g_controller_2);
+  m_ui_pitchbend_2.Init(g_par_pitchbend, &g_pitchbend_2);
   m_ui_velocity_2.Init(g_par_velocity, &g_velocity_2);
 
   SetNumberOfLines(20, g_selected_line, g_first_line);
@@ -159,7 +159,7 @@ Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
   if (line == 0)
     return LineChannelOctave1(func, field);
   else if (line == 1)
-    return LineControllerVelocity1(func, field);
+    return LinePitchbendVelocity1(func, field);
   else if (line == 2)
     return TextLine(func, PSTR_left);
   else if (line == 3)
@@ -173,41 +173,41 @@ Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
 Page::LineResult PageMulti::LineChannelOctave1(LineFunction func, uint8_t field)
 {
   if (func == Page::GET_NUMBER_OF_FIELDS)
-    return Page::LineResult{2, nullptr, Screen::inversion_none, false};
+    return {2, nullptr, Screen::inversion_none, false};
   if (func == Page::GET_TEXT) {
     char* text = Screen::buffer;
     const uint8_t text_len = Screen::buffer_len;
     Screen::Inversion ch_inversion, oct_inversion;
     m_ui_channel_1.GetText(text, text_len, ch_inversion, 0, 14, 2);
     m_ui_octave_1.GetText(text, text_len, oct_inversion, strlen(text), 7, 0);
-    return Page::LineResult{2, text, field==0 ? ch_inversion : oct_inversion, false};
+    return {2, text, field==0 ? ch_inversion : oct_inversion, false};
   }
   if (func == Page::DO_LEFT)
-    return Page::LineResult{2, nullptr, Screen::inversion_none, field==0 ? m_ui_channel_1.OnLeft() : m_ui_octave_1.OnLeft()};
+    return {2, nullptr, Screen::inversion_none, field==0 ? m_ui_channel_1.OnLeft() : m_ui_octave_1.OnLeft()};
   if (func == Page::DO_RIGHT)
-    return Page::LineResult{2, nullptr, Screen::inversion_none, field==0 ? m_ui_channel_1.OnRight() : m_ui_octave_1.OnRight()};
+    return {2, nullptr, Screen::inversion_none, field==0 ? m_ui_channel_1.OnRight() : m_ui_octave_1.OnRight()};
 
-  return Page::LineResult{2, nullptr, Screen::inversion_none, false};
+  return {2, nullptr, Screen::inversion_none, false};
 }
 
-Page::LineResult PageMulti::LineControllerVelocity1(LineFunction func, uint8_t field)
+Page::LineResult PageMulti::LinePitchbendVelocity1(LineFunction func, uint8_t field)
 {
   if (func == Page::GET_NUMBER_OF_FIELDS)
-    return Page::LineResult{2, nullptr, Screen::inversion_none, false};
+    return {2, nullptr, Screen::inversion_none, false};
   if (func == Page::GET_TEXT) {
     char* text = Screen::buffer;
     const uint8_t text_len = Screen::buffer_len;
     Screen::Inversion pb_inversion, vel_inversion;
-    m_ui_controller_1.GetText(text, text_len, pb_inversion, 0, 14, 2);
-    m_ui_velocity_1.GetText(text, text_len, vel_inversion, strlen(text), 8);
-    return Page::LineResult{2, text, field==0 ? pb_inversion : vel_inversion, false};
+    m_ui_pitchbend_1.GetText(text, text_len, pb_inversion, 0, 14, 2);
+    m_ui_velocity_1.GetText(text, text_len, vel_inversion, strlen(text), 8, 0);
+    return {2, text, field==0 ? pb_inversion : vel_inversion, false};
   }
   if (func == Page::DO_LEFT)
-    return Page::LineResult{2, nullptr, Screen::inversion_none, field==0 ? m_ui_controller_1.OnLeft() : m_ui_velocity_1.OnLeft()};
+    return {2, nullptr, Screen::inversion_none, field==0 ? m_ui_pitchbend_1.OnLeft() : m_ui_velocity_1.OnLeft()};
   if (func == Page::DO_RIGHT)
-    return Page::LineResult{2, nullptr, Screen::inversion_none, field==0 ? m_ui_controller_1.OnRight() : m_ui_velocity_1.OnRight()};
+    return {2, nullptr, Screen::inversion_none, field==0 ? m_ui_pitchbend_1.OnRight() : m_ui_velocity_1.OnRight()};
 
-  return Page::LineResult{2, nullptr, Screen::inversion_none, false};
+  return {2, nullptr, Screen::inversion_none, false};
 }
 
 

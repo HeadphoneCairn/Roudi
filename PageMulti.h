@@ -20,9 +20,9 @@ private:
   void SetMidiConfiguration();
 private:
   NewCombiline m_ui_channel_1, m_ui_octave_1;
-  NewCombiline m_ui_controller_1, m_ui_velocity_1;
+  NewCombiline m_ui_pitchbend_1, m_ui_velocity_1;
   NewCombiline m_ui_channel_2, m_ui_octave_2;
-  NewCombiline m_ui_controller_2, m_ui_velocity_2;
+  NewCombiline m_ui_pitchbend_2, m_ui_velocity_2;
   NewCombiline m_ui_mode, m_ui_split_note;
 
 /*
@@ -34,7 +34,7 @@ split    split note: C4        of layer
 */
 
   LineResult LineChannelOctave1(LineFunction func, uint8_t field);
-  LineResult LineControllerVelocity1(LineFunction func, uint8_t field);
+  LineResult LinePitchbendVelocity1(LineFunction func, uint8_t field);
   
 
 };
