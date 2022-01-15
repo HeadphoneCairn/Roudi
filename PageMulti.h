@@ -33,8 +33,4 @@ private:
 split    split note: C4        of layer
 */
 
-  LineResult LineChannelOctave1(LineFunction func, uint8_t field);
-  LineResult LinePitchbendVelocity1(LineFunction func, uint8_t field);
-  
-
 };

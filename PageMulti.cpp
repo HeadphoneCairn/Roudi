@@ -28,6 +28,33 @@ namespace
 
   uint8_t g_pitchbend_1 = 0, g_pitchbend_2 =1;
   uint8_t g_velocity_1 = 3, g_velocity_2 = 8;
+
+
+
+Page::LineResult LineDoubleField(
+  Page::LineFunction func, uint8_t field, 
+  NewCombiline& combiline_1, uint8_t len_1, uint8_t extra_padding_1, bool right_align_1, 
+  NewCombiline& combiline_2, uint8_t len_2, uint8_t extra_padding_2, bool right_align_2 
+)
+{
+  if (func == Page::GET_NUMBER_OF_FIELDS)
+    return {2, nullptr, Screen::inversion_none, false};
+  if (func == Page::GET_TEXT) {
+    char* text = Screen::buffer;
+    const uint8_t text_len = Screen::buffer_len;
+    Screen::Inversion inversion_1, inversion_2;
+    combiline_1.GetText(text, text_len, inversion_1, 0, len_1, extra_padding_1, right_align_1);
+    combiline_2.GetText(text, text_len, inversion_2, strlen(text), len_2, extra_padding_2, right_align_2);
+    return {2, text, field==0 ? inversion_1 : inversion_2, false};
+  }
+  if (func == Page::DO_LEFT)
+    return {2, nullptr, Screen::inversion_none, field==0 ? combiline_1.OnLeft() : combiline_2.OnLeft()};
+  if (func == Page::DO_RIGHT)
+    return {2, nullptr, Screen::inversion_none, field==0 ? combiline_1.OnRight() : combiline_2.OnRight()};
+
+  return {2, nullptr, Screen::inversion_none, false};  
+}
+
 }
 
 
@@ -157,58 +184,23 @@ Page::LineResult DumbLine(Page::LineFunction func, uint8_t line, uint8_t field)
 Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
 {
   if (line == 0)
-    return LineChannelOctave1(func, field);
+    return LineDoubleField(func, field, m_ui_channel_1, 14, 2, false, m_ui_octave_1,  7, 0, false);
   else if (line == 1)
-    return LinePitchbendVelocity1(func, field);
+    return LineDoubleField(func, field, m_ui_pitchbend_1, 14, 2, false, m_ui_velocity_1,  8, 0, false);
   else if (line == 2)
-    return TextLine(func, PSTR_left);
+    return LineDoubleField(func, field, m_ui_channel_2, 14, 2, false, m_ui_octave_2,  7, 0, false);
   else if (line == 3)
-    return TextLine(func, PSTR_right);
+    return LineDoubleField(func, field, m_ui_pitchbend_2, 14, 2, false, m_ui_velocity_2,  8, 0, false);
   else if (line == 4)
+    return TextLine(func, PSTR_left);
+  else if (line == 5)
+    return TextLine(func, PSTR_right);
+  else if (line == 6)
     return TextLine(func, PSTR_split);
   else
     return DumbLine(func, line, field);
 }
 
-Page::LineResult PageMulti::LineChannelOctave1(LineFunction func, uint8_t field)
-{
-  if (func == Page::GET_NUMBER_OF_FIELDS)
-    return {2, nullptr, Screen::inversion_none, false};
-  if (func == Page::GET_TEXT) {
-    char* text = Screen::buffer;
-    const uint8_t text_len = Screen::buffer_len;
-    Screen::Inversion ch_inversion, oct_inversion;
-    m_ui_channel_1.GetText(text, text_len, ch_inversion, 0, 14, 2);
-    m_ui_octave_1.GetText(text, text_len, oct_inversion, strlen(text), 7, 0);
-    return {2, text, field==0 ? ch_inversion : oct_inversion, false};
-  }
-  if (func == Page::DO_LEFT)
-    return {2, nullptr, Screen::inversion_none, field==0 ? m_ui_channel_1.OnLeft() : m_ui_octave_1.OnLeft()};
-  if (func == Page::DO_RIGHT)
-    return {2, nullptr, Screen::inversion_none, field==0 ? m_ui_channel_1.OnRight() : m_ui_octave_1.OnRight()};
-
-  return {2, nullptr, Screen::inversion_none, false};
-}
-
-Page::LineResult PageMulti::LinePitchbendVelocity1(LineFunction func, uint8_t field)
-{
-  if (func == Page::GET_NUMBER_OF_FIELDS)
-    return {2, nullptr, Screen::inversion_none, false};
-  if (func == Page::GET_TEXT) {
-    char* text = Screen::buffer;
-    const uint8_t text_len = Screen::buffer_len;
-    Screen::Inversion pb_inversion, vel_inversion;
-    m_ui_pitchbend_1.GetText(text, text_len, pb_inversion, 0, 14, 2);
-    m_ui_velocity_1.GetText(text, text_len, vel_inversion, strlen(text), 8, 0);
-    return {2, text, field==0 ? pb_inversion : vel_inversion, false};
-  }
-  if (func == Page::DO_LEFT)
-    return {2, nullptr, Screen::inversion_none, field==0 ? m_ui_pitchbend_1.OnLeft() : m_ui_velocity_1.OnLeft()};
-  if (func == Page::DO_RIGHT)
-    return {2, nullptr, Screen::inversion_none, field==0 ? m_ui_pitchbend_1.OnRight() : m_ui_velocity_1.OnRight()};
-
-  return {2, nullptr, Screen::inversion_none, false};
-}
 
 
 
