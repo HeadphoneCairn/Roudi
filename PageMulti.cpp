@@ -35,14 +35,9 @@ namespace
 }
 
 
-PSTRING(PSTR_page_multi, " MULTI "); 
-PSTRING(PSTR_left,       "Left is good.");
-PSTRING(PSTR_right,      "Right is bad. ");
-PSTRING(PSTR_split,      "Split note!");
-
-
-
 namespace {
+
+  PSTRING(PSTR_page_multi, " MULTI ");
 
   PSTRING(PSTR_channel, "");
   void g_par_channel(NewParsPars& pars)
@@ -122,19 +117,6 @@ namespace {
 }
 
 
-#if 0
-
-
-void line_split_note(NewParsPars& pars)
-  {
-  pars.types = TypePString|TypeFunction; 
-  pars.name = (void*) PSTR_split; 
-  pars.number_of_values = 128;
-  pars.values = (void*) GetNoteName;
-  }
-#endif
-
-
 PageMulti::PageMulti(): 
   Page() {}
 
@@ -181,10 +163,10 @@ Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
 {
   switch (line)
   {
-    case 0: return DoubleCombiline(func, field, m_ui_channel_1, 14, 2, false, m_ui_octave_1,  7, 0, false);
-    case 1: return DoubleCombiline(func, field, m_ui_pitchbend_1, 14, 2, false, m_ui_velocity_1,  8, 0, false);
-    case 2: return DoubleCombiline(func, field, m_ui_channel_2, 14, 2, false, m_ui_octave_2,  7, 0, false);
-    case 3: return DoubleCombiline(func, field, m_ui_pitchbend_2, 14, 2, false, m_ui_velocity_2,  8, 0, false);
+    case 0: return DoubleCombiline(func, field, m_ui_channel_1, 14, 2, false, m_ui_octave_1, 7, 0, false);
+    case 1: return DoubleCombiline(func, field, m_ui_pitchbend_1, 14, 2, false, m_ui_velocity_1, 8, 0, false);
+    case 2: return DoubleCombiline(func, field, m_ui_channel_2, 14, 2, false, m_ui_octave_2, 7, 0, false);
+    case 3: return DoubleCombiline(func, field, m_ui_pitchbend_2, 14, 2, false, m_ui_velocity_2, 8, 0, false);
     case 4: return DoubleCombiline(func, field, m_ui_mode, 10, 4, false, m_ui_split_note, 10, 0, false);
     case 5: return DefaultLine(func);
     case 6: return TextLine(func, PSTR_save);
