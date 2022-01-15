@@ -84,20 +84,15 @@ namespace {
 
   PSTRING(PSTR_mode_split, "SPLIT mode");
   PSTRING(PSTR_mode_layer, "LAYER mode");
-  const char* GetMode(uint8_t mode)
-  {
-    return GetPString(mode ? PSTR_mode_layer : PSTR_mode_split);
-  }
-
+  PTABLE(PTAB_mode, PSTR_mode_split, PSTR_mode_layer);
   PSTRING(PSTR_mode, "");
   void g_par_mode(NewParsPars& pars)
     {
-    pars.types = TypePString|TypeFunction; 
+    pars.types = TypePString|TypePTable;
     pars.name = (void*) PSTR_mode;
-    pars.number_of_values = 2; 
-    pars.values = (void*) GetMode;
+    pars.number_of_values = PTAB_mode_size;
+    pars.values = (void*) PTAB_mode;
     }
-  // todo verander in ptab
 
   PSTRING(PSTR_split_note, "split: ");
   void g_par_split_note(NewParsPars& pars)
