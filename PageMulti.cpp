@@ -25,6 +25,9 @@ namespace
     g_values.left_channel = EE::ChannelValueToChannelIndex(g_values.left_channel);
     g_values.right_channel = EE::ChannelValueToChannelIndex(g_values.right_channel);
   }
+
+  uint8_t g_controller_1 = 0, g_controller_2 =1;
+  uint8_t g_velocity_1 = 3, g_velocity_2 = 8;
 }
 
 
@@ -37,29 +40,7 @@ PSTRING(PSTR_split,      "Split note!");
 
 namespace {
 
-  PSTRING(PSTR_octave,     "oct: ");
-  void g_par_octave(NewParsPars& pars)
-    {
-    pars.types = TypePString|TypeFunction; 
-    pars.name = (void*) PSTR_octave;
-    pars.number_of_values = GetNumberOfOctaves(); 
-    pars.values = (void*) GetOctaveName;
-    }
-
-
-  PSTRING(PSTR_numformat, "%d");
-  const char* GetNumberPlusOne(uint8_t selected_value)
-  {
-    sprintf(data_scratch, GetPString(PSTR_numformat), selected_value + 1);
-    return data_scratch;
-  }
-
-
-
-
-
-  PSTRING(PSTR_channel,     "");
-
+  PSTRING(PSTR_channel, "");
   void g_par_channel(NewParsPars& pars)
   {
     pars.types = TypePString|TypeFunction;
@@ -68,43 +49,46 @@ namespace {
     pars.values = (void*) GetChannelNameBrol;
   }
 
+  PSTRING(PSTR_octave, "oct: ");
+  void g_par_octave(NewParsPars& pars)
+    {
+    pars.types = TypePString|TypeFunction; 
+    pars.name = (void*) PSTR_octave;
+    pars.number_of_values = GetNumberOfOctaves(); 
+    pars.values = (void*) GetOctaveName;
+    }
+
+  PSTRING(PSTR_controller, "    pb/cc: ");
+  void g_par_controller(NewParsPars& pars)
+    {
+    pars.types = TypePString|TypeFunction; 
+    pars.name = (void*) PSTR_controller;
+    pars.number_of_values = 2; 
+    pars.values = (void*) GetOnOff;
+    }
+
+  PSTRING(PSTR_percentage_format, "%d%%");
+  const char* GetPercentage(uint8_t selected_value)
+  {
+    sprintf(data_scratch, GetPString(PSTR_percentage_format), selected_value*10);
+    return data_scratch;
+  }
+
+  PSTRING(PSTR_velocity, "vel: ");
+  void g_par_velocity(NewParsPars& pars)
+    {
+    pars.types = TypePString|TypeFunction; 
+    pars.name = (void*) PSTR_velocity;
+    pars.number_of_values = 10;
+    pars.values = (void*) GetPercentage;
+    }
+
+
 }
 
 
 #if 0
 
-
-void line_left_channel(NewParsPars& pars)
-  {
-  pars.types = TypePString|TypeFunction;
-  pars.name = (void*) PSTR_left;
-  pars.number_of_values = EE::GetNumberOfChannels(); 
-  pars.values = (void*) EE::GetChannelNameFormatted; 
-  }
-
-void line_left_octave(NewParsPars& pars)
-  {
-  pars.types = TypePString|TypeFunction; 
-  pars.name = (void*) PSTR_octave;
-  pars.number_of_values = GetNumberOfOctaves(); 
-  pars.values = (void*) GetOctaveName;
-  }
-
-void line_right_channel(NewParsPars& pars)
-  {
-  pars.types = TypePString|TypeFunction;
-  pars.name = (void*) PSTR_right;
-  pars.number_of_values = EE::GetNumberOfChannels();
-  pars.values = (void*) EE::GetChannelNameFormatted;
-  }
-
-void line_right_octave(NewParsPars& pars)
-  {
-  pars.types = TypePString|TypeFunction; 
-  pars.name = (void*) PSTR_octave;
-  pars.number_of_values = GetNumberOfOctaves();
-  pars.values = (void*) GetOctaveName;
-  }
 
 void line_split_note(NewParsPars& pars)
   {
@@ -128,18 +112,18 @@ void PageMulti::OnStart()
 
   gValues_ChannelValueToChannelIndex();
   g_values.left_octave = OctaveDeltaToOctaveValue(0);
-  m_ui_channel_1.Init(g_par_channel, &g_values.left_channel);
-  m_ui_channel_2.Init(g_par_channel, &g_values.right_channel);
-  m_ui_octave_1.Init(g_par_octave, &g_values.left_octave);
-  m_ui_octave_2.Init(g_par_octave, &g_values.right_octave);
 
-#if 0
-  m_lines[0].Init(line_left_channel,  &g_values.left_channel);
-  m_lines[1].Init(line_left_octave,   &g_values.left_octave);   // must be initted to 2!
-  m_lines[2].Init(line_right_channel, &g_values.right_channel);
-  m_lines[3].Init(line_right_octave,  &g_values.right_octave);  // must be initted to 2!
-  m_lines[4].Init(line_split_note,    &g_values.split_note);
-#endif
+  // Bind ui elements to values
+  m_ui_channel_1.Init(g_par_channel, &g_values.left_channel);
+  m_ui_octave_1.Init(g_par_octave, &g_values.left_octave);
+  m_ui_controller_1.Init(g_par_controller, &g_controller_1);
+  m_ui_velocity_1.Init(g_par_velocity, &g_velocity_1);
+
+  m_ui_channel_2.Init(g_par_channel, &g_values.right_channel);
+  m_ui_octave_2.Init(g_par_octave, &g_values.right_octave);
+  m_ui_controller_2.Init(g_par_controller, &g_controller_2);
+  m_ui_velocity_2.Init(g_par_velocity, &g_velocity_2);
+
   SetNumberOfLines(20, g_selected_line, g_first_line);
 
   SettingsValues settings;
@@ -154,115 +138,10 @@ const char* PageMulti::GetTitle()
   return GetPString(PSTR_page_multi);
 }
 
-
-Page::LineResult PageMulti::LineChannel1a(LineFunction func, uint8_t field)
+Page::LineResult TextLine(Page::LineFunction func, const char* pstring)
 {
-  const uint8_t nbr_fields = 2;
-  if (func == Page::GET_NUMBER_OF_FIELDS)
-    return Page::LineResult{nbr_fields, nullptr, Screen::inversion_none, false};
-  if (func == Page::GET_TEXT) {
-    char* text = Screen::buffer;
-    const uint8_t text_len = Screen::buffer_len;
-    Screen::Inversion ch_inversion, oct_inversion;
-    m_ui_channel_1.GetText(text, text_len, ch_inversion, 0, 14, 2);
-    m_ui_octave_1.GetText(text, text_len, oct_inversion, strlen(text), 7, true);
-    return Page::LineResult{nbr_fields, text, field==0 ? ch_inversion : oct_inversion, false};
-  }
-  if (func == Page::DO_LEFT)
-    return Page::LineResult{nbr_fields, nullptr, Screen::inversion_none, field==0 ? m_ui_channel_1.OnLeft() : m_ui_octave_1.OnLeft()};
-  if (func == Page::DO_RIGHT)
-    return Page::LineResult{nbr_fields, nullptr, Screen::inversion_none, field==0 ? m_ui_channel_1.OnRight() : m_ui_octave_1.OnRight()};
-
-  return Page::LineResult{nbr_fields, nullptr, Screen::inversion_none, false};
+  return Page::LineResult{1, GetPString(pstring), Screen::inversion_all, false};
 }
-
-Page::LineResult PageMulti::LineChannel1b(LineFunction func, uint8_t field)
-{
-  if (func == Page::GET_NUMBER_OF_FIELDS)
-    return LineResult{2, nullptr, Screen::inversion_none, false};
-  if (func == Page::GET_TEXT) {
-    char* text = Screen::buffer;
-    sprintf(text, "par1: %s, par2: %s", "val1", "val2");
-    Screen::Inversion inversion = Screen::inversion_none;
-    if (field == 0)
-      inversion = { Screen::InvertGiven, 6, 9};
-    else if (field == 1)
-      inversion = { Screen::InvertGiven, 18, 21};
-    return LineResult{2, text, inversion, false};
-  }
-
-  return LineResult{2, nullptr, Screen::inversion_none, false};
-}
-
-/*
-Page::LineResult PageMulti::Line1(LineFunction func, uint8_t field)
-{
-  if (func == Page::GET_NUMBER_OF_FIELDS)
-    return LineResult{2, nullptr, none, false};
-  if (func == Page::GET_TEXT) {
-    char* text = Screen::buffer;
-    sprintf(text, "par1: %s, par2: %s", "val1", "val2");
-    Screen::Inversion inversion = none;
-    if (field == 0)
-      inversion = { Screen::InvertGiven, 6, 9};
-    else if (field == 1)
-      inversion = { Screen::InvertGiven, 18, 21};
-    return LineResult{2, text, inversion, false};
-  }
-
-  return LineResult{2, nullptr, none, false};
-}
-
-Page::LineResult PageMulti::Line2(LineFunction func, uint8_t field)
-{
-  if (func == Page::GET_NUMBER_OF_FIELDS)
-    return Page::LineResult{1, nullptr, none, false};
-  if (func == Page::GET_TEXT) {
-    //char* text = Screen::buffer;
-    //sprintf(text, "dit is test");
-
-
-    const char* text = m_ui_octave.GetText();
-    Screen::Inversion inversion = m_ui_octave.GetInversion();
-    return Page::LineResult{1, text, inversion, false};
-
-
-//    Screen::Inversion inversion = m_ui_octave.GetInversion();
-//    return Page::LineResult{1, text, inversion, false};
-    
-    //Screen::Inversion inversion = none;
-    //if (field == 0)
-    //  inversion = { Screen::InvertGiven, 6, 9};
-    //else if (field == 1)
-    //  inversion = { Screen::InvertGiven, 18, 21};
-    //return Page::LineResult{2, text, inversion, false};
-  }
-  if (func == Page::DO_LEFT)
-    return Page::LineResult{1, nullptr, none, m_ui_octave.OnLeft()};
-  if (func == Page::DO_RIGHT)
-    return Page::LineResult{1, nullptr, none, m_ui_octave.OnRight()};
-
-  return Page::LineResult{1, nullptr, none, false};
-}
-
-
-Page::LineResult PageMulti::Line3(LineFunction func, uint8_t field)
-{
-  if (func == Page::GET_NUMBER_OF_FIELDS)
-    return Page::LineResult{1, nullptr, none, false};
-  if (func == Page::GET_TEXT) {
-    const char* text = m_ui_channel_1.GetText();
-    Screen::Inversion inversion = m_ui_channel_1.GetInversion();
-    return Page::LineResult{1, text, inversion, false};
-  }
-  if (func == Page::DO_LEFT)
-    return Page::LineResult{1, nullptr, none, m_ui_channel_1.OnLeft()};
-  if (func == Page::DO_RIGHT)
-    return Page::LineResult{1, nullptr, none, m_ui_channel_1.OnRight()};
-
-  return Page::LineResult{1, nullptr, none, false};
-}
-*/
 
 Page::LineResult DumbLine(Page::LineFunction func, uint8_t line, uint8_t field)
 {
@@ -275,54 +154,65 @@ Page::LineResult DumbLine(Page::LineFunction func, uint8_t line, uint8_t field)
 }
 
 
-Page::LineResult TextLine(Page::LineFunction func, const char* pstring)
-{
-  return Page::LineResult{1, GetPString(pstring), Screen::inversion_all, false};
-}
-
-
 Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
 {
-  if (line == 0 || line == 9 || line == 18 || line == 19)
-    return LineChannel1a(func, field);
-  if (line == 1)
-    return LineChannel1b(func, field);
-
-//  else if (line == 1)
-//    return Line2(func, field);
-//  else if (line == 2)
-//    return Line3(func, field);
-  else if (line==3)
+  if (line == 0)
+    return LineChannelOctave1(func, field);
+  else if (line == 1)
+    return LineControllerVelocity1(func, field);
+  else if (line == 2)
     return TextLine(func, PSTR_left);
-  else if (line==4)
+  else if (line == 3)
     return TextLine(func, PSTR_right);
-  else if (line==5)
+  else if (line == 4)
     return TextLine(func, PSTR_split);
   else
     return DumbLine(func, line, field);
 }
 
-#if 0
-
-void PageMulti::GetLine(uint8_t line, const char*& text, Screen::Inversion& inversion)
+Page::LineResult PageMulti::LineChannelOctave1(LineFunction func, uint8_t field)
 {
-  if (line < m_number_of_combilines) {
-    text = m_lines[line].GetText();
-    inversion = m_lines[line].GetInversion();
-  } else if (line >= m_number_of_combilines + 1 && line <= m_number_of_combilines + 3) { // Load presets
-    text = GetPStringLoadPreset(line - m_number_of_combilines);
-    inversion = Screen::inversion_all;
-  } else if (line >= m_number_of_combilines + 4 && line <= m_number_of_combilines + 6) {  // Save presets
-    text = GetPStringSavePreset(line - (m_number_of_combilines + 3));
-    inversion = Screen::inversion_all;
-  } else if (line == m_number_of_combilines + 7) {
-    text = GetPStringMonitor();
-    inversion = Screen::inversion_all;
-  } else {
-    text = GetPStringEmpty();
-    inversion = {Screen::InvertGiven, 0, 0};
+  if (func == Page::GET_NUMBER_OF_FIELDS)
+    return Page::LineResult{2, nullptr, Screen::inversion_none, false};
+  if (func == Page::GET_TEXT) {
+    char* text = Screen::buffer;
+    const uint8_t text_len = Screen::buffer_len;
+    Screen::Inversion ch_inversion, oct_inversion;
+    m_ui_channel_1.GetText(text, text_len, ch_inversion, 0, 14, 2);
+    m_ui_octave_1.GetText(text, text_len, oct_inversion, strlen(text), 7, 0);
+    return Page::LineResult{2, text, field==0 ? ch_inversion : oct_inversion, false};
   }
+  if (func == Page::DO_LEFT)
+    return Page::LineResult{2, nullptr, Screen::inversion_none, field==0 ? m_ui_channel_1.OnLeft() : m_ui_octave_1.OnLeft()};
+  if (func == Page::DO_RIGHT)
+    return Page::LineResult{2, nullptr, Screen::inversion_none, field==0 ? m_ui_channel_1.OnRight() : m_ui_octave_1.OnRight()};
+
+  return Page::LineResult{2, nullptr, Screen::inversion_none, false};
 }
+
+Page::LineResult PageMulti::LineControllerVelocity1(LineFunction func, uint8_t field)
+{
+  if (func == Page::GET_NUMBER_OF_FIELDS)
+    return Page::LineResult{2, nullptr, Screen::inversion_none, false};
+  if (func == Page::GET_TEXT) {
+    char* text = Screen::buffer;
+    const uint8_t text_len = Screen::buffer_len;
+    Screen::Inversion pb_inversion, vel_inversion;
+    m_ui_controller_1.GetText(text, text_len, pb_inversion, 0, 14, 2);
+    m_ui_velocity_1.GetText(text, text_len, vel_inversion, strlen(text), 8);
+    return Page::LineResult{2, text, field==0 ? pb_inversion : vel_inversion, false};
+  }
+  if (func == Page::DO_LEFT)
+    return Page::LineResult{2, nullptr, Screen::inversion_none, field==0 ? m_ui_controller_1.OnLeft() : m_ui_velocity_1.OnLeft()};
+  if (func == Page::DO_RIGHT)
+    return Page::LineResult{2, nullptr, Screen::inversion_none, field==0 ? m_ui_controller_1.OnRight() : m_ui_velocity_1.OnRight()};
+
+  return Page::LineResult{2, nullptr, Screen::inversion_none, false};
+}
+
+
+
+#if 0
 
 bool PageMulti::OnLine(LineAction action, uint8_t line)
 {

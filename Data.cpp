@@ -73,7 +73,7 @@ uint8_t GetNumberOfOctaves()
 {
   return MAX_OCTAVES * 2 + 1;
 }
-PSTRING(PSTR_octave_0, " 0");
+PSTRING(PSTR_octave_0, "0");
 PSTRING(PSTR_octave,   "%+d octave");
 const char* GetOctaveName(uint8_t octave_value)
 {
@@ -546,4 +546,12 @@ const char* GetChannelNameBrol(uint8_t channel)
   sprintf(data_scratch, GetPString(PSTR_channel_name_brol_formatting), channel + 1);
   strcat(data_scratch, GetPStringFromPTable(PTAB_channel_names, channel));
   return data_scratch;
+}
+
+
+PSTRING(PSTR_on_off_off, "off");
+PSTRING(PSTR_on_off_on, "on");
+const char* GetOnOff(uint8_t on)
+{
+  return GetPString(on ? PSTR_on_off_on : PSTR_on_off_off);
 }

@@ -20,10 +20,10 @@ private:
   void SetMidiConfiguration();
 private:
   NewCombiline m_ui_channel_1, m_ui_octave_1;
-  NewCombiline m_ui_pbcc_1,    m_ui_velocity_1;
+  NewCombiline m_ui_controller_1, m_ui_velocity_1;
   NewCombiline m_ui_channel_2, m_ui_octave_2;
-  NewCombiline m_ui_pbcc_2,    m_ui_velocity_2;
-  NewCombiline m_ui_mode,      m_ui_split_note;
+  NewCombiline m_ui_controller_2, m_ui_velocity_2;
+  NewCombiline m_ui_mode, m_ui_split_note;
 
 /*
 01. Dreadbox    oct: +1 
@@ -33,8 +33,8 @@ private:
 split    split note: C4        of layer
 */
 
-  LineResult LineChannel1a(LineFunction func, uint8_t field);
-  LineResult LineChannel1b(LineFunction func, uint8_t field);
+  LineResult LineChannelOctave1(LineFunction func, uint8_t field);
+  LineResult LineControllerVelocity1(LineFunction func, uint8_t field);
   
 
 };
