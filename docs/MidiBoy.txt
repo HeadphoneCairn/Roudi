@@ -695,3 +695,12 @@ GetLine(line, field, what=nrfields/text/, out)
   if field = 0 && what = selected
      if field = ....
      out.redraw = ... 
+
+
+TODO:
+- Make single menu
+- Make settings menu
+(- Make fake Midi Monitor)
+- Create menu switching with A and B and A+B
+- Save first_line and selected line and field
+- Put everything on disk

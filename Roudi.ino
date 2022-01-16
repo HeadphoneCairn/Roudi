@@ -22,10 +22,11 @@ TODO
 #include "Menus.h"
 #include "MidiProcessing.h"
 #include "PageMulti.h"
+#include "PageSingle.h"
 
 NextMidiConfiguration g_next_midi_config;
 
-PageMulti multi;
+PageSingle multi;
 
 void setup()
 {
