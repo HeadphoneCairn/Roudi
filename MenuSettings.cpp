@@ -68,14 +68,6 @@ PTABLE(PTAB_split, PSTR_split_0, PSTR_split_1, PSTR_split_2, PSTR_split_3);
 
 
 
-PSTRING(PSTR_numformat, "%d");
-
-const char* GetNumberPlusOne(uint8_t selected_value)
-{
-  sprintf(data_scratch, GetPString(PSTR_numformat), selected_value + 1);
-  return data_scratch;
-}
-
 
 
 // 3 bytes per line is reached by using function to store parameters

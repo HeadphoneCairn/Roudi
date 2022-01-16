@@ -539,7 +539,6 @@ PTABLE(PTAB_channel_names,
        PSTR_channel_15);
 
 PSTRING(PSTR_channel_name_brol_formatting, "%02d. ");
-
 const char* GetChannelNameBrol(uint8_t channel)
 {
   channel = channel % 16;
@@ -548,10 +547,16 @@ const char* GetChannelNameBrol(uint8_t channel)
   return data_scratch;
 }
 
-
 PSTRING(PSTR_on_off_off, "off");
 PSTRING(PSTR_on_off_on, "on");
 const char* GetOnOff(uint8_t on)
 {
   return GetPString(on ? PSTR_on_off_on : PSTR_on_off_off);
+}
+
+PSTRING(PSTR_numformat, "%d");
+const char* GetNumberPlusOne(uint8_t value)
+{
+  sprintf(data_scratch, GetPString(PSTR_numformat), value + 1);
+  return data_scratch;
 }

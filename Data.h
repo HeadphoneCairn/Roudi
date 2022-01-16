@@ -151,5 +151,5 @@ namespace EE
 
 
 const char* GetChannelNameBrol(uint8_t channel);
-
 const char* GetOnOff(uint8_t on);
+const char* GetNumberPlusOne(uint8_t value);

@@ -52,7 +52,6 @@ void PageSingle::SetMidiConfiguration(uint8_t selected_line)
   if (selected_line < 16) {
     g_next_midi_config.config.m_nbr_output_channels = 1;
     g_next_midi_config.config.m_output_channel[0].m_channel = EE::ChannelIndexToChannelValue(selected_line);
-    Debug::Beep();
   } else {
     g_next_midi_config.config.m_nbr_output_channels = 0;
   }

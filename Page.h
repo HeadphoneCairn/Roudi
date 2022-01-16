@@ -53,6 +53,10 @@ extern Page* g_page;
 Page::LineResult DefaultLine(Page::LineFunction func);
 Page::LineResult TextLine(Page::LineFunction func, const char* pstring);
 Page::LineResult DumbLine(Page::LineFunction func, uint8_t line, uint8_t field);
+Page::LineResult SingleCombiLine(
+  Page::LineFunction func, 
+  NewCombiline& combiline, uint8_t len, uint8_t extra_padding, bool right_align
+);
 Page::LineResult DoubleCombiline(
   Page::LineFunction func, uint8_t field, 
   NewCombiline& combiline_1, uint8_t len_1, uint8_t extra_padding_1, bool right_align_1, 

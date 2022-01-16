@@ -185,6 +185,29 @@ Page::LineResult DumbLine(Page::LineFunction func, uint8_t line, uint8_t field)
 }
 
 
+Page::LineResult SingleCombiLine(
+  Page::LineFunction func, 
+  NewCombiline& combiline, uint8_t len, uint8_t extra_padding, bool right_align
+)
+{
+  if (func == Page::GET_NUMBER_OF_FIELDS)
+    return {1, nullptr, Screen::inversion_none, false};
+  if (func == Page::GET_TEXT) {
+    char* text = Screen::buffer;
+    const uint8_t text_len = Screen::buffer_len;
+    Screen::Inversion inversion;
+    combiline.GetText(text, text_len, inversion, 0, len, extra_padding, right_align);
+    return {1, text, inversion, false};
+  }
+  if (func == Page::DO_LEFT)
+    return {1, nullptr, Screen::inversion_none, combiline.OnLeft()};
+  if (func == Page::DO_RIGHT)
+    return {1, nullptr, Screen::inversion_none, combiline.OnRight()};
+
+  return {1, nullptr, Screen::inversion_none, false};
+}
+
+
 Page::LineResult DoubleCombiline(
   Page::LineFunction func, uint8_t field, 
   NewCombiline& combiline_1, uint8_t len_1, uint8_t extra_padding_1, bool right_align_1, 

@@ -21,12 +21,14 @@ TODO
 #include "Logo.h"
 #include "Menus.h"
 #include "MidiProcessing.h"
+
 #include "PageMulti.h"
 #include "PageSingle.h"
+#include "PageSettings.h"
 
 NextMidiConfiguration g_next_midi_config;
 
-PageSingle multi;
+PageSettings multi;
 
 void setup()
 {
