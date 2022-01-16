@@ -702,6 +702,8 @@ TODO:
 - Make settings menu
 (- Make fake Midi Monitor)
 - Create menu switching with A and B and A+B
-- Save first_line and selected line and field
+- about menu
+  - also show used memory
+  - memory used by page classes- Save first_line and selected line and field
 - Put everything on disk
 - Channel menu

@@ -19,16 +19,11 @@ TODO
 #include "DinMidiboy.h"
 #include "Data.h"
 #include "Logo.h"
-#include "Menus.h"
+#include "Pages.h"
 #include "MidiProcessing.h"
 
-#include "PageMulti.h"
-#include "PageSingle.h"
-#include "PageSettings.h"
 
 NextMidiConfiguration g_next_midi_config;
-
-PageSettings multi;
 
 void setup()
 {
@@ -38,19 +33,16 @@ void setup()
   EE::Init(); // Create the EEPROM data if it doesn't exist yet.
   MidiProcessing::Init(); // Initialize the MIDI processing subsystem
 
-  //ShowLogo();
-  //delay(1000);
-  //Menus::Start(); // Start showing the menus
-  multi.Start();  
-  //Debug::Print("%d", sizeof(multi));
-
-
   // For some reason, after boot of the program, the input
   // event queue thinks button A was released. So before
   // we start processing, we clean the input queue.
   DinMidiboy.think();
   MidiboyInput::Event event;
   while (DinMidiboy.readInputEvent(event));
+
+  //ShowLogo();
+  //delay(1000);
+  Pages::Start(); // Start showing the menus
 }
 
 void loop()
@@ -73,14 +65,15 @@ void loop()
   if (last_A && last_B && last_A + max_A_B_diff > now && last_B + max_A_B_diff > now) {
     last_A = last_B = 0;
     Debug::Beep();
+    Pages::ButtonAB();
   }
   if (last_A && last_A + max_A_B_diff < now) {
     last_A = 0;
-    //Menus::ButtonA();
+    Pages::ButtonA();
   }
   if (last_B && last_B + max_A_B_diff < now) {
     last_B = 0;
-    //Menus::ButtonB();
+    Pages::ButtonB();
   }
 
   MidiboyInput::Event event;
@@ -92,16 +85,16 @@ void loop()
       switch (event.m_button)
       {
       case MidiboyInput::BUTTON_UP:
-        multi.Up(); //Menus::ButtonUp();
+        Pages::ButtonUp();
         break;
       case MidiboyInput::BUTTON_DOWN:
-        multi.Down(); //Menus::ButtonDown();
+        Pages::ButtonDown();
         break;
       case MidiboyInput::BUTTON_LEFT:
-        multi.Left(); //Menus::ButtonLeft();
+        Pages::ButtonLeft();
         break;
       case MidiboyInput::BUTTON_RIGHT:
-        multi.Right(); //Menus::ButtonRight();
+        Pages::ButtonRight();
         break;
       default:
         break;
