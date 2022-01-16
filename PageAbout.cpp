@@ -2,7 +2,14 @@
 
 #include "Debug.h"
 #include "Data.h"
+#include "MemoryFree.h"
+#include "Pages.h"
 #include "Roudi.h"
+
+#include "PageSingle.h"  // TODO remove
+#include "PageMulti.h"  // TODO remove
+#include "PageSettings.h"  // TODO remove
+
 
 namespace
 {
@@ -11,9 +18,11 @@ namespace
 }
 
 
+PSTRING(PSTR_page_about, " ABOUT ROUDI "); 
+
 //                      123456789012345678901234
 PSTRING(PSTR_about_00, "");
-PSTRING(PSTR_about_01, "     === Roudi ===");
+PSTRING(PSTR_about_01, "         Roudi");
 PSTRING(PSTR_about_02, "ROUter for miDI messages");
 PSTRING(PSTR_about_03, "      version 0.1");
 PSTRING(PSTR_about_04, "       2019-2022");
@@ -21,14 +30,15 @@ PSTRING(PSTR_about_05, "");
 PSTRING(PSTR_about_06, "Made by Headphone Cairn");
 PSTRING(PSTR_about_07, "Software for the Blokas");
 PSTRING(PSTR_about_08, "midiboy.");
-PSTRING(PSTR_about_09, "Parts by blokas a.o.");
+PSTRING(PSTR_about_09, "Parts by blokas, a.o.");
 PSTRING(PSTR_about_10, "");
-PSTRING(PSTR_about_11, "   === Some help ===");
-PSTRING(PSTR_about_12, "A or B: switch pages");
-PSTRING(PSTR_about_13, "A + B: toggle utils");
-PSTRING(PSTR_about_14, "v, ^: switch fields");
-PSTRING(PSTR_about_15, "<, >: change values");
+PSTRING(PSTR_about_11, "SOME HELP:");
+PSTRING(PSTR_about_12, " A or B: switch pages");
+PSTRING(PSTR_about_13, " A + B: toggle utils");
+PSTRING(PSTR_about_14, " v, ^: switch fields");
+PSTRING(PSTR_about_15, " <, >: change values");
 PSTRING(PSTR_about_16, "");
+PSTRING(PSTR_about_17, "STATUS:");
 
 PTABLE(PTAB_about_text,
        PSTR_about_00,
@@ -48,10 +58,15 @@ PTABLE(PTAB_about_text,
        PSTR_about_14,
        PSTR_about_15,
        PSTR_about_16,
+       PSTR_about_17,
        );
 
 
-PSTRING(PSTR_page_about, " ABOUT ROUDI "); 
+
+PSTRING(PSTR_about_memory, " free memory: %d bytes");
+PSTRING(PSTR_about_pages,  " pages memory: %d bytes");
+PSTRING(PSTR_about_sizeof, " size menus: %d %d %d %d");
+
 
 PageAbout::PageAbout(): Page()
 {
@@ -59,7 +74,7 @@ PageAbout::PageAbout(): Page()
 
 void PageAbout::OnStart()
 {
-  SetNumberOfLines(PTAB_about_text_size, g_selected_line, g_first_line);
+  SetNumberOfLines(PTAB_about_text_size + 3, g_selected_line, g_first_line);
   SetMidiConfiguration(g_selected_line);
 }
 
@@ -70,7 +85,16 @@ const char* PageAbout::GetTitle()
 
 Page::LineResult PageAbout::Line(LineFunction func, uint8_t line, uint8_t field)
 {
-  return {1, GetPStringFromPTable(PTAB_about_text, line), Screen::inversion_all, false};
+  if (line < PTAB_about_text_size)
+    return {1, GetPStringFromPTable(PTAB_about_text, line), Screen::inversion_all, false};
+  else if (line == PTAB_about_text_size)
+    snprintf(Screen::buffer, sizeof(Screen::buffer), GetPString(PSTR_about_memory), freeMemory());
+  else if (line == PTAB_about_text_size + 1)
+    snprintf(Screen::buffer, sizeof(Screen::buffer), GetPString(PSTR_about_pages), Pages::GetTotalPageUsage());
+  else
+    snprintf(Screen::buffer, sizeof(Screen::buffer), GetPString(PSTR_about_sizeof), sizeof(PageSingle), sizeof(PageMulti), sizeof(PageSettings), sizeof(PageAbout));
+  return {1, Screen::buffer, Screen::inversion_all, false};
+// TODO: bekijk verschil sizeof(Screen::buffer) Screen::buffer_len !!!!
 }
 
 

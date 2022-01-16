@@ -698,12 +698,15 @@ GetLine(line, field, what=nrfields/text/, out)
 
 
 TODO:
-- Make single menu
-- Make settings menu
-(- Make fake Midi Monitor)
-- Create menu switching with A and B and A+B
+x Make single menu
+x Make settings menu
+x Create menu switching with A and B and A+B
 - about menu
   - also show used memory
-  - memory used by page classes- Save first_line and selected line and field
+  - memory used by page classes
+  // TODO: bekijk verschil sizeof(Screen::buffer) Screen::buffer_len !!!!
+  // TODO: waarom toont hij ABOUT page eerst???  
+- Save first_line and selected line and field
 - Put everything on disk
 - Channel menu
+(- Make fake Midi Monitor)
