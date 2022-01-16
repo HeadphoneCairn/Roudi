@@ -7,7 +7,8 @@ enum PageID
   // --- AB pages ---
   PAGE_SINGLE       = 0,
   PAGE_MULTI        = 1,
-  PAGE_SETTINGS     = 2,  
+  PAGE_SETTINGS     = 2,
+  PAGE_ABOUT        = 3,
 
   // --- Popup pages ---
   PAGE_CHANNELS     = 100,

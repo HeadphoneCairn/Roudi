@@ -1,8 +1,8 @@
 #include "Pages.h"
 
-#include "Pages.h"
 #include "PageSingle.h"
 #include "PageMulti.h"
+#include "PageAbout.h"
 #include "PageSettings.h"
 //#include "PageNameChannel.h"
 //#include "PageNamePreset.h"
@@ -11,12 +11,6 @@
 #include "Screen.h"
 
 #include <stdio.h>
-
-
-#include "PageSingle.h"
-#include "PageMulti.h"
-#include "PageSettings.h"
-
 
 
 /* Pages overview
@@ -36,6 +30,7 @@ namespace
 {
   PageSingle    g_page_single;
   PageMulti     g_page_multi;
+  PageAbout     g_page_about;
   PageSettings  g_page_settings;
 
   PageID g_current_lower_id = PAGE_SINGLE;
@@ -69,6 +64,7 @@ namespace Pages
     switch(page_id) {
       case PAGE_SINGLE:   g_current_page = &g_page_single; break;
       case PAGE_MULTI:    g_current_page = &g_page_multi; break;
+      case PAGE_ABOUT:    g_current_page = &g_page_about; break;
       case PAGE_SETTINGS: g_current_page = &g_page_settings; break;
       default:            g_current_page = &g_page_single; break;
     }
@@ -130,8 +126,9 @@ namespace Pages
     PageID page_to_show = PAGE_SINGLE; // fallback  // TODO make this about
     if (g_current_lower) {
       switch (g_current_lower_id) {
-        case PAGE_SINGLE:   page_to_show = PAGE_MULTI; break;
+        case PAGE_SINGLE:   page_to_show = PAGE_ABOUT; break;
         case PAGE_MULTI:    page_to_show = PAGE_SINGLE; break;
+        case PAGE_ABOUT:    page_to_show = PAGE_MULTI; break;
       }
     } else {
       switch (g_current_upper_id) {
@@ -154,7 +151,8 @@ namespace Pages
     if (g_current_lower) {
       switch (g_current_lower_id) {
         case PAGE_SINGLE:   page_to_show = PAGE_MULTI; break;
-        case PAGE_MULTI:    page_to_show = PAGE_SINGLE; break;
+        case PAGE_MULTI:    page_to_show = PAGE_ABOUT; break;
+        case PAGE_ABOUT:    page_to_show = PAGE_SINGLE; break;
       }
     } else {
       switch (g_current_upper_id) {
@@ -176,7 +174,8 @@ namespace Pages
   {
     return sizeof(PageSingle) + 
            sizeof(PageMulti) +
-           sizeof(PageSettings);
+           sizeof(PageSettings) +
+           sizeof(PageAbout);
       //sizeof(PageChannels) +
       //sizeof(PageNameChannel);
   }
