@@ -25,6 +25,8 @@ TODO
 
 NextMidiConfiguration g_next_midi_config;
 
+const bool g_show_logo = false; 
+
 void setup()
 {
   DinMidiboy.begin();
@@ -33,15 +35,21 @@ void setup()
   EE::Init(); // Create the EEPROM data if it doesn't exist yet.
   MidiProcessing::Init(); // Initialize the MIDI processing subsystem
 
+  if (g_show_logo)
+    ShowLogo();
+
   // For some reason, after boot of the program, the input
-  // event queue thinks button A was released. So before
-  // we start processing, we clean the input queue.
+  // event queue receives an up A, up >, up v, up < and up ^,
+  // after about 50 ms, so before we start we start working, 
+  // we sleep 100 ms and then we clean the input queue.
+  delay(100);
   DinMidiboy.think();
   MidiboyInput::Event event;
   while (DinMidiboy.readInputEvent(event));
 
-  //ShowLogo();
-  //delay(1000);
+  if (g_show_logo)
+    delay(1000);
+
   Pages::Start(); // Start showing the menus
 }
 
@@ -126,3 +134,32 @@ void loop()
   // --- Write to MIDI ---
   MidiProcessing::WriteToOutput();
 }
+
+
+
+/*
+  char keys[200] ="";
+
+  MidiboyInput::Event event;
+  while (DinMidiboy.readInputEvent(event))
+  {
+    switch (event.m_type) 
+    {
+       case MidiboyInput::EVENT_DOWN: strcat(keys, "d"); break;
+       case MidiboyInput::EVENT_UP:   strcat(keys, "u"); break;
+       default:                       strcat(keys, "-"); break;
+    }
+    switch (event.m_button)
+    {
+    case MidiboyInput::BUTTON_UP:   strcat(keys, "^"); break;
+    case MidiboyInput::BUTTON_DOWN: strcat(keys, "v"); break;
+    case MidiboyInput::BUTTON_LEFT: strcat(keys, "<"); break;
+    case MidiboyInput::BUTTON_RIGHT:strcat(keys, ">"); break;
+    case MidiboyInput::BUTTON_A:    strcat(keys, "A"); break;
+    case MidiboyInput::BUTTON_B:    strcat(keys, "B"); break;
+    default:                        strcat(keys, "?"); break;
+    }
+  }
+
+  Debug::Print("%s", keys);
+*/
