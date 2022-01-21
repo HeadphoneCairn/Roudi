@@ -9,7 +9,9 @@ class Page
 {
 public:
   Page();
-  void SetNumberOfLines(uint8_t number_of_lines, uint8_t selected_line = 0, uint8_t first_line = 0xFF); // Must be called before first call to Start()!
+  // SetNumberOfLines() must be called in the OnStart()!
+  // TODO: simplify or remove???
+  void SetNumberOfLines(uint8_t number_of_lines, uint8_t selected_line = 0xFF, uint8_t selected_field = 0xFF, uint8_t first_line = 0xFF); 
 //  uint8_t GetSelectedLine();
 //  uint8_t GetFirstLine();
 public:

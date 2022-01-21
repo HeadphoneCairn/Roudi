@@ -11,8 +11,6 @@
 namespace 
 {
   bool g_first_run = true;
-  uint8_t g_selected_line = 0;
-  uint8_t g_first_line = 0; 
 
   struct SplitValues g_values;
   void gValues_ChannelIndexToChannelValue()
@@ -139,7 +137,7 @@ void PageMulti::OnStart()
   m_ui_mode.Init(g_par_mode, &g_mode);
   m_ui_split_note.Init(g_par_split_note, &g_split_note);
 
-  SetNumberOfLines(20, g_selected_line, g_first_line);
+  SetNumberOfLines(20);
 
   SettingsValues settings;
   EE::GetSettings(settings);
@@ -213,8 +211,6 @@ bool PageMulti::ActualOnLine(LineAction action, uint8_t line)
 void PageMulti::OnStop(uint8_t selected_line, uint8_t first_line)
 {
   gValues_ChannelIndexToChannelValue();
-  g_selected_line = selected_line;
-  g_first_line = first_line;
 }
 
 

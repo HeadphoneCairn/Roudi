@@ -22,8 +22,17 @@ Page::Page():
 {
 }
 
-void Page::SetNumberOfLines(uint8_t i_number_of_lines, uint8_t i_selected_line, uint8_t i_first_line)
+void Page::SetNumberOfLines(uint8_t i_number_of_lines, uint8_t i_selected_line, uint8_t i_selected_field, uint8_t i_first_line)
 {
+  if (i_selected_line == 0xFF)
+    i_selected_line = m_selected_line;
+  if (i_selected_field == 0xFF)
+    i_selected_field = m_selected_field;
+  if (i_first_line == 0xFF)
+    i_first_line = m_first_line;
+
+  // TODO FIELD CHECKEN!!!!!
+
   m_number_of_lines = i_number_of_lines;
   if (i_selected_line < m_number_of_lines) { 
     // We have a valid i_selected_line.
@@ -150,12 +159,6 @@ void Page::Draw(uint8_t from, uint8_t to) // from..to are the lines to draw
   }
 }
 
-// To prevent heap fragmentation when allocating the pages, I have chosen
-// for a single memory block that is used for all pages.
-// You have to make sure that the buffer is large enough to store all types
-// of pages.
-static char page_buffer[gPageBufferSize];
-Page* g_page = (Page*)page_buffer;
 
 
 //==============================================================================

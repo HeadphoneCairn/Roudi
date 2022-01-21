@@ -11,11 +11,6 @@
 #include "PageSettings.h"  // TODO remove
 
 
-namespace
-{
-  uint8_t g_first_line = 0; 
-  uint8_t g_selected_line = 0;
-}
 
 
 PSTRING(PSTR_page_about, " ABOUT ROUDI "); 
@@ -74,8 +69,8 @@ PageAbout::PageAbout(): Page()
 
 void PageAbout::OnStart()
 {
-  SetNumberOfLines(PTAB_about_text_size + 3, g_selected_line, g_first_line);
-  SetMidiConfiguration(g_selected_line);
+  SetNumberOfLines(PTAB_about_text_size + 3);
+  SetMidiConfiguration(); // TODO
 }
 
 const char* PageAbout::GetTitle()
@@ -100,10 +95,9 @@ Page::LineResult PageAbout::Line(LineFunction func, uint8_t line, uint8_t field)
 
 void PageAbout::OnStop(uint8_t selected_line, uint8_t first_line)
 {
-  g_first_line = first_line;
 }
 
-void PageAbout::SetMidiConfiguration(uint8_t selected_line)
+void PageAbout::SetMidiConfiguration()
 {
   g_next_midi_config.config.SetDefaults();
   g_next_midi_config.config.m_nbr_output_channels = 0;

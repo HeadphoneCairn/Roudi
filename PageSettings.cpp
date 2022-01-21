@@ -22,11 +22,6 @@ Future:
 
 */
 
-namespace
-{
-  uint8_t g_selected_line = 0;
-  uint8_t g_first_line = 0;
-}
 
 PSTRING(PSTR_page_settings,   " SETTINGS ");
 
@@ -114,7 +109,7 @@ void PageSettings::OnStart()
   m_ui_velocity_curve.Init(line_velocity_curve, &m_values.velocity_curve);
   m_ui_program_change.Init(line_program_change, &m_values.program_change);
   m_ui_brightness.Init(line_brightness, &m_values.brightness);
-  SetNumberOfLines(5, g_selected_line, g_first_line);
+  SetNumberOfLines(5);
 }
 
 const char* PageSettings::GetTitle()
@@ -138,8 +133,6 @@ Page::LineResult PageSettings::Line(LineFunction func, uint8_t line, uint8_t fie
 
 void PageSettings::OnStop(uint8_t selected_line, uint8_t first_line) 
 {  
-  g_selected_line = selected_line;
-  g_first_line = first_line;
 
 /*
   struct SettingsValues m_stored_values;

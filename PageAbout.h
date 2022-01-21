@@ -12,7 +12,7 @@ protected:
   virtual void OnStart() override;
   virtual void OnStop(uint8_t selected_line, uint8_t first_line) override;
 private:
-  void SetMidiConfiguration(uint8_t selected_line);
+  void SetMidiConfiguration();
 };
 
 
