@@ -24,6 +24,7 @@ Page::Page():
 
 void Page::SetNumberOfLines(uint8_t i_number_of_lines, uint8_t i_selected_line, uint8_t i_selected_field, uint8_t i_first_line)
 {
+  // Use remembered positions
   if (i_selected_line == 0xFF)
     i_selected_line = m_selected_line;
   if (i_selected_field == 0xFF)
@@ -31,8 +32,7 @@ void Page::SetNumberOfLines(uint8_t i_number_of_lines, uint8_t i_selected_line, 
   if (i_first_line == 0xFF)
     i_first_line = m_first_line;
 
-  // TODO FIELD CHECKEN!!!!!
-
+  // Check (and correct if needed) the selected line and first line compared to new reality
   m_number_of_lines = i_number_of_lines;
   if (i_selected_line < m_number_of_lines) { 
     // We have a valid i_selected_line.
@@ -51,6 +51,12 @@ void Page::SetNumberOfLines(uint8_t i_number_of_lines, uint8_t i_selected_line, 
   } else {
     m_selected_line = m_first_line = 0;
   }
+
+  // Check (and correct if needed) the selected field
+  if (i_selected_field < Line(GET_NUMBER_OF_FIELDS, m_selected_line, 0xFF).number_of_fields)
+    m_selected_field = i_selected_field;
+  else 
+    m_selected_field = 0;
 }
 
 //uint8_t Page::GetSelectedLine()
@@ -100,13 +106,13 @@ bool Page::OnUpDown(UpDownAction action)
       m_selected_field--;
     } else {
       m_selected_line--;
-      m_selected_field = Line(GET_NUMBER_OF_FIELDS, m_selected_line, -1).number_of_fields - 1;       
+      m_selected_field = Line(GET_NUMBER_OF_FIELDS, m_selected_line, 0xFF).number_of_fields - 1;       
       if (m_selected_line < m_first_line)
         m_first_line = m_selected_line;
     }
     return true; // redraw
   } else /* action == DOWN */ {
-    uint8_t nbr_of_fields = Line(GET_NUMBER_OF_FIELDS, m_selected_line, -1).number_of_fields;
+    uint8_t nbr_of_fields = Line(GET_NUMBER_OF_FIELDS, m_selected_line, 0xFF).number_of_fields;
     if (m_selected_line == m_number_of_lines - 1 && m_selected_field == nbr_of_fields - 1)
       return false; // do not redraw
     if (m_selected_field + 1 < nbr_of_fields) {
@@ -143,7 +149,7 @@ void Page::Draw(uint8_t from, uint8_t to) // from..to are the lines to draw
       uint8_t line_to_show = m_first_line + i - 1;
       if (line_to_show < m_number_of_lines) {
         const char* text; 
-        LineResult res = Line(GET_TEXT, line_to_show, line_to_show == m_selected_line ? m_selected_field : -1);       
+        LineResult res = Line(GET_TEXT, line_to_show, line_to_show == m_selected_line ? m_selected_field : 0xFF);       
         Screen::Print(Screen::CanvasScrollbar, i, 0, res.text, Screen::LineClear, line_to_show == m_selected_line ? res.text_inversion : Screen::inversion_none);
       }
     }
