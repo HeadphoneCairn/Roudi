@@ -179,9 +179,16 @@ namespace Pages
     return sizeof(PageSingle) + 
            sizeof(PageMulti) +
            sizeof(PageSettings) +
-           sizeof(PageAbout);
-      //sizeof(PageChannels) +
-      //sizeof(PageNameChannel);
+           sizeof(PageAbout) +
+           sizeof(PageNameChannel);
+  }
+
+  PSTRING(PSTR_page_usage, "%d %d %d %d %d");
+  const char* GetPageUsage()
+  {
+    snprintf(data_scratch, sizeof(data_scratch), GetPString(PSTR_page_usage), 
+      sizeof(PageSingle), sizeof(PageMulti), sizeof(PageSettings), sizeof(PageAbout), sizeof(PageNameChannel));
+    return data_scratch;
   }
 
 }

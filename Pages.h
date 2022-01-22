@@ -41,4 +41,5 @@ namespace Pages
   void ButtonAB();
 
   uint16_t GetTotalPageUsage();
+  const char* GetPageUsage();
 }

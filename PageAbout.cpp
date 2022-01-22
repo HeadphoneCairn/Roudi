@@ -6,12 +6,6 @@
 #include "Pages.h"
 #include "Roudi.h"
 
-#include "PageSingle.h"  // TODO remove
-#include "PageMulti.h"  // TODO remove
-#include "PageSettings.h"  // TODO remove
-
-
-
 
 PSTRING(PSTR_page_about, " ABOUT ROUDI "); 
 
@@ -59,8 +53,8 @@ PTABLE(PTAB_about_text,
 
 
 PSTRING(PSTR_about_memory, " free memory: %d bytes");
-PSTRING(PSTR_about_pages,  " pages memory: %d bytes");
-PSTRING(PSTR_about_sizeof, " size menus: %d %d %d %d");
+PSTRING(PSTR_about_pages,  " pages total: %d bytes");
+PSTRING(PSTR_about_sizeof, "    -> %s");
 
 
 PageAbout::PageAbout(): Page()
@@ -87,7 +81,7 @@ Page::LineResult PageAbout::Line(LineFunction func, uint8_t line, uint8_t field)
   else if (line == PTAB_about_text_size + 1)
     snprintf(Screen::buffer, sizeof(Screen::buffer), GetPString(PSTR_about_pages), Pages::GetTotalPageUsage());
   else
-    snprintf(Screen::buffer, sizeof(Screen::buffer), GetPString(PSTR_about_sizeof), sizeof(PageSingle), sizeof(PageMulti), sizeof(PageSettings), sizeof(PageAbout));
+    snprintf(Screen::buffer, sizeof(Screen::buffer), GetPString(PSTR_about_sizeof), Pages::GetPageUsage());
   return {1, Screen::buffer, Screen::inversion_all, false};
 // TODO: bekijk verschil sizeof(Screen::buffer) Screen::buffer_len !!!!
 }
