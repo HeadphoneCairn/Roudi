@@ -25,7 +25,7 @@ Page::LineResult PageSingle::Line(LineFunction func, uint8_t line, uint8_t field
 {
   const char* text = nullptr;
   if (func == GET_TEXT) {
-    text = (line < 16) ? GetChannelNameBrol(line) : GetPStringNone();
+    text = (line < 16) ? GetChannelNameAndNumber(line) : GetPStringNone();
   } else if (func == DO_SELECTED) {
     SetMidiConfiguration(line);
   }

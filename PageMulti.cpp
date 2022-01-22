@@ -43,7 +43,7 @@ namespace {
     pars.types = TypePString|TypeFunction;
     pars.name = (void*) PSTR_channel;
     pars.number_of_values = 16;
-    pars.values = (void*) GetChannelNameBrol;
+    pars.values = (void*) GetChannelNameAndNumber;
   }
 
   PSTRING(PSTR_octave, "oct: ");

@@ -4,7 +4,7 @@
 #include "PageMulti.h"
 #include "PageAbout.h"
 #include "PageSettings.h"
-//#include "PageNameChannel.h"
+#include "PageNameChannel.h"
 //#include "PageNamePreset.h"
 
 #include "Data.h"
@@ -32,6 +32,7 @@ namespace
   PageMulti     g_page_multi;
   PageAbout     g_page_about;
   PageSettings  g_page_settings;
+  PageNameChannel g_page_name_channel;
 
   PageID g_current_lower_id = PAGE_SINGLE;
   PageID g_current_upper_id = PAGE_SETTINGS;
@@ -64,6 +65,7 @@ namespace Pages
     switch(page_id) {
       case PAGE_SINGLE:   g_current_page = &g_page_single; break;
       case PAGE_MULTI:    g_current_page = &g_page_multi; break;
+      case PAGE_NAME_CHANNEL: g_current_page = &g_page_name_channel; break;
       case PAGE_ABOUT:    g_current_page = &g_page_about; break;
       case PAGE_SETTINGS: g_current_page = &g_page_settings; break;
       default:            g_current_page = &g_page_single; break;
@@ -128,7 +130,8 @@ namespace Pages
       switch (g_current_lower_id) {
         case PAGE_SINGLE:   page_to_show = PAGE_ABOUT; break;
         case PAGE_MULTI:    page_to_show = PAGE_SINGLE; break;
-        case PAGE_ABOUT:    page_to_show = PAGE_MULTI; break;
+        case PAGE_NAME_CHANNEL: page_to_show = PAGE_MULTI; break;
+        case PAGE_ABOUT:    page_to_show = PAGE_NAME_CHANNEL; break;
       }
     } else {
       switch (g_current_upper_id) {
@@ -151,7 +154,8 @@ namespace Pages
     if (g_current_lower) {
       switch (g_current_lower_id) {
         case PAGE_SINGLE:   page_to_show = PAGE_MULTI; break;
-        case PAGE_MULTI:    page_to_show = PAGE_ABOUT; break;
+        case PAGE_MULTI:    page_to_show = PAGE_NAME_CHANNEL; break;
+        case PAGE_NAME_CHANNEL:    page_to_show = PAGE_ABOUT; break;
         case PAGE_ABOUT:    page_to_show = PAGE_SINGLE; break;
       }
     } else {

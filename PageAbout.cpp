@@ -30,8 +30,8 @@ PSTRING(PSTR_about_10, "");
 PSTRING(PSTR_about_11, "SOME HELP:");
 PSTRING(PSTR_about_12, " A or B: switch pages");
 PSTRING(PSTR_about_13, " A + B: toggle utils");
-PSTRING(PSTR_about_14, " v, ^: switch fields");
-PSTRING(PSTR_about_15, " <, >: change values");
+PSTRING(PSTR_about_14, " up, down: switch fields");
+PSTRING(PSTR_about_15, " left, right: modify");
 PSTRING(PSTR_about_16, "");
 PSTRING(PSTR_about_17, "STATUS:");
 

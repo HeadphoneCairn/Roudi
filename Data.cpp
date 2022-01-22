@@ -538,8 +538,15 @@ PTABLE(PTAB_channel_names,
        PSTR_channel_14,
        PSTR_channel_15);
 
-PSTRING(PSTR_channel_name_brol_formatting, "%02d. ");
 const char* GetChannelNameBrol(uint8_t channel)
+{
+  channel = channel % 16;
+  sprintf(data_scratch, GetPStringFromPTable(PTAB_channel_names, channel));
+  return data_scratch;
+}
+
+PSTRING(PSTR_channel_name_brol_formatting, "%02d. ");
+const char* GetChannelNameAndNumber(uint8_t channel)
 {
   channel = channel % 16;
   sprintf(data_scratch, GetPString(PSTR_channel_name_brol_formatting), channel + 1);
