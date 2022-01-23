@@ -1,3 +1,5 @@
+#if 0
+
 #pragma once
 
 #include <Arduino.h> // for uint8_t
@@ -38,3 +40,5 @@ namespace Menus
   void ButtonA();
   void ButtonB();  
 }
+
+#endif

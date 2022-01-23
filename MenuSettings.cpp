@@ -1,3 +1,5 @@
+#if 0
+
 #include "MenuSettings.h"
 #include "Data.h"
 #include "Debug.h"
@@ -217,3 +219,5 @@ bool MenuSettings::Undo()
   EE::GetSettings(m_values);
   return true; // make sure menu gets updated
 }
+
+#endif

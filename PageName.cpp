@@ -12,6 +12,9 @@
 const uint8_t MaxLength = 10; // TODO MaxNameLength; 
 
 PSTRING(PSTR_number_format, "%02d v X");
+PSTRING(PSTR_name_help_1, "use left/right to move");
+PSTRING(PSTR_name_help_2, "up/down to make changes");
+PSTRING(PSTR_name_help_3, "v=accept, X=cancel");
 
 PageName::PageName(): Page(), m_number_prefix_len(0), m_number(0), m_position(0), m_result(NONE)
 {
@@ -19,8 +22,10 @@ PageName::PageName(): Page(), m_number_prefix_len(0), m_number(0), m_position(0)
 
 /*
   The name editing line looks as follows:
-   <name>____ <number_prefix><number> v X
+   <name>____ <number_prefix><number+1> v X
    Matriarch_ ch01 v X"
+  
+  NOTE: number starts at 0 but is shown as number + 1.
 */
 void PageName::SetValues(const char* name, uint8_t number, uint8_t number_max, const char* number_prefix)
 {
@@ -69,11 +74,11 @@ Page::LineResult PageName::Line(LineFunction func, uint8_t line, uint8_t field)
       uint8_t stop = (m_position == GetPositionOfNumber()) ? start + 1 + m_number_prefix_len : start;
       inversion = {Screen::InvertGiven, start, stop};
     } else if (line == 4) {
-      text = GetPStringNameHelp1();
+      text = GetPString(PSTR_name_help_1);
     } else if (line == 5) {
-      text = GetPStringNameHelp2();
+      text = GetPString(PSTR_name_help_2);
     } else if (line == 6) {
-      text = GetPStringNameHelp3();
+      text = GetPString(PSTR_name_help_3);
     } else {
       text = GetPStringEmpty();
     }

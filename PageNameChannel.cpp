@@ -4,10 +4,6 @@
 #include "Data.h"
 #include "Utils.h"
 
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-
 PSTRING(PSTR_page_name_channel, " CHANNEL NAME "); 
 PSTRING(PSTR_channel_prefix, "ch");
 
@@ -17,8 +13,8 @@ PageNameChannel::PageNameChannel(/*uint8_t channel_value*/): PageName()
 
 void PageNameChannel::OnStart()
 {
-  uint8_t channel_number = 4;
-  SetValues(GetChannelNameBrol(channel_number), channel_number, EE::GetNumberOfChannels(), PSTR_channel_prefix);
+  uint8_t channel_value = 4;
+  SetValues(EE::GetChannelName(channel_value), channel_value, EE::GetNumberOfChannels(), PSTR_channel_prefix);
   PageName::OnStart();
 }
 
@@ -31,8 +27,9 @@ bool PageNameChannel::OnUpDown(UpDownAction action)
 {  
   bool redraw = PageName::OnUpDown(action);
   if (GetResult() == ACCEPT) {
-    //GetNameAndValue(data_scratch, number)
-    //EE::SetChannelName(m_channel_value, data_scratch);
+    uint8_t channel_value;
+    GetNameAndValue(data_scratch, channel_value);
+    EE::SetChannelName(channel_value, data_scratch);
     //Pages::SetNextPage(PAGE_CHANNELS);
     Debug::Beep();
   } else if (GetResult() == REJECT) {

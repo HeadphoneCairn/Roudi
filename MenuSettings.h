@@ -1,3 +1,4 @@
+#if 0
 #pragma once
 
 #include "Data.h"
@@ -20,3 +21,4 @@ private:
   Combiline m_lines[m_number_of_combilines];
   struct SettingsValues m_values;
 };
+#endif

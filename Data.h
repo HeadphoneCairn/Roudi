@@ -36,14 +36,6 @@ const char* GetPStringEmpty();
 const char* GetPStringNone();
 const char* GetPStringUndo();
 const char* GetPStringAccept();
-const char* GetPStringMonitor();
-const char* GetPStringLoadPreset(uint8_t preset);
-const char* GetPStringSavePreset(uint8_t preset);
-
-// --- Help for name menus ---
-const char* GetPStringNameHelp1();
-const char* GetPStringNameHelp2();
-const char* GetPStringNameHelp3();
 
 // --- Octaves ---
 // Encapsulated the number of octaves to transpose
@@ -55,6 +47,9 @@ uint8_t OctaveDeltaToOctaveValue(int8_t octave_delta);
 // --- MIDI Note names ---
 const char* GetNoteName(uint8_t midi_note_number);
 
+// --- Some (generic) value functions ---
+const char* GetOnOff(uint8_t on);
+const char* GetNumberPlusOne(uint8_t value);
 
 //==============================================================================
 // 
@@ -62,43 +57,33 @@ const char* GetNoteName(uint8_t midi_note_number);
 //
 //==============================================================================
 
-const uint8_t MaxNameLength = 15; // Max number of characters in channel name or preset name, not including the \0
+const uint8_t MaxNameLength = 10; // Max number of characters in channel name or preset name, not including the \0
 
 struct SingleValues
 {
-  uint8_t channel; // saved to EEPROM as channel value (0-15) or menu entry (16-), shown as channel index (0-15) or menu entry (16-)
+  uint8_t channel; // saved to EEPROM as channel (0-15)
 };
 void GetSingleDefault(struct SingleValues& values);
 
-struct SplitValues
+struct MultiValues
 {
-  uint8_t left_channel;  // saved to EEPROM as channel value, shown as channel index 
-  uint8_t left_octave;
-  uint8_t right_channel;
-  uint8_t right_octave;
+  char name[MaxNameLength + 1]; // We also store the /0
+  uint8_t channel[2];  // saved to EEPROM as channel (0-15)
+  uint8_t octave[2];
+  uint8_t pbcc[2];
+  uint8_t velocity[2]; // stored as 0 - 9, shown as 0% - 90%, interpreted as i*13 in range [0..127]
+  uint8_t mode;        // 0: SPLIT, 1: LAYER
   uint8_t split_note;
 };
-void GetSplitDefault(struct SplitValues& values);
-
-struct LayerValues
-{
-  uint8_t a_channel;   // saved to EEPROM as channel value, shown as channel index
-  uint8_t a_velocity;  // stored as 0 - 9, shown as 0% - 90%, interpreted as i*13 in range [0..127]
-  uint8_t b_channel;
-  uint8_t b_velocity;
-};
-void GetLayerDefault(struct LayerValues& values);
+void GetMultiDefault(struct MultiValues& values);
 
 struct SettingsValues
 {
-  uint8_t input_channel;    // x // stored as 0-15, shown as 1-16
-  uint8_t output_channels;
-  uint8_t channel_order;
-  uint8_t channel_number;
-  uint8_t velocity_curve;   // x
-  uint8_t program_change;   // x
-  uint8_t split_delta;
-  uint8_t brightness;       // x
+  uint8_t input_channel;    // stored as 0-15, shown as 1-16
+  uint8_t output_channels;  // always stores 0, is just easy way to make sure UI works correctly
+  uint8_t velocity_curve;   // 
+  uint8_t program_change;   // 
+  uint8_t brightness;       // 
 };
 void GetSettingsDefault(struct SettingsValues& values);
 
@@ -114,20 +99,16 @@ void GetSettingsDefault(struct SettingsValues& values);
 namespace EE
 {
   // --- Init ---
-  // Initiliaze EEPROM if first usage
+  // Initialize EEPROM if first usage
   void Init();
 
   // --- Single ---
   void SetSingle(const struct SingleValues& values);
   void GetSingle(struct SingleValues& values);
 
-  // --- Split ---
-  void SetSplit(uint8_t preset, const struct SplitValues& values);
-  void GetSplit(uint8_t preset, struct SplitValues& values);
-
-  // --- Layer ---
-  void SetLayer(uint8_t preset, const struct LayerValues& values);
-  void GetLayer(uint8_t preset, struct LayerValues& values);
+  // --- Multi ---
+  void SetMulti(uint8_t which, const struct MultiValues& values);
+  void GetMulti(uint8_t which, struct MultiValues& values);
 
   // --- Settings ---
   void SetSettings(const struct SettingsValues& values);
@@ -135,21 +116,13 @@ namespace EE
   struct SettingsValues GetSettings();
   
   // --- Channels ---
-  // channel index: index into current sorted representation of channels
   // channel value: 0-15
   // channel number: 1-16
   // channel name: Piano
   uint8_t GetNumberOfChannels();
-  void SetChannelName(uint8_t channel_value, const char* channel_name);    
+  void SetChannelName(uint8_t channel_value, const char* channel_name);
   const char* GetChannelName(uint8_t channel_value);
-  // For channel iteration we use channel_index:
-  const char* GetChannelNameFormatted(uint8_t channel_index);
-  uint8_t ChannelIndexToChannelValue(uint8_t channel_index);
-  uint8_t ChannelValueToChannelIndex(uint8_t channel_value);
+  const char* GetChannelNameFormatted(uint8_t channel_value);
 }
 
 
-const char* GetChannelNameBrol(uint8_t channel);
-const char* GetChannelNameAndNumber(uint8_t channel);
-const char* GetOnOff(uint8_t on);
-const char* GetNumberPlusOne(uint8_t value);

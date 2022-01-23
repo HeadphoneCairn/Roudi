@@ -12,23 +12,8 @@ namespace
 {
   bool g_first_run = true;
 
-  struct SplitValues g_values;
-  void gValues_ChannelIndexToChannelValue()
-  {
-    g_values.left_channel = EE::ChannelIndexToChannelValue(g_values.left_channel);
-    g_values.right_channel = EE::ChannelIndexToChannelValue(g_values.right_channel);
-  }
-  void gValues_ChannelValueToChannelIndex()
-  {
-    g_values.left_channel = EE::ChannelValueToChannelIndex(g_values.left_channel);
-    g_values.right_channel = EE::ChannelValueToChannelIndex(g_values.right_channel);
-  }
 
-  uint8_t g_pitchbend_1 = 0, g_pitchbend_2 =1;
-  uint8_t g_velocity_1 = 3, g_velocity_2 = 8;
-  uint8_t g_mode = 0, g_split_note = 100;
-
-
+  MultiValues g_values;
 
 }
 
@@ -42,8 +27,8 @@ namespace {
   {
     pars.types = TypePString|TypeFunction;
     pars.name = (void*) PSTR_channel;
-    pars.number_of_values = 16;
-    pars.values = (void*) GetChannelNameAndNumber;
+    pars.number_of_values = EE::GetNumberOfChannels();
+    pars.values = (void*) EE::GetChannelNameFormatted;
   }
 
   PSTRING(PSTR_octave, "oct: ");
@@ -117,31 +102,24 @@ void PageMulti::OnStart()
 {
   if (g_first_run) {
     g_first_run = false;
-    EE::GetSplit(0, g_values);
+    EE::GetMulti(0, g_values);
   }
 
-  gValues_ChannelValueToChannelIndex();
-  g_values.left_octave = OctaveDeltaToOctaveValue(0);
-
   // Bind ui elements to values
-  m_ui_channel_1.Init(g_par_channel, &g_values.left_channel);
-  m_ui_octave_1.Init(g_par_octave, &g_values.left_octave);
-  m_ui_pitchbend_1.Init(g_par_pitchbend, &g_pitchbend_1);
-  m_ui_velocity_1.Init(g_par_velocity, &g_velocity_1);
+  m_ui_channel_1.Init(g_par_channel, &g_values.channel[0]);
+  m_ui_octave_1.Init(g_par_octave, &g_values.octave[0]);
+  m_ui_pitchbend_1.Init(g_par_pitchbend, &g_values.pbcc[0]);
+  m_ui_velocity_1.Init(g_par_velocity, &g_values.velocity[0]);
 
-  m_ui_channel_2.Init(g_par_channel, &g_values.right_channel);
-  m_ui_octave_2.Init(g_par_octave, &g_values.right_octave);
-  m_ui_pitchbend_2.Init(g_par_pitchbend, &g_pitchbend_2);
-  m_ui_velocity_2.Init(g_par_velocity, &g_velocity_2);
+  m_ui_channel_2.Init(g_par_channel, &g_values.channel[1]);
+  m_ui_octave_2.Init(g_par_octave, &g_values.octave[1]);
+  m_ui_pitchbend_2.Init(g_par_pitchbend, &g_values.pbcc[1]);
+  m_ui_velocity_2.Init(g_par_velocity, &g_values.velocity[1]);
 
-  m_ui_mode.Init(g_par_mode, &g_mode);
-  m_ui_split_note.Init(g_par_split_note, &g_split_note);
+  m_ui_mode.Init(g_par_mode, &g_values.mode);
+  m_ui_split_note.Init(g_par_split_note, &g_values.split_note);
 
   SetNumberOfLines(20);
-
-  SettingsValues settings;
-  EE::GetSettings(settings);
-  m_split_delta_from_settings = settings.split_delta;
 
   SetMidiConfiguration();
 }
@@ -210,25 +188,29 @@ bool PageMulti::ActualOnLine(LineAction action, uint8_t line)
 
 void PageMulti::OnStop(uint8_t selected_line, uint8_t first_line)
 {
-  gValues_ChannelIndexToChannelValue();
 }
 
 
 void PageMulti::SetMidiConfiguration()
-// Left channel will play on notes [0, split_note - 1], right on notes [split_note, 127]
-// In the unlikely case that the split note is 0 = C-1, we have left on [0, 0] and right on [0, 127],
-// so, some overlap. But don't care.  
+// In SPLIT mode, left channel will play on notes [0, split_note - 1], right on notes [split_note, 127]
 {
   g_next_midi_config.config.SetDefaults();
 //g_next_midi_config.config.m_input_channel = 0; // TODO ??????
-  g_next_midi_config.config.m_nbr_output_channels = 2;
-  g_next_midi_config.config.m_output_channel[0].m_channel = EE::ChannelIndexToChannelValue(g_values.left_channel);
-  g_next_midi_config.config.m_output_channel[0].m_transpose = OctaveValueToOctaveDelta(g_values.left_octave) * 12;
-  g_next_midi_config.config.m_output_channel[0].m_minimum_note = 0; 
-  g_next_midi_config.config.m_output_channel[0].m_maximum_note = g_values.split_note > 0 ? g_values.split_note - 1 : 0;
-  g_next_midi_config.config.m_output_channel[1].m_channel = EE::ChannelIndexToChannelValue(g_values.right_channel);
-  g_next_midi_config.config.m_output_channel[1].m_transpose = OctaveValueToOctaveDelta(g_values.right_octave) * 12;
-  g_next_midi_config.config.m_output_channel[1].m_minimum_note = g_values.split_note; 
-  g_next_midi_config.config.m_output_channel[1].m_maximum_note = 127; 
+  g_next_midi_config.config.m_nbr_output_channels = 2;  
+
+  for (int num=0; num < 2; num++) {  
+    g_next_midi_config.config.m_output_channel[num].m_channel = g_values.channel[num];
+    g_next_midi_config.config.m_output_channel[num].m_minimum_velocity = g_values.velocity[num] * 13;
+    g_next_midi_config.config.m_output_channel[num].m_allow_pitch_modulation = g_values.pbcc[num] != 0;
+    g_next_midi_config.config.m_output_channel[num].m_transpose = OctaveValueToOctaveDelta(g_values.octave[num]) * 12;
+    g_next_midi_config.config.m_output_channel[num].m_minimum_note = 0; 
+    g_next_midi_config.config.m_output_channel[num].m_maximum_note = 127; 
+  }
+  if (g_values.mode == 0) { // Split
+    const uint8_t split_note = max(1, g_values.split_note); // split_node must be at least 1
+    g_next_midi_config.config.m_output_channel[0].m_maximum_note = split_note - 1;
+    g_next_midi_config.config.m_output_channel[1].m_minimum_note = split_note;
+  }
+
   g_next_midi_config.go = true;
 }
