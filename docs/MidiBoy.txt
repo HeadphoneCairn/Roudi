@@ -708,9 +708,10 @@ x about menu
   // TODO: waarom toont hij ABOUT page eerst???  
 x Put everything on disk
 x Channels menu
-- connect menus 
+x connect menus 
 - Save first_line and selected line and field
 - 
 (- Make fake Midi Monitor)
 - Use 12 characters for channels anyway????
 - Order of OnStart OnStop Line in Page ... in subclasses
+- Allow for single mode, next to split and layer!

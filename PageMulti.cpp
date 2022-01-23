@@ -198,6 +198,8 @@ void PageMulti::SetMidiConfiguration()
 //g_next_midi_config.config.m_input_channel = 0; // TODO ??????
   g_next_midi_config.config.m_nbr_output_channels = 2;  
 
+  // TODO: If channel 0 and 1 are the same, just program one channel!
+
   for (int num=0; num < 2; num++) {  
     g_next_midi_config.config.m_output_channel[num].m_channel = g_values.channel[num];
     g_next_midi_config.config.m_output_channel[num].m_minimum_velocity = g_values.velocity[num] * 13;
