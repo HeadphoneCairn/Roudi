@@ -1,7 +1,7 @@
 #include "PageSettings.h"
 #include "Data.h"
 #include "Debug.h"
-//#include "Menus.h"
+#include "Pages.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -101,7 +101,7 @@ PageSettings::PageSettings():
   Page()
   {}
 
-void PageSettings::OnStart()
+void PageSettings::OnStart(uint8_t)
 {
   EE::GetSettings(m_values);
   m_ui_input_channel.Init(line_input_channel, &m_values.input_channel);
@@ -122,7 +122,10 @@ Page::LineResult PageSettings::Line(LineFunction func, uint8_t line, uint8_t fie
   switch (line)
   {
     case 0: return SingleCombiLine(func, m_ui_input_channel,   24, 0, true);
-    case 1: return SingleCombiLine(func, m_ui_output_channels, 24, 0, true);
+    case 1:
+      if (func == DO_LEFT || func == DO_RIGHT)
+        Pages::SetNextPage(PAGE_CHANNELS);
+      return SingleCombiLine(func, m_ui_output_channels, 24, 0, true);
     case 2: return SingleCombiLine(func, m_ui_velocity_curve,  24, 0, true);
     case 3: return SingleCombiLine(func, m_ui_program_change,  24, 0, true);
     case 4: return SingleCombiLine(func, m_ui_brightness,      24, 0, true);

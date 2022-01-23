@@ -76,9 +76,9 @@ const char* Page::GetTitle()
 }
 */
 
-void Page::Start()
+void Page::Start(uint8_t parameter)
 {
-  OnStart();
+  OnStart(parameter);
   Screen::Clear();
   Draw(0, 7);
 }

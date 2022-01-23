@@ -706,8 +706,8 @@ x about menu
   - memory used by page classes
   // TODO: bekijk verschil sizeof(Screen::buffer) Screen::buffer_len !!!!
   // TODO: waarom toont hij ABOUT page eerst???  
-- Put everything on disk
-- Channel menu
+x Put everything on disk
+x Channels menu
 - connect menus 
 - Save first_line and selected line and field
 - 

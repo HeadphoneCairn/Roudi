@@ -50,8 +50,9 @@ void PageName::GetNameAndValue(char* name, uint8_t& number)
   number = m_number; 
 }
 
-void PageName::OnStart()
+void PageName::OnStart(uint8_t)
 {
+  m_position = 0;
   SetNumberOfLines(7, 1, 0);
 }
 

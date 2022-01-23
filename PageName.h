@@ -11,7 +11,7 @@ protected:
   virtual const char* GetTitle() = 0;
   virtual LineResult Line(LineFunction func, uint8_t line, uint8_t field) override;
   virtual bool OnUpDown(UpDownAction action) override;
-  virtual void OnStart() override;
+  virtual void OnStart(uint8_t dummy = 0xFF) override;
 protected:
   enum Result { NONE, ACCEPT, REJECT };
   void SetValues(const char* name, uint8_t number, uint8_t number_max, const char* number_prefix);

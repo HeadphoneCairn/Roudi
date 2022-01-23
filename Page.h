@@ -15,7 +15,7 @@ public:
 //  uint8_t GetSelectedLine();
 //  uint8_t GetFirstLine();
 public:
-  void Start(); // Call this when you want to first display the page
+  void Start(uint8_t parameter = 0xFF); // Call this when you want to first display the page
   void Stop(); // Call this when you want to exit the page
   void Up();
   void Down();
@@ -35,7 +35,7 @@ protected:// to implement
   virtual const char* GetTitle() = 0; // Returned string must be alive for as long the page is active
   // field is number of selected field, 0xFF if none is selected
   virtual LineResult Line(LineFunction func, uint8_t line, uint8_t field) = 0;
-  virtual void OnStart() { return; }
+  virtual void OnStart(uint8_t parameter = 0xFF) { return; }
   virtual void OnStop(uint8_t selected_line, uint8_t first_line) { return; }
   enum UpDownAction { UP, DOWN };
   virtual bool OnUpDown(UpDownAction action); // returns whether to redraw screen

@@ -10,7 +10,7 @@ PageSingle::PageSingle(): Page()
 {
 }
 
-void PageSingle::OnStart()
+void PageSingle::OnStart(uint8_t)
 {
   SetNumberOfLines(NumberOfChannels + 1);
   // SetMidiConfiguration(g_selected_line);  // TODO

@@ -73,7 +73,7 @@ namespace Pages
       case PAGE_CHANNELS: g_current_page = &g_page_channels; break;
       default:            g_current_page = &g_page_single; break;
     }
-    g_current_page->Start();
+    g_current_page->Start(data);
   }
 
   void ShowNextPageIfRequested()
@@ -123,9 +123,9 @@ namespace Pages
   void ButtonA() 
   {
     // Ignore A/B for some pages
-    //if (g_page == g_page_channels ||
-    //    g_page == p_page_name_channel)
-    //  return;
+    if (g_current_page == &g_page_channels ||
+        g_current_page == &g_page_name_channel)
+      return;
 
     // Go to previous page
     PageID page_to_show = PAGE_ABOUT; // fallback
@@ -133,9 +133,7 @@ namespace Pages
       switch (g_current_lower_id) {
         case PAGE_SINGLE:   page_to_show = PAGE_ABOUT; break;
         case PAGE_MULTI:    page_to_show = PAGE_SINGLE; break;
-        case PAGE_CHANNELS: page_to_show = PAGE_MULTI; break;
-        case PAGE_NAME_CHANNEL: page_to_show = PAGE_CHANNELS; break;
-        case PAGE_ABOUT:    page_to_show = PAGE_NAME_CHANNEL; break;
+        case PAGE_ABOUT:    page_to_show = PAGE_MULTI; break;
       }
     } else {
       switch (g_current_upper_id) {
@@ -149,18 +147,16 @@ namespace Pages
   void ButtonB()
   {
     // Ignore A/B for some pages
-    //if (g_page == g_page_channels ||
-    //    g_page == p_page_name_channel)
-    //  return;
+    if (g_current_page == &g_page_channels ||
+        g_current_page == &g_page_name_channel)
+      return;
 
     // Go to next page
     PageID page_to_show = PAGE_ABOUT; // fallback
     if (g_current_lower) {
       switch (g_current_lower_id) {
         case PAGE_SINGLE:   page_to_show = PAGE_MULTI; break;
-        case PAGE_MULTI:    page_to_show = PAGE_CHANNELS; break;
-        case PAGE_CHANNELS: page_to_show = PAGE_NAME_CHANNEL; break;
-        case PAGE_NAME_CHANNEL:    page_to_show = PAGE_ABOUT; break;
+        case PAGE_MULTI:    page_to_show = PAGE_ABOUT; break;
         case PAGE_ABOUT:    page_to_show = PAGE_SINGLE; break;
       }
     } else {
@@ -174,6 +170,11 @@ namespace Pages
 
   void ButtonAB()
   {
+    // Ignore A/B for some pages
+    if (g_current_page == &g_page_channels ||
+        g_current_page == &g_page_name_channel)
+      return;
+
     g_current_lower = !g_current_lower;
     ShowPage(g_current_lower ? g_current_lower_id : g_current_upper_id);
   }

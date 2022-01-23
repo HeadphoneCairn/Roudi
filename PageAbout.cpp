@@ -61,7 +61,7 @@ PageAbout::PageAbout(): Page()
 {
 }
 
-void PageAbout::OnStart()
+void PageAbout::OnStart(uint8_t)
 {
   SetNumberOfLines(PTAB_about_text_size + 3);
   SetMidiConfiguration(); // TODO

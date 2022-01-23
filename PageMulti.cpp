@@ -98,7 +98,7 @@ namespace {
 PageMulti::PageMulti(): 
   Page() {}
 
-void PageMulti::OnStart()
+void PageMulti::OnStart(uint8_t)
 {
   if (g_first_run) {
     g_first_run = false;

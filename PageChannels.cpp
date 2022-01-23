@@ -18,7 +18,7 @@ PageChannels::PageChannels(): Page()
 {
 }
 
-void PageChannels::OnStart()
+void PageChannels::OnStart(uint8_t)
 {
   SetNumberOfLines(NumberOfChannels + 1); // TODO: set first line and seletction to zero if coming from settings dialog 
 }
@@ -53,10 +53,10 @@ Page::LineResult PageChannels::Line(LineFunction func, uint8_t line, uint8_t fie
   } else if (func == DO_LEFT || func == DO_RIGHT) {
     if (line < NumberOfChannels) {
       Debug::Beep();
-      //Menus::SetNextMenu(MENU_NAME_CHANNEL, line);
+      Pages::SetNextPage(PAGE_NAME_CHANNEL, line);
     } else {
       Debug::BeepLow();
-      //Menus::SetNextMenu(MENU_SETTINGS);
+      Pages::SetNextPage(PAGE_SETTINGS);
     }
   }
   
