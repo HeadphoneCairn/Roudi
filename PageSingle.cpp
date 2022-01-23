@@ -12,7 +12,7 @@ PageSingle::PageSingle(): Page()
 
 void PageSingle::OnStart()
 {
-  SetNumberOfLines(EE::GetNumberOfChannels() + 1);
+  SetNumberOfLines(NumberOfChannels + 1);
   // SetMidiConfiguration(g_selected_line);  // TODO
 }
 
@@ -25,7 +25,7 @@ Page::LineResult PageSingle::Line(LineFunction func, uint8_t line, uint8_t field
 {
   const char* text = nullptr;
   if (func == GET_TEXT) {
-    text = (line < EE::GetNumberOfChannels()) ? EE::GetChannelNameFormatted(line) : GetPStringNone();
+    text = (line < NumberOfChannels) ? EE::GetChannelNameFormatted(line) : GetPStringNone();
   } else if (func == DO_SELECTED) {
     SetMidiConfiguration(line);
   }
@@ -42,7 +42,7 @@ void PageSingle::OnStop(uint8_t selected_line, uint8_t first_line)
 void PageSingle::SetMidiConfiguration(uint8_t selected_line)
 {
   g_next_midi_config.config.SetDefaults();
-  if (selected_line < EE::GetNumberOfChannels()) {
+  if (selected_line < NumberOfChannels) {
     g_next_midi_config.config.m_nbr_output_channels = 1;
     g_next_midi_config.config.m_output_channel[0].m_channel = selected_line;
   } else {

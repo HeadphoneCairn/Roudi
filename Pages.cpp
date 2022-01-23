@@ -5,6 +5,7 @@
 #include "PageAbout.h"
 #include "PageSettings.h"
 #include "PageNameChannel.h"
+#include "PageChannels.h"
 //#include "PageNamePreset.h"
 
 #include "Data.h"
@@ -33,6 +34,7 @@ namespace
   PageAbout     g_page_about;
   PageSettings  g_page_settings;
   PageNameChannel g_page_name_channel;
+  PageChannels  g_page_channels;
 
   PageID g_current_lower_id = PAGE_SINGLE;
   PageID g_current_upper_id = PAGE_SETTINGS;
@@ -68,6 +70,7 @@ namespace Pages
       case PAGE_NAME_CHANNEL: g_current_page = &g_page_name_channel; break;
       case PAGE_ABOUT:    g_current_page = &g_page_about; break;
       case PAGE_SETTINGS: g_current_page = &g_page_settings; break;
+      case PAGE_CHANNELS: g_current_page = &g_page_channels; break;
       default:            g_current_page = &g_page_single; break;
     }
     g_current_page->Start();
@@ -125,12 +128,13 @@ namespace Pages
     //  return;
 
     // Go to previous page
-    PageID page_to_show = PAGE_SINGLE; // fallback  // TODO make this about
+    PageID page_to_show = PAGE_ABOUT; // fallback
     if (g_current_lower) {
       switch (g_current_lower_id) {
         case PAGE_SINGLE:   page_to_show = PAGE_ABOUT; break;
         case PAGE_MULTI:    page_to_show = PAGE_SINGLE; break;
-        case PAGE_NAME_CHANNEL: page_to_show = PAGE_MULTI; break;
+        case PAGE_CHANNELS: page_to_show = PAGE_MULTI; break;
+        case PAGE_NAME_CHANNEL: page_to_show = PAGE_CHANNELS; break;
         case PAGE_ABOUT:    page_to_show = PAGE_NAME_CHANNEL; break;
       }
     } else {
@@ -150,11 +154,12 @@ namespace Pages
     //  return;
 
     // Go to next page
-    PageID page_to_show = PAGE_SINGLE; // fallback  // TODO make this about
+    PageID page_to_show = PAGE_ABOUT; // fallback
     if (g_current_lower) {
       switch (g_current_lower_id) {
         case PAGE_SINGLE:   page_to_show = PAGE_MULTI; break;
-        case PAGE_MULTI:    page_to_show = PAGE_NAME_CHANNEL; break;
+        case PAGE_MULTI:    page_to_show = PAGE_CHANNELS; break;
+        case PAGE_CHANNELS: page_to_show = PAGE_NAME_CHANNEL; break;
         case PAGE_NAME_CHANNEL:    page_to_show = PAGE_ABOUT; break;
         case PAGE_ABOUT:    page_to_show = PAGE_SINGLE; break;
       }
@@ -180,14 +185,15 @@ namespace Pages
            sizeof(PageMulti) +
            sizeof(PageSettings) +
            sizeof(PageAbout) +
-           sizeof(PageNameChannel);
+           sizeof(PageNameChannel) +
+           sizeof(PageChannels);
   }
 
-  PSTRING(PSTR_page_usage, "%d %d %d %d %d");
+  PSTRING(PSTR_page_usage, "%d %d %d %d %d %d");
   const char* GetPageUsage()
   {
     snprintf(data_scratch, sizeof(data_scratch), GetPString(PSTR_page_usage), 
-      sizeof(PageSingle), sizeof(PageMulti), sizeof(PageSettings), sizeof(PageAbout), sizeof(PageNameChannel));
+      sizeof(PageSingle), sizeof(PageMulti), sizeof(PageSettings), sizeof(PageAbout), sizeof(PageNameChannel), sizeof(PageChannels));
     return data_scratch;
   }
 

@@ -88,7 +88,7 @@ NOTE: Wanted to use sprintf with "%*.*s", but the variable width specifiers don'
       inv_stop = strlen(text) - 1;
       PadRight(text, len - strlen(text)); // Pad end with spaces
     }
-    inversion = {Screen::InvertGiven, inv_start + start, inv_stop + start};
+    inversion = {Screen::InvertGiven, static_cast<uint8_t>(inv_start + start), static_cast<uint8_t>(inv_stop + start)};
   } 
 
   // Add extra_padding 

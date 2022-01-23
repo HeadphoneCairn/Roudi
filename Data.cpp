@@ -39,13 +39,9 @@ const char* GetPStringFromPTable(const char *const ptable[], uint8_t which)
 // --- Globally defined strings ---
 PSTRING(PSTR_empty, "");
 PSTRING(PSTR_none, "> None");
-PSTRING(PSTR_undo, "> Undo");
-PSTRING(PSTR_accept, "> Accept");
 
 const char* GetPStringEmpty()  { return GetPString(PSTR_empty); }
 const char* GetPStringNone()   { return GetPString(PSTR_none); }
-const char* GetPStringUndo()   { return GetPString(PSTR_undo); }
-const char* GetPStringAccept() { return GetPString(PSTR_accept); }
 
 
 // --- Octaves ---
@@ -246,14 +242,9 @@ namespace EE
 
   // ===== C H A N N E L S =====================================================
 
-  uint8_t GetNumberOfChannels()
-  {
-    return 16;
-  }
-
   void SetChannelName(uint8_t channel_value, const char* channel_name)
   {
-    if (channel_value < GetNumberOfChannels())
+    if (channel_value < NumberOfChannels)
     {
       char name[MaxNameLength + 1];
       strncpy(name, channel_name, sizeof(name) - 1);
@@ -266,7 +257,7 @@ namespace EE
   const char* GetChannelName(uint8_t channel_value)
   {
     *data_scratch = 0;
-    if (channel_value < GetNumberOfChannels()) {
+    if (channel_value < NumberOfChannels) {
       char name[MaxNameLength + 1];
       uint16_t position = start_of_channel_names + channel_value * sizeof(name);
       EEPROM_GET(position, name);
@@ -323,7 +314,7 @@ namespace EE
 
   static void InitChannels()
   {
-    for (uint8_t i = 0; i < GetNumberOfChannels(); i++)
+    for (uint8_t i = 0; i < NumberOfChannels; i++)
       EE::SetChannelName(i, GetPStringEmpty());
     // TODO: Temporary values that should be removed on release!
     EE::SetChannelName(0, GetPString(PSTR_channel_piano));

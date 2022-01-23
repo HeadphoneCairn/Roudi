@@ -713,3 +713,4 @@ x about menu
 - 
 (- Make fake Midi Monitor)
 - Use 12 characters for channels anyway????
+- Order of OnStart OnStop Line in Page ... in subclasses

@@ -27,7 +27,7 @@ namespace {
   {
     pars.types = TypePString|TypeFunction;
     pars.name = (void*) PSTR_channel;
-    pars.number_of_values = EE::GetNumberOfChannels();
+    pars.number_of_values = NumberOfChannels;
     pars.values = (void*) EE::GetChannelNameFormatted;
   }
 

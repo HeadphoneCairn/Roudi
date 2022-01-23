@@ -34,8 +34,6 @@ extern char data_scratch[Screen::MaxCharsCanvasComplete + 1];
 // --- Globally defined strings ---
 const char* GetPStringEmpty();
 const char* GetPStringNone();
-const char* GetPStringUndo();
-const char* GetPStringAccept();
 
 // --- Octaves ---
 // Encapsulated the number of octaves to transpose
@@ -57,7 +55,8 @@ const char* GetNumberPlusOne(uint8_t value);
 //
 //==============================================================================
 
-const uint8_t MaxNameLength = 10; // Max number of characters in channel name or preset name, not including the \0
+const uint8_t NumberOfChannels = 16;
+const uint8_t MaxNameLength = 10; // Max number of characters in channel name or preset name, not including the /0
 
 struct SingleValues
 {
@@ -119,7 +118,6 @@ namespace EE
   // channel value: 0-15
   // channel number: 1-16
   // channel name: Piano
-  uint8_t GetNumberOfChannels();
   void SetChannelName(uint8_t channel_value, const char* channel_name);
   const char* GetChannelName(uint8_t channel_value);
   const char* GetChannelNameFormatted(uint8_t channel_value);

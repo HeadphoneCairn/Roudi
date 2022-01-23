@@ -9,7 +9,7 @@
 #include <stdlib.h>
 
 
-const uint8_t MaxLength = 10; // TODO MaxNameLength; 
+const uint8_t MaxLength = MaxNameLength; 
 
 PSTRING(PSTR_number_format, "%02d v X");
 PSTRING(PSTR_name_help_1, "use left/right to move");

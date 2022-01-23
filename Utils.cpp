@@ -11,8 +11,7 @@
 //
 //==============================================================================
 
-const uint8_t MaxLength = 10; // TODO MaxLength; 
-
+const uint8_t MaxLength = MaxNameLength; 
 
 #define UNDERSCORE '_' // represents and empty postion that can be filled, lowest possible value
 

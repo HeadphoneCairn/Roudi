@@ -14,7 +14,7 @@ PageNameChannel::PageNameChannel(/*uint8_t channel_value*/): PageName()
 void PageNameChannel::OnStart()
 {
   uint8_t channel_value = 4;
-  SetValues(EE::GetChannelName(channel_value), channel_value, EE::GetNumberOfChannels(), PSTR_channel_prefix);
+  SetValues(EE::GetChannelName(channel_value), channel_value, NumberOfChannels, PSTR_channel_prefix);
   PageName::OnStart();
 }
 
