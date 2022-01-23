@@ -72,7 +72,6 @@ void loop()
   //Debug::Print("%lu, %lu, %lu", now, last_A, last_B);
   if (last_A && last_B && last_A + max_A_B_diff > now && last_B + max_A_B_diff > now) {
     last_A = last_B = 0;
-    Debug::Beep();
     Pages::ButtonAB();
   }
   if (last_A && last_A + max_A_B_diff < now) {

@@ -9,7 +9,6 @@
 #include <stdlib.h>
 
 PSTRING(PSTR_page_channels, " OUTPUT CHANNELS "); 
-PSTRING(PSTR_accept, "> Accept");
 
 PSTRING(PSTR_channel_format, "ch%02d: %s");
 
@@ -20,7 +19,7 @@ PageChannels::PageChannels(): Page()
 
 void PageChannels::OnStart(uint8_t)
 {
-  SetNumberOfLines(NumberOfChannels + 1); // TODO: set first line and seletction to zero if coming from settings dialog 
+  SetNumberOfLines(NumberOfChannels); 
 }
 
 void PageChannels::OnStop(uint8_t selected_line, uint8_t first_line)
@@ -42,22 +41,12 @@ Page::LineResult PageChannels::Line(LineFunction func, uint8_t line, uint8_t fie
   Screen::Inversion inversion = Screen::inversion_all;
 
   if (func == GET_TEXT) {
-    if (line < NumberOfChannels) {
-      text = Screen::buffer;
-      const char* channel_name = EE::GetChannelName(line);
-      sprintf(Screen::buffer, GetPString(PSTR_channel_format), line + 1, channel_name);
-      inversion = { Screen::InvertGiven, 6, static_cast<uint8_t>(6 + strlen(channel_name) - 1)};
-    } else {
-      text = GetPString(PSTR_accept);
-    }  
+    text = Screen::buffer;
+    const char* channel_name = EE::GetChannelName(line);
+    sprintf(Screen::buffer, GetPString(PSTR_channel_format), line + 1, channel_name);
+    inversion = { Screen::InvertGiven, 6, static_cast<uint8_t>(6 + strlen(channel_name) - 1)};
   } else if (func == DO_LEFT || func == DO_RIGHT) {
-    if (line < NumberOfChannels) {
-      Debug::Beep();
-      Pages::SetNextPage(PAGE_NAME_CHANNEL, line);
-    } else {
-      Debug::BeepLow();
-      Pages::SetNextPage(PAGE_SETTINGS);
-    }
+    Pages::SetNextPage(PAGE_NAME_CHANNEL, line);
   }
   
   return {1, text, inversion, false};

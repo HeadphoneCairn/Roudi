@@ -8,6 +8,7 @@
 #include "PageChannels.h"
 //#include "PageNamePreset.h"
 
+#include "Debug.h"
 #include "Data.h"
 #include "Screen.h"
 
@@ -67,10 +68,10 @@ namespace Pages
     switch(page_id) {
       case PAGE_SINGLE:   g_current_page = &g_page_single; break;
       case PAGE_MULTI:    g_current_page = &g_page_multi; break;
-      case PAGE_NAME_CHANNEL: g_current_page = &g_page_name_channel; break;
       case PAGE_ABOUT:    g_current_page = &g_page_about; break;
       case PAGE_SETTINGS: g_current_page = &g_page_settings; break;
       case PAGE_CHANNELS: g_current_page = &g_page_channels; break;
+      case PAGE_NAME_CHANNEL: g_current_page = &g_page_name_channel; break;
       default:            g_current_page = &g_page_single; break;
     }
     g_current_page->Start(data);
@@ -123,8 +124,7 @@ namespace Pages
   void ButtonA() 
   {
     // Ignore A/B for some pages
-    if (g_current_page == &g_page_channels ||
-        g_current_page == &g_page_name_channel)
+    if (g_current_page == &g_page_name_channel)
       return;
 
     // Go to previous page
@@ -138,17 +138,17 @@ namespace Pages
     } else {
       switch (g_current_upper_id) {
         case PAGE_SETTINGS: page_to_show = PAGE_SETTINGS; break;
+        case PAGE_CHANNELS: page_to_show = PAGE_SETTINGS; break;
       }
     }
-
+  
     ShowPage(page_to_show);
   }
 
   void ButtonB()
   {
     // Ignore A/B for some pages
-    if (g_current_page == &g_page_channels ||
-        g_current_page == &g_page_name_channel)
+    if (g_current_page == &g_page_name_channel)
       return;
 
     // Go to next page
@@ -162,6 +162,7 @@ namespace Pages
     } else {
       switch (g_current_upper_id) {
         case PAGE_SETTINGS: page_to_show = PAGE_SETTINGS; break;
+        case PAGE_CHANNELS: page_to_show = PAGE_SETTINGS; break;
       }
     }
 
