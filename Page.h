@@ -34,7 +34,7 @@ protected:// to implement
   // requires an extra 2 bytes of dynamic memory, for each subclass! 
   virtual const char* GetTitle() = 0; // Returned string must be alive for as long the page is active
   // field is number of selected field, 0xFF if none is selected
-  virtual LineResult Line(LineFunction func, uint8_t line, uint8_t field);
+  virtual LineResult Line(LineFunction func, uint8_t line, uint8_t field) = 0;
   virtual void OnStart() { return; }
   virtual void OnStop(uint8_t selected_line, uint8_t first_line) { return; }
   enum UpDownAction { UP, DOWN };

@@ -62,7 +62,7 @@ const char* GetNoteName(uint8_t midi_note_number);
 //
 //==============================================================================
 
-const uint8_t MaxNameLength = 15; // Max number of characters in channel name or preset name
+const uint8_t MaxNameLength = 15; // Max number of characters in channel name or preset name, not including the \0
 
 struct SingleValues
 {

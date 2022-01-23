@@ -11,6 +11,8 @@
 //
 //==============================================================================
 
+const uint8_t MaxLength = 10; // TODO MaxLength; 
+
 
 #define UNDERSCORE '_' // represents and empty postion that can be filled, lowest possible value
 
@@ -68,12 +70,12 @@ NameEditor::NameEditor():
 }
 
 void NameEditor::Init(char* name_buffer, const char* name)
-// The name_buffer should be allocated by caller and should have enough place for MaxNameLength characters
+// The name_buffer should be allocated by caller and should have enough place for MaxLength characters
 // This constructor will put the name in the name_buffer suffixed with UNDERSCOREs
 {
   m_name_buffer = name_buffer;
-  strncpy(m_name_buffer, name, MaxNameLength);
-  for (uint8_t i = strlen(name); i < MaxNameLength; ++i)
+  strncpy(m_name_buffer, name, MaxLength);
+  for (uint8_t i = strlen(name); i < MaxLength; ++i)
     m_name_buffer[i] = UNDERSCORE;
 }
 
@@ -86,18 +88,18 @@ void NameEditor::CopyName(char* name)
 uint8_t NameEditor::GetLength()
 // Returns the length of the name
 {
-  for (uint8_t i = 0; i < MaxNameLength; i++) {
+  for (uint8_t i = 0; i < MaxLength; i++) {
     if (m_name_buffer[i] == UNDERSCORE)
       return i;
   }
-  return MaxNameLength;
+  return MaxLength;
 }
 
 uint8_t NameEditor::GetPositions()
 // Returns the number of positions of the name that are selectable with left/right buttons.
 {
   uint8_t num_positions = GetLength() + 1;
-  return num_positions > MaxNameLength ? MaxNameLength : num_positions;
+  return num_positions > MaxLength ? MaxLength : num_positions;
 }
 
 bool NameEditor::UpDown(uint8_t position, bool up)
@@ -106,7 +108,7 @@ bool NameEditor::UpDown(uint8_t position, bool up)
   if (position >= GetPositions()) 
     return false; // Just te be sure
   bool use_underscore = (position + 1 == GetPositions()) || 
-                        (position + 2 == GetPositions() && GetLength() != MaxNameLength);
+                        (position + 2 == GetPositions() && GetLength() != MaxLength);
   char old_character = m_name_buffer[position];
   if (up) {
     m_name_buffer[position] = GetNextCharacter(old_character, use_underscore);

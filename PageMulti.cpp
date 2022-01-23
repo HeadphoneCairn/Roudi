@@ -101,10 +101,11 @@ namespace {
     pars.values = (void*) GetNoteName;
     }
 
-  PSTRING(PSTR_save_as, "> Save As");
-  PSTRING(PSTR_rename, "> Rename");
+  PSTRING(PSTR_save_as, "> Save As ...");
+  PSTRING(PSTR_remove, "> Remove ...");
   PSTRING(PSTR_move_left, "> Move left");
   PSTRING(PSTR_move_right, "> Move right");
+  PSTRING(PSTR_new, "> New");
 
 }
 
@@ -162,9 +163,10 @@ Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
     case 4: return DoubleCombiline(func, field, m_ui_mode, 10, 4, false, m_ui_split_note, 10, 0, false);
     case 5: return DefaultLine(func);
     case 6: return TextLine(func, PSTR_save_as);
-    case 7: return TextLine(func, PSTR_rename);
+    case 7: return TextLine(func, PSTR_remove);
     case 8: return TextLine(func, PSTR_move_left);
     case 9: return TextLine(func, PSTR_move_right);
+    case 10: return TextLine(func, PSTR_new);
     default: return DefaultLine(func);
   }
 }

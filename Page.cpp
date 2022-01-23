@@ -69,6 +69,13 @@ void Page::SetNumberOfLines(uint8_t i_number_of_lines, uint8_t i_selected_line, 
 //  return m_first_line;
 //}
 
+/*
+const char* Page::GetTitle()
+{
+  return GetPStringEmpty();
+}
+*/
+
 void Page::Start()
 {
   OnStart();

@@ -187,6 +187,22 @@ namespace EE
   // 0484-0503:         - preset order + type (split/layer) (20 bytes)
   // 0504-1023:         - 20 x (16 for name and 10 for values) (520 bytes)
   // but it became to complex, so added some simple presets to split and layer instead.
+
+
+
+
+  0000-0007: Header (8 bytes)
+  0008-0049: Settings (32 bytes)
+  0040-0215: Channels names: 16 x (10 chars + zero) (176 bytes)
+  0216-0219: Single: 1 byte for selected line (=channel), 1 for first line (4 bytes)
+  0220-0539: Multi x 10 (320 bytes)
+              11 bytes (10 + 1) for the name 
+               8 bytes (2 x 4) for channel settings
+               2 bytes for mode
+               3 bytes for selected line, selected field, first line
+              = 24 bytes => for some future use 32 bytes 
+  ... unused memory ...
+
   */
 
   static const uint16_t start_of_header = 0;
