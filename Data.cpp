@@ -140,7 +140,6 @@ void GetMultiDefault(struct MultiValues& values)
 void GetSettingsDefault(struct SettingsValues& values)
 {
   memset(&values, 0, sizeof(values)); // sizeof of a reference gives the size of the referenced, so ok!
-  values.input_channel = 10;
 }
 
 //==============================================================================
@@ -156,26 +155,26 @@ namespace EE
   EEPROM has 1024 bytes:
 
   0000-0007: Header (8 bytes)
-  0008-0049: Settings (32 bytes)
-  0040-0215: Channels names: 16 x (10 chars + zero) (176 bytes)
-  0216-0219: Single: 1 byte for selected line (=channel), 1 for first line (4 bytes)
-  0220-0539: Multi x 10 (320 bytes)
-              11 bytes (10 + 1) for the name 
+  0008-0071: Settings: 5 bytes (64 bytes)
+  0072-0279: Channels names: 16 x (12 chars + zero) (208 bytes)
+  0280-0287: Single: 1 byte for selected line (=channel), 1 for first line (8 bytes)
+  0288-0719: Multi x 12 (432 bytes)
+              13 bytes (12 + 1) for the name 
                8 bytes (2 x 4) for channel settings
                2 bytes for mode
                3 bytes for selected line, selected field, first line
-              = 24 bytes => for some future use 32 bytes 
+              = 26 bytes, but leave space for future use => 36 bytes 
   ... unused memory ...
 
   */
 
   static const uint16_t start_of_header = 0;
   static const uint16_t start_of_settings = 8;
-  static const uint16_t start_of_channel_names = 40;
-  static const uint16_t start_of_single = 216;
-  static const uint16_t start_of_multi = 220;
-  static const uint16_t multi_size = 32; // currently, we use 32 bytes for a multi
-  static const uint8_t max_multis = 10; // TODO number_of_multis
+  static const uint16_t start_of_channel_names = 72;
+  static const uint16_t start_of_single = 280;
+  static const uint16_t start_of_multi = 288;
+  static const uint16_t multi_size = 36; // currently, we use 36 bytes for a multi
+  static const uint8_t  max_multis = 12; // currently, we have a max of 12 multis  TODO number_of_multis
   
   // We make sure to ring a bell when we save to the EEPROM to make
   // sure that we don't save too much by accident.
@@ -188,7 +187,7 @@ namespace EE
 
   struct EE_Header
   {
-    uint16_t magic_number = 0x2B37;
+    uint16_t magic_number = 0x2B39;
     uint8_t version = 1;
     uint8_t number_of_multis = 1;
   };

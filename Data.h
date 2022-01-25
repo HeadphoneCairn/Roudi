@@ -56,7 +56,7 @@ const char* GetNumberPlusOne(uint8_t value);
 //==============================================================================
 
 const uint8_t NumberOfChannels = 16;
-const uint8_t MaxNameLength = 10; // Max number of characters in channel name or preset name, not including the /0
+const uint8_t MaxNameLength = 12; // Max number of characters in channel name or preset name, not including the /0
 
 struct SingleValues
 {

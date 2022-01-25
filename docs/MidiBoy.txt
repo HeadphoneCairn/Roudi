@@ -574,10 +574,10 @@ Ik gebruik 24 tekens, laatse 8 pixels is voor cursor
 
 
 ========= 1. MULTI =========
-01. Dreadbox    oct: +1 
+01. Dreadbox     oct: +1 
     pb/cc: off  vel: 90%   
 05. 0123456789  oct: +1 
-    pb/cc: on   vel: 0%
+    pb/cc: on    vel: 0%
 SPLIT mode,   split: C4        of LAYER mode
 > Save
 > Save as
@@ -715,3 +715,4 @@ x connect menus
 - Use 12 characters for channels anyway????
 - Order of OnStart OnStop Line in Page ... in subclasses
 - Allow for single mode, next to split and layer!
+
