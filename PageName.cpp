@@ -30,7 +30,7 @@ PageName::PageName(): Page(), m_number_prefix_len(0), m_number(0), m_position(0)
 void PageName::SetValues(const char* name, uint8_t number, uint8_t number_max, const char* number_prefix)
 {
   m_number = number % number_max; // make sure m_number is smaller than max
-  m_number_prefix_len = strlen(number_prefix);
+  m_number_prefix_len = strlen(GetPString(number_prefix));
   m_number_max = number_max;
   m_result = NONE;
   Screen::buffer[MaxLength] = ' ';
