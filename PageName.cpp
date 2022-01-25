@@ -14,7 +14,7 @@ const uint8_t MaxLength = MaxNameLength;
 PSTRING(PSTR_number_format, "%02d v X");
 PSTRING(PSTR_name_help_1, "use left/right to move");
 PSTRING(PSTR_name_help_2, "up/down to make changes");
-PSTRING(PSTR_name_help_3, "v=accept, X=cancel");
+PSTRING(PSTR_name_help_3, "v=save, X=cancel");
 
 PageName::PageName(): Page(), m_number_prefix_len(0), m_number(0), m_position(0), m_result(NONE)
 {

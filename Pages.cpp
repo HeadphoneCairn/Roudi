@@ -6,7 +6,7 @@
 #include "PageSettings.h"
 #include "PageNameChannel.h"
 #include "PageChannels.h"
-//#include "PageNamePreset.h"
+#include "PageNameMulti.h"
 
 #include "Debug.h"
 #include "Data.h"
@@ -19,7 +19,7 @@
 
   Lower level:
   0. PageSingle
-  1. PageMulti -------- PageNamePreset
+  1. PageMulti -------- PageNameMulti
   n. PageAbout
 
   Upper level:
@@ -32,6 +32,7 @@ namespace
 {
   PageSingle    g_page_single;
   PageMulti     g_page_multi;
+  PageNameMulti g_page_name_multi;
   PageAbout     g_page_about;
   PageSettings  g_page_settings;
   PageNameChannel g_page_name_channel;
@@ -72,6 +73,7 @@ namespace Pages
       case PAGE_SETTINGS: g_current_page = &g_page_settings; break;
       case PAGE_CHANNELS: g_current_page = &g_page_channels; break;
       case PAGE_NAME_CHANNEL: g_current_page = &g_page_name_channel; break;
+      case PAGE_NAME_MULTI:   g_current_page = &g_page_name_multi; break;
       default:            g_current_page = &g_page_single; break;
     }
     g_current_page->Start(data);
@@ -124,7 +126,8 @@ namespace Pages
   void ButtonA() 
   {
     // Ignore A/B for some pages
-    if (g_current_page == &g_page_name_channel)
+    if (g_current_page == &g_page_name_channel ||
+        g_current_page == &g_page_name_multi)
       return;
 
     // Go to previous page
@@ -148,7 +151,8 @@ namespace Pages
   void ButtonB()
   {
     // Ignore A/B for some pages
-    if (g_current_page == &g_page_name_channel)
+    if (g_current_page == &g_page_name_channel ||
+        g_current_page == &g_page_name_multi)
       return;
 
     // Go to next page
@@ -173,7 +177,8 @@ namespace Pages
   {
     // Ignore A/B for some pages
     if (g_current_page == &g_page_channels ||
-        g_current_page == &g_page_name_channel)
+        g_current_page == &g_page_name_channel ||
+        g_current_page == &g_page_name_multi)
       return;
 
     g_current_lower = !g_current_lower;
@@ -184,18 +189,19 @@ namespace Pages
   uint16_t GetTotalPageUsage()
   {
     return sizeof(PageSingle) + 
-           sizeof(PageMulti) +
-           sizeof(PageSettings) +
-           sizeof(PageAbout) +
-           sizeof(PageNameChannel) +
-           sizeof(PageChannels);
+           sizeof(PageMulti) + sizeof(PageNameMulti) +
+           sizeof(PageSettings) + sizeof(PageChannels) + sizeof(PageNameChannel) +
+           sizeof(PageAbout);
   }
 
-  PSTRING(PSTR_page_usage, "%d %d %d %d %d %d");
+  PSTRING(PSTR_page_usage, "%d %d %d %d %d %d %d");
   const char* GetPageUsage()
   {
-    snprintf(data_scratch, sizeof(data_scratch), GetPString(PSTR_page_usage), 
-      sizeof(PageSingle), sizeof(PageMulti), sizeof(PageSettings), sizeof(PageAbout), sizeof(PageNameChannel), sizeof(PageChannels));
+    snprintf(data_scratch, sizeof(data_scratch), GetPString(PSTR_page_usage),
+             sizeof(PageSingle), 
+             sizeof(PageMulti), sizeof(PageNameMulti),
+             sizeof(PageSettings), sizeof(PageChannels), sizeof(PageNameChannel),
+             sizeof(PageAbout));
     return data_scratch;
   }
 

@@ -13,6 +13,7 @@ enum PageID
   // --- Popup pages ---
   PAGE_CHANNELS     = 100,
   PAGE_NAME_CHANNEL = 101,
+  PAGE_NAME_MULTI   = 102,
   
   // --- Special pages ---
   PAGE_DEBUG        = 254,
