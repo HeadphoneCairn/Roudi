@@ -2,6 +2,7 @@
 
 #include "Debug.h"
 #include "Data.h"
+#include "Pages.h"
 #include "Roudi.h"
 
 PSTRING(PSTR_page_single, " SINGLE "); 
@@ -26,6 +27,9 @@ Page::LineResult PageSingle::Line(LineFunction func, uint8_t line, uint8_t field
   const char* text = nullptr;
   if (func == GET_TEXT) {
     text = (line < NumberOfChannels) ? EE::GetChannelNameFormatted(line) : GetPStringNone();
+  } else if (func == DO_LEFT || func == DO_RIGHT) {
+    if (line < NumberOfChannels)
+      Pages::SetNextPage(PAGE_NAME_CHANNEL, line);
   } else if (func == DO_SELECTED) {
     SetMidiConfiguration(line);
   }

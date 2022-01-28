@@ -30,9 +30,9 @@ bool PageNameChannel::OnUpDown(UpDownAction action)
     uint8_t channel_value;
     GetNameAndValue(data_scratch, channel_value);
     EE::SetChannelName(channel_value, data_scratch);
-    Pages::SetNextPage(PAGE_CHANNELS);
+    Pages::SetNextPage(PAGE_SINGLE);
   } else if (GetResult() == REJECT) {
-    Pages::SetNextPage(PAGE_CHANNELS);
+    Pages::SetNextPage(PAGE_SINGLE);
   }
   return redraw;
 }

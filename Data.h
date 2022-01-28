@@ -79,7 +79,6 @@ void GetMultiDefault(struct MultiValues& values);
 struct SettingsValues
 {
   uint8_t input_channel;    // stored as 0-15, shown as 1-16
-  uint8_t output_channels;  // always stores 0, is just easy way to make sure UI works correctly
   uint8_t velocity_curve;   // 
   uint8_t program_change;   // 
   uint8_t brightness;       // 

@@ -155,7 +155,7 @@ namespace EE
   EEPROM has 1024 bytes:
 
   0000-0007: Header (8 bytes)
-  0008-0071: Settings: 5 bytes (64 bytes)
+  0008-0071: Settings: 4 bytes (64 bytes)
   0072-0279: Channels names: 16 x (12 chars + zero) (208 bytes)
   0280-0287: Single: 1 byte for selected line (=channel), 1 for first line (8 bytes)
   0288-0719: Multi x 12 (432 bytes)

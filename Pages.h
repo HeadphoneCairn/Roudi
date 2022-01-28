@@ -11,7 +11,6 @@ enum PageID
   PAGE_ABOUT        = 3,
 
   // --- Popup pages ---
-  PAGE_CHANNELS     = 100,
   PAGE_NAME_CHANNEL = 101,
   PAGE_NAME_MULTI   = 102,
   

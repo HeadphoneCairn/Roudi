@@ -15,8 +15,7 @@ protected:
 private:
   bool ShowChannelMenu();
 private:
-  NewCombiline m_ui_input_channel;  
-  NewCombiline m_ui_output_channels;
+  NewCombiline m_ui_input_channel;
   NewCombiline m_ui_velocity_curve; 
   NewCombiline m_ui_program_change; 
   NewCombiline m_ui_brightness;  

@@ -1,3 +1,5 @@
+#if 0 // No longer needed
+
 #include "PageChannels.h"
 
 #include "Debug.h"
@@ -51,3 +53,5 @@ Page::LineResult PageChannels::Line(LineFunction func, uint8_t line, uint8_t fie
   
   return {1, text, inversion, false};
 }
+
+#endif
