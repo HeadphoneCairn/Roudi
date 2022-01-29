@@ -41,6 +41,7 @@ namespace
   PageID g_current_upper_id = PAGE_SETTINGS;
   Page*  g_current_page     = nullptr;
   bool   g_current_lower    = true;
+  uint8_t g_current_multi   = 0;
 
 
   // The page that should be started when Left/Right/Up/Down returns
@@ -54,7 +55,7 @@ namespace
 
 namespace Pages
 {
-  void ShowPage(PageID page_id, uint8_t data = 0xFF, uint8_t selected_line = 0, uint8_t first_line = 0xFF)
+  void ShowPage(PageID page_id, uint8_t data = 0xFF /*, uint8_t selected_line = 0, uint8_t first_line = 0xFF*/)
   {
     // --- Stop previous page ---
     if (g_current_page)
@@ -67,7 +68,13 @@ namespace Pages
       g_current_upper_id = page_id;
     switch(page_id) {
       case PAGE_SINGLE:   g_current_page = &g_page_single; break;
-      case PAGE_MULTI:    g_current_page = &g_page_multi; break;
+      case PAGE_MULTI:    
+        g_current_page = &g_page_multi; 
+        if (data == 0xFF)
+          data = g_current_multi; 
+        else 
+          g_current_multi = data; 
+        break;
       case PAGE_ABOUT:    g_current_page = &g_page_about; break;
       case PAGE_SETTINGS: g_current_page = &g_page_settings; break;
       case PAGE_NAME_CHANNEL: g_current_page = &g_page_name_channel; break;
@@ -129,12 +136,24 @@ namespace Pages
       return;
 
     // Go to previous page
+    uint8_t data = 0xFF;
     PageID page_to_show = PAGE_ABOUT; // fallback
     if (g_current_lower) {
       switch (g_current_lower_id) {
-        case PAGE_SINGLE:   page_to_show = PAGE_ABOUT; break;
-        case PAGE_MULTI:    page_to_show = PAGE_SINGLE; break;
-        case PAGE_ABOUT:    page_to_show = PAGE_MULTI; break;
+        case PAGE_SINGLE:  
+          page_to_show = PAGE_ABOUT;
+          break;
+        case PAGE_MULTI:
+          if (g_current_multi > 0) {
+            data = g_current_multi - 1;
+            page_to_show = PAGE_MULTI;
+          } else
+            page_to_show = PAGE_SINGLE;
+          break;
+        case PAGE_ABOUT:   
+          page_to_show = PAGE_MULTI;
+          data = EE::GetNumberOfMultis() - 1; 
+          break;
       }
     } else {
       switch (g_current_upper_id) {
@@ -142,7 +161,7 @@ namespace Pages
       }
     }
   
-    ShowPage(page_to_show);
+    ShowPage(page_to_show, data);
   }
 
   void ButtonB()
@@ -153,12 +172,23 @@ namespace Pages
       return;
 
     // Go to next page
+    uint8_t data = 0xFF;
     PageID page_to_show = PAGE_ABOUT; // fallback
     if (g_current_lower) {
       switch (g_current_lower_id) {
-        case PAGE_SINGLE:   page_to_show = PAGE_MULTI; break;
-        case PAGE_MULTI:    page_to_show = PAGE_ABOUT; break;
-        case PAGE_ABOUT:    page_to_show = PAGE_SINGLE; break;
+        case PAGE_SINGLE:   
+          page_to_show = PAGE_MULTI;
+          data = 0; // new current multi 
+          break;
+        case PAGE_MULTI:
+          if (g_current_multi + 1 < EE::GetNumberOfMultis()) {
+            data = g_current_multi + 1;
+            page_to_show = PAGE_MULTI;
+          } else 
+            page_to_show = PAGE_ABOUT; 
+          break;
+        case PAGE_ABOUT:    
+          page_to_show = PAGE_SINGLE; break;
       }
     } else {
       switch (g_current_upper_id) {
@@ -166,7 +196,7 @@ namespace Pages
       }
     }
 
-    ShowPage(page_to_show);
+    ShowPage(page_to_show, data);
   }  
 
   void ButtonAB()

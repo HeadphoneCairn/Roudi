@@ -11,17 +11,10 @@
 
 namespace 
 {
-  bool g_first_run = true;
-
-
   MultiValues g_values;
-
 }
 
-
 namespace {
-
-  PSTRING(PSTR_page_multi, " MULTI ");
 
   PSTRING(PSTR_channel, "");
   void g_par_channel(NewParsPars& pars)
@@ -98,14 +91,12 @@ namespace {
 
 
 PageMulti::PageMulti(): 
-  Page() {}
+  Page(), m_which_multi(0xFF) {}
 
-void PageMulti::OnStart(uint8_t)
+void PageMulti::OnStart(uint8_t which_multi)
 {
-  if (g_first_run) {
-    g_first_run = false;
-    EE::GetMulti(0, g_values);
-  }
+  m_which_multi = which_multi;
+  EE::GetMulti(m_which_multi, g_values);
 
   // Bind ui elements to values
   m_ui_channel_1.Init(g_par_channel, &g_values.channel[0]);
@@ -128,7 +119,9 @@ void PageMulti::OnStart(uint8_t)
 
 const char* PageMulti::GetTitle()
 {
-  return GetPString(PSTR_page_multi);
+  //sprintf(Screen::buffer, " %02d/%02d. %s ", m_which_multi + 1, EE::GetNumberOfMultis(), g_values.name);
+  sprintf(Screen::buffer, " %02d. %s ", m_which_multi + 1, g_values.name);
+  return Screen::buffer;
 }
 
 
@@ -144,7 +137,7 @@ Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
     case 5: return DefaultLine(func);
     case 6: 
       if (func == DO_LEFT || func == DO_RIGHT) {
-        Pages::SetNextPage(PAGE_NAME_MULTI, 0 /* TODO: current multi */);
+        Pages::SetNextPage(PAGE_NAME_MULTI, m_which_multi);
         return {1, nullptr, Screen::inversion_none, false};
       } else
         return TextLine(func, PSTR_save_as);

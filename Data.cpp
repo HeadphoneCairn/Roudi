@@ -190,7 +190,7 @@ namespace EE
 
   struct EE_Header
   {
-    uint16_t magic_number = 0x2B3A;
+    uint16_t magic_number = 0x2B3B;
     uint8_t version = 1;
   };
 

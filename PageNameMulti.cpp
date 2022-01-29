@@ -12,10 +12,12 @@ PageNameMulti::PageNameMulti(): PageName()
 {
 }
 
-void PageNameMulti::OnStart(uint8_t multi)
+void PageNameMulti::OnStart(uint8_t which_multi)
 {
   const uint8_t max_multi_allowed = min(EE::GetNumberOfMultis() + 1, EE::GetMaxNumberOfMultis()); // User can create a new multi by saving one further than current number of multis. 
-  SetValues("multiculti", multi, max_multi_allowed, PSTR_multi_prefix);
+  MultiValues values;
+  EE::GetMulti(which_multi, values);
+  SetValues(values.name, which_multi, max_multi_allowed, PSTR_multi_prefix);
   PageName::OnStart();
 }
 
@@ -29,9 +31,11 @@ bool PageNameMulti::OnUpDown(UpDownAction action)
   bool redraw = PageName::OnUpDown(action);
   if (GetResult() == ACCEPT) {
     uint8_t multi;
-    GetNameAndValue(data_scratch, multi);
-    //TODO: EE::SetMultiName(channel_value, data_scratch);
-    Pages::SetNextPage(PAGE_MULTI);
+    MultiValues values;
+    GetMultiDefault(values);
+    GetNameAndValue(values.name, multi);
+    EE::SetMulti(multi, values);
+    Pages::SetNextPage(PAGE_MULTI, multi);
   } else if (GetResult() == REJECT) {
     Pages::SetNextPage(PAGE_MULTI);
   }
