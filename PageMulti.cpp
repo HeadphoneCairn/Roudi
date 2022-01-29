@@ -111,7 +111,7 @@ void PageMulti::OnStart(uint8_t which_multi)
   m_ui_mode.Init(g_par_mode, &g_values.mode);
   m_ui_split_note.Init(g_par_split_note, &g_values.split_note);
 
-  SetNumberOfLines(20);
+  SetNumberOfLines(11);
 
   SetMidiConfiguration();
 }
@@ -134,21 +134,35 @@ Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
     case 3: return DoubleCombiline(func, field, m_ui_pitchbend_2, 14, 2, false, m_ui_velocity_2, 8, 0, false);
     case 4: return DoubleCombiline(func, field, m_ui_mode, 12, 2, false, m_ui_split_note, 10, 0, false);
     case 5: return DefaultLine(func);
-    case 6: 
-      if (func == DO_LEFT || func == DO_RIGHT) {
-        Pages::SetNextPage(PAGE_NAME_MULTI, m_which_multi);
-        return {1, nullptr, Screen::inversion_none, false};
-      } else
-        return TextLine(func, PSTR_save_as);
+    case 6: // Save As ... 
+      if (func == DO_LEFT || func == DO_RIGHT) SaveAs();
+      return TextLine(func, PSTR_save_as);
     case 7: return TextLine(func, PSTR_remove);
     case 8: return TextLine(func, PSTR_move_left);
     case 9: return TextLine(func, PSTR_move_right);
-    case 10: return TextLine(func, PSTR_new);
+    case 10: // New ...
+      if (func == DO_LEFT || func == DO_RIGHT) New();
+      return TextLine(func, PSTR_new);
     default: return DefaultLine(func);
   }
 }
 
+void PageMulti::SaveAs()
+{
+  Pages::SetNextPage(PAGE_NAME_MULTI, m_which_multi);
+}
 
+void PageMulti::New()
+{
+  uint8_t num_multi = EE::GetNumberOfMultis();
+  if (num_multi < EE::GetMaxNumberOfMultis()) {
+    MultiValues default_values;
+    GetMultiDefault(default_values);
+    EE::SetMulti(num_multi, default_values);
+    Pages::SetNextPage(PAGE_MULTI, num_multi);
+  } else
+    Debug::BeepLow();
+}
 
 
 #if 0

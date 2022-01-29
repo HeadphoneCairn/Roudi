@@ -181,8 +181,8 @@ namespace EE
   
   // We make sure to ring a bell when we save to the EEPROM to make
   // sure that we don't save too much by accident.
-  // Because we can only save 10000 times to the EEPROM without damaging it.
-  #define EEPROM_PUT(position, value) { Debug::BeepLow(); EEPROM.put(position, value); }
+  // Because we can only save 100,000 times to the EEPROM without damaging it.
+  #define EEPROM_PUT(position, value) { Debug::Beep(); EEPROM.put(position, value); }
   #define EEPROM_GET(position, value)	{ EEPROM.get(position, value); }
 
 
@@ -190,7 +190,7 @@ namespace EE
 
   struct EE_Header
   {
-    uint16_t magic_number = 0x2B3B;
+    uint16_t magic_number = 0x2B3C;
     uint8_t version = 1;
   };
 

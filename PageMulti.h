@@ -16,13 +16,16 @@ protected:
 private:
   uint8_t m_which_multi;
 private:
-  void SetMidiConfiguration();
-private:
   Combiline m_ui_channel_1, m_ui_octave_1;
   Combiline m_ui_pitchbend_1, m_ui_velocity_1;
   Combiline m_ui_channel_2, m_ui_octave_2;
   Combiline m_ui_pitchbend_2, m_ui_velocity_2;
   Combiline m_ui_mode, m_ui_split_note;
+private:
+  void SaveAs();
+  void New();
+private:
+  void SetMidiConfiguration();
 
 /*
 01. Dreadbox    oct: +1 
