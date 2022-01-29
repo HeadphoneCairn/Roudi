@@ -710,9 +710,10 @@ x Put everything on disk
 x Channels menu
 x connect menus 
 - Save first_line and selected line and field
-- 
-(- Make fake Midi Monitor)
-- Use 12 characters for channels anyway????
+- auto save
+- Make fake Midi Monitor
+x Use 12 characters for channels anyway????
 - Order of OnStart OnStop Line in Page ... in subclasses
-- Allow for single mode, next to split and layer!
-
+x Allow for single mode, next to split and layer!
+- Uitroepteken in namen
+- Multi namen beperken tot hoofdletters + nummers + leestekens

@@ -127,7 +127,7 @@ void GetSingleDefault(struct SingleValues& values)
   values.channel = 0;
 }
 
-PSTRING(PSTR_default_multi_name, "Multi");
+PSTRING(PSTR_default_multi_name, "MULTI");
 void GetMultiDefault(struct MultiValues& values)
 {
   memset(&values, 0, sizeof(values)); // sizeof of a reference gives the size of the referenced, so ok!
