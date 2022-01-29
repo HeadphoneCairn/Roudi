@@ -29,6 +29,11 @@ PSTRING(PSTR_about_15, " left, right: modify");
 PSTRING(PSTR_about_16, "");
 PSTRING(PSTR_about_17, "STATUS:");
 
+/*
+To add:
+- Everything is saved automatically.
+*/
+
 PTABLE(PTAB_about_text,
        PSTR_about_00,
        PSTR_about_01,

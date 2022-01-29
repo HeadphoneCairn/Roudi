@@ -59,22 +59,21 @@ void Page::SetNumberOfLines(uint8_t i_number_of_lines, uint8_t i_selected_line, 
     m_selected_field = 0;
 }
 
-//uint8_t Page::GetSelectedLine()
-//{
-//  return m_selected_line;
-//}
-//
-//uint8_t Page::GetFirstLine()
-//{
-//  return m_first_line;
-//}
-
-/*
-const char* Page::GetTitle()
+uint8_t Page::GetSelectedLine()
 {
-  return GetPStringEmpty();
+  return m_selected_line;
 }
-*/
+
+uint8_t Page::GetSelectedField()
+{
+  return m_selected_field;
+}
+
+uint8_t Page::GetFirstLine()
+{
+  return m_first_line;
+}
+
 
 void Page::Start(uint8_t parameter)
 {

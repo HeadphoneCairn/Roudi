@@ -710,7 +710,14 @@ x Put everything on disk
 x Channels menu
 x connect menus 
 x Save first_line and selected line and field
-- save on switch and save on timer
+- save on switch
+  x Multi
+  - single
+  - settings
+- save on timer
+  - multi
+  - single
+  - settings
 - Make fake Midi Monitor
 x Use 12 characters for channels anyway????
 - Order of OnStart OnStop Line in Page ... in subclasses

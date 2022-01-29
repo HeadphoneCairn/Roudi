@@ -11,9 +11,11 @@ public:
   Page();
   // SetNumberOfLines() must be called in the OnStart()!
   // TODO: simplify or remove???
+protected:
   void SetNumberOfLines(uint8_t number_of_lines, uint8_t selected_line = 0xFF, uint8_t selected_field = 0xFF, uint8_t first_line = 0xFF); 
-//  uint8_t GetSelectedLine();
-//  uint8_t GetFirstLine();
+  uint8_t GetSelectedLine();
+  uint8_t GetSelectedField();
+  uint8_t GetFirstLine();
 public:
   void Start(uint8_t parameter = 0xFF); // Call this when you want to first display the page
   void Stop(); // Call this when you want to exit the page

@@ -156,8 +156,10 @@ Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
 void PageMulti::SaveIfModified()
 {
   // Update "cursor"
-  
-    SetNumberOfLines(11, m_values.selected_line, m_values.selected_field, m_values.first_line);
+  m_values.selected_line = GetSelectedLine();
+  m_values.selected_field = GetSelectedField();
+  m_values.first_line = GetFirstLine();
+
   // Save if values are different
   MultiValues stored_values;
   EE::GetMulti(m_which, stored_values);
