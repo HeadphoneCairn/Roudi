@@ -158,7 +158,8 @@ namespace EE
   0008-0071: Settings: 4 bytes (64 bytes)
   0072-0279: Channels names: 16 x (12 chars + zero) (208 bytes)
   0280-0287: Single: 1 byte for selected line (=channel), 1 for first line (8 bytes)
-  0288-0719: Multi x 12 (432 bytes)
+  0288-0291: Multi header: only number of multis for the moment (4 bytes)
+  0292-0723: Multi x 12 (432 bytes)
               13 bytes (12 + 1) for the name 
                8 bytes (2 x 4) for channel settings
                2 bytes for mode
@@ -166,13 +167,15 @@ namespace EE
               = 26 bytes, but leave space for future use => 36 bytes 
   ... unused memory ...
 
+  NOTE: EEPROM has 100,000 write/erase cycles
   */
 
   static const uint16_t start_of_header = 0;
   static const uint16_t start_of_settings = 8;
   static const uint16_t start_of_channel_names = 72;
   static const uint16_t start_of_single = 280;
-  static const uint16_t start_of_multi = 288;
+  static const uint16_t start_of_multi_header = 288;
+  static const uint16_t start_of_multis = 292;
   static const uint16_t multi_size = 36; // currently, we use 36 bytes for a multi
   static const uint8_t  max_multis = 12; // currently, we have a max of 12 multis  TODO number_of_multis
   
@@ -187,9 +190,8 @@ namespace EE
 
   struct EE_Header
   {
-    uint16_t magic_number = 0x2B39;
+    uint16_t magic_number = 0x2B3A;
     uint8_t version = 1;
-    uint8_t number_of_multis = 1;
   };
 
   // ===== S I N G L E =========================================================
@@ -206,17 +208,50 @@ namespace EE
 
   // ===== M U L T I ===========================================================
 
+  struct EE_MultiHeader
+  {
+    uint8_t number_of_multis;
+  };
+
+  void SetNumberOfMultis(uint8_t number_of_multis)
+  {
+    EE_MultiHeader multi_header;
+    multi_header.number_of_multis = number_of_multis;
+    EEPROM_PUT(start_of_multi_header, multi_header);
+  }
+
+  uint8_t GetNumberOfMultis()
+  {
+    EE_MultiHeader multi_header;
+    EEPROM_GET(start_of_multi_header, multi_header);
+    return multi_header.number_of_multis;
+  }
+
+  uint8_t GetMaxNumberOfMultis()
+  {
+    return max_multis;
+  }
+
   void SetMulti(uint8_t which, const struct MultiValues& values)
   {
-    if (which < max_multis)
-      EEPROM_PUT(start_of_multi + static_cast<uint16_t>(which) * multi_size, values);
+    // This function saves the multi to the requested spot 'which'.
+    // It is allowed to write one further than the current number of multis, 
+    // in which case the number of multis is incremented.
+    if (which <= GetNumberOfMultis() && which < GetMaxNumberOfMultis()) {
+      if (which == GetNumberOfMultis()) // new multi
+        SetNumberOfMultis(which + 1);
+      EEPROM_PUT(start_of_multis + static_cast<uint16_t>(which) * multi_size, values);
+    }
   }
   
   void GetMulti(uint8_t which, struct MultiValues& values)
   {
     GetMultiDefault(values);
-    if (which < max_multis)
-      EEPROM_GET(start_of_multi + static_cast<uint16_t>(which) * multi_size, values);
+    if (which < GetNumberOfMultis()) {
+      EEPROM_GET(start_of_multis + static_cast<uint16_t>(which) * multi_size, values);
+    } else {
+      GetMultiDefault(values); // just as a fallback in case a bad which is supplied
+    }
   }
 
   // ===== S E T T I N G S =====================================================
@@ -293,6 +328,8 @@ namespace EE
   
   void InitMulti()
   {
+    // We create one 'default' multi
+    SetNumberOfMultis(1);
     struct MultiValues default_values;
     GetMultiDefault(default_values);
     SetMulti(0, default_values);

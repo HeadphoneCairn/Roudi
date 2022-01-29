@@ -144,7 +144,7 @@ Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
     case 5: return DefaultLine(func);
     case 6: 
       if (func == DO_LEFT || func == DO_RIGHT) {
-        Pages::SetNextPage(PAGE_NAME_MULTI, line);
+        Pages::SetNextPage(PAGE_NAME_MULTI, 0 /* TODO: current multi */);
         return {1, nullptr, Screen::inversion_none, false};
       } else
         return TextLine(func, PSTR_save_as);

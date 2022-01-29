@@ -14,7 +14,8 @@ PageNameMulti::PageNameMulti(): PageName()
 
 void PageNameMulti::OnStart(uint8_t multi)
 {
-  SetValues("multiculti", multi, 20, PSTR_multi_prefix); // TODO!
+  const uint8_t max_multi_allowed = min(EE::GetNumberOfMultis() + 1, EE::GetMaxNumberOfMultis()); // User can create a new multi by saving one further than current number of multis. 
+  SetValues("multiculti", multi, max_multi_allowed, PSTR_multi_prefix);
   PageName::OnStart();
 }
 

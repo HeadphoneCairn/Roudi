@@ -105,7 +105,9 @@ namespace EE
   void GetSingle(struct SingleValues& values);
 
   // --- Multi ---
-  void SetMulti(uint8_t which, const struct MultiValues& values);
+  uint8_t GetNumberOfMultis();
+  uint8_t GetMaxNumberOfMultis();
+  void SetMulti(uint8_t which, const struct MultiValues& values); // Only [0..GetNumberOfMultis] can be set, as long as GetNumberOfMultis()<GetMaxNumberOfMultis()
   void GetMulti(uint8_t which, struct MultiValues& values);
 
   // --- Settings ---
