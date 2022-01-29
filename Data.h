@@ -62,7 +62,7 @@ struct SingleValues
 {
   uint8_t channel; // saved to EEPROM as channel (0-15)
 };
-void GetSingleDefault(struct SingleValues& values);
+void GetSingleDefault(SingleValues& values);
 
 struct MultiValues
 {
@@ -77,7 +77,7 @@ struct MultiValues
   uint8_t mode;        // 0: SPLIT, 1: LAYER
   uint8_t split_note;
 };
-void GetMultiDefault(struct MultiValues& values);
+void GetMultiDefault(MultiValues& values);
 
 struct SettingsValues
 {
@@ -86,7 +86,7 @@ struct SettingsValues
   uint8_t program_change;   // 
   uint8_t brightness;       // 
 };
-void GetSettingsDefault(struct SettingsValues& values);
+void GetSettingsDefault(SettingsValues& values);
 
 
 
@@ -104,19 +104,19 @@ namespace EE
   void Init();
 
   // --- Single ---
-  void SetSingle(const struct SingleValues& values);
-  void GetSingle(struct SingleValues& values);
+  void SetSingle(const SingleValues& values);
+  void GetSingle(SingleValues& values);
 
   // --- Multi ---
   uint8_t GetNumberOfMultis();
   uint8_t GetMaxNumberOfMultis();
-  void SetMulti(uint8_t which, const struct MultiValues& values); // Only [0..GetNumberOfMultis] can be set, as long as GetNumberOfMultis()<GetMaxNumberOfMultis()
-  void GetMulti(uint8_t which, struct MultiValues& values);
+  void SetMulti(uint8_t which, const MultiValues& values); // Only [0..GetNumberOfMultis] can be set, as long as GetNumberOfMultis()<GetMaxNumberOfMultis()
+  void GetMulti(uint8_t which, MultiValues& values);
 
   // --- Settings ---
-  void SetSettings(const struct SettingsValues& values);
-  void GetSettings(struct SettingsValues& values);
-  struct SettingsValues GetSettings();
+  void SetSettings(const SettingsValues& values);
+  void GetSettings(SettingsValues& values);
+  SettingsValues GetSettings();
   
   // --- Channels ---
   // channel value: 0-15

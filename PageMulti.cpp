@@ -118,6 +118,11 @@ void PageMulti::OnStart(uint8_t which_multi)
   SetMidiConfiguration();
 }
 
+void PageMulti::OnStop(uint8_t selected_line, uint8_t first_line)
+{
+  SaveIfModified();  
+}
+
 const char* PageMulti::GetTitle()
 {
   //sprintf(Screen::buffer, " %02d/%02d. %s ", m_which + 1, EE::GetNumberOfMultis(), m_values.name);
@@ -149,6 +154,15 @@ Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
       return TextLine(func, PSTR_new);
     default: return DefaultLine(func);
   }
+}
+
+
+void PageMulti::SaveIfModified()
+{
+  MultiValues stored_values, current_values;
+  EE::GetMulti(m_which, stored_values);
+  if (memcmp(&stored_values, &m_values, sizeof(stored_values)) != 0)
+    EE::SetMulti(m_which, m_values);
 }
 
 void PageMulti::SaveAs()
@@ -203,9 +217,6 @@ bool PageMulti::ActualOnLine(LineAction action, uint8_t line)
 
 #endif
 
-void PageMulti::OnStop(uint8_t selected_line, uint8_t first_line)
-{
-}
 
 
 void PageMulti::SetMidiConfiguration()

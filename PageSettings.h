@@ -20,5 +20,5 @@ private:
   Combiline m_ui_program_change; 
   Combiline m_ui_brightness;  
 
-  struct SettingsValues m_values;
+  SettingsValues m_values;
 };

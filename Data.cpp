@@ -121,14 +121,14 @@ const char* GetNumberPlusOne(uint8_t value)
 //
 //==============================================================================
 
-void GetSingleDefault(struct SingleValues& values)
+void GetSingleDefault(SingleValues& values)
 {
   memset(&values, 0, sizeof(values)); // sizeof of a reference gives the size of the referenced, so ok!
   values.channel = 0;
 }
 
 PSTRING(PSTR_default_multi_name, "MULTI");
-void GetMultiDefault(struct MultiValues& values)
+void GetMultiDefault(MultiValues& values)
 {
   memset(&values, 0, sizeof(values)); // sizeof of a reference gives the size of the referenced, so ok!
   strcpy(values.name, GetPString(PSTR_default_multi_name));
@@ -137,7 +137,7 @@ void GetMultiDefault(struct MultiValues& values)
   values.split_note = 60; // C4
 }
 
-void GetSettingsDefault(struct SettingsValues& values)
+void GetSettingsDefault(SettingsValues& values)
 {
   memset(&values, 0, sizeof(values)); // sizeof of a reference gives the size of the referenced, so ok!
 }
@@ -196,12 +196,12 @@ namespace EE
 
   // ===== S I N G L E =========================================================
 
-  void SetSingle(const struct SingleValues& values)
+  void SetSingle(const SingleValues& values)
   {
     EEPROM_PUT(start_of_single, values);
   }
 
-  void GetSingle(struct SingleValues& values)
+  void GetSingle(SingleValues& values)
   {
     EEPROM_GET(start_of_single, values);
   }
@@ -232,7 +232,7 @@ namespace EE
     return max_multis;
   }
 
-  void SetMulti(uint8_t which, const struct MultiValues& values)
+  void SetMulti(uint8_t which, const MultiValues& values)
   {
     // This function saves the multi to the requested spot 'which'.
     // It is allowed to write one further than the current number of multis, 
@@ -244,7 +244,7 @@ namespace EE
     }
   }
   
-  void GetMulti(uint8_t which, struct MultiValues& values)
+  void GetMulti(uint8_t which, MultiValues& values)
   {
     GetMultiDefault(values);
     if (which < GetNumberOfMultis()) {
@@ -256,19 +256,19 @@ namespace EE
 
   // ===== S E T T I N G S =====================================================
 
-  void SetSettings(const struct SettingsValues& values)
+  void SetSettings(const SettingsValues& values)
   {
     EEPROM_PUT(start_of_settings, values);
   }
 
-  void GetSettings(struct SettingsValues& values)
+  void GetSettings(SettingsValues& values)
   {
     EEPROM_GET(start_of_settings, values);
   }
 
-  struct SettingsValues GetSettings()
+  SettingsValues GetSettings()
   {
-    struct SettingsValues values;
+    SettingsValues values;
     EE::GetSettings(values);
     return values;
   }
@@ -321,7 +321,7 @@ namespace EE
 
   void InitSingle()
   {
-    struct SingleValues default_values;
+    SingleValues default_values;
     GetSingleDefault(default_values);
     SetSingle(default_values);
   }
@@ -330,7 +330,7 @@ namespace EE
   {
     // We create one 'default' multi
     SetNumberOfMultis(1);
-    struct MultiValues default_values;
+    MultiValues default_values;
     GetMultiDefault(default_values);
     SetMulti(0, default_values);
   }
