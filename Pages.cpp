@@ -214,13 +214,6 @@ namespace Pages
     ShowPage(g_current_lower ? g_current_lower_id : g_current_upper_id);
   }
 
-
-  MultiValues GetCurrentMultiValues()
-  {
-    return g_page_multi.GetValues();
-  }
-
-
   uint16_t GetTotalPageUsage()
   {
     return sizeof(PageSingle) + sizeof(PageNameChannel) +

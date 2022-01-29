@@ -2,8 +2,6 @@
 
 #include <Arduino.h> // for uint8_t
 
-#include "data.h"
-
 enum PageID
 {
   // --- AB pages ---
@@ -42,9 +40,6 @@ namespace Pages
   void ButtonA();
   void ButtonB();
   void ButtonAB();
-
-  // Special access functions
-  MultiValues GetCurrentMultiValues();
 
   // Debug info
   uint16_t GetTotalPageUsage();

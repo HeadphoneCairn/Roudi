@@ -88,10 +88,6 @@ PageMulti::PageMulti():
   GetMultiDefault(m_values);
 }
 
-MultiValues PageMulti::GetValues()
-{
-  return m_values;
-}
 
 
 void PageMulti::OnStart(uint8_t which_multi)
@@ -159,7 +155,11 @@ Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
 
 void PageMulti::SaveIfModified()
 {
-  MultiValues stored_values, current_values;
+  // Update "cursor"
+  
+    SetNumberOfLines(11, m_values.selected_line, m_values.selected_field, m_values.first_line);
+  // Save if values are different
+  MultiValues stored_values;
   EE::GetMulti(m_which, stored_values);
   if (memcmp(&stored_values, &m_values, sizeof(stored_values)) != 0)
     EE::SetMulti(m_which, m_values);

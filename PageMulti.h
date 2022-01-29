@@ -7,7 +7,6 @@ class PageMulti: public Page
 {
 public:
   PageMulti();
-  MultiValues GetValues();
 protected:
   virtual const char* GetTitle() override;
   virtual LineResult Line(LineFunction func, uint8_t line, uint8_t field) override;
