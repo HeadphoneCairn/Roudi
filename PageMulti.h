@@ -3,18 +3,19 @@
 #include "Data.h"
 #include "Page.h"
 
-
 class PageMulti: public Page
 {
 public:
   PageMulti();
+  MultiValues GetValues();
 protected:
   virtual const char* GetTitle() override;
   virtual LineResult Line(LineFunction func, uint8_t line, uint8_t field) override;
   virtual void OnStart(uint8_t which_multi = 0xFF) override;
   virtual void OnStop(uint8_t selected_line, uint8_t first_line) override;
 private:
-  uint8_t m_which_multi;
+  uint8_t m_which; // number of this multi, 0 based 
+  MultiValues m_values;
 private:
   Combiline m_ui_channel_1, m_ui_octave_1;
   Combiline m_ui_pitchbend_1, m_ui_velocity_1;

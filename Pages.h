@@ -2,6 +2,8 @@
 
 #include <Arduino.h> // for uint8_t
 
+#include "data.h"
+
 enum PageID
 {
   // --- AB pages ---
@@ -32,6 +34,7 @@ namespace Pages
   // back at Pages level.
   void SetNextPage(PageID page_id, uint8_t data = 0xFF); 
 
+  // Act on pushed buttons
   void ButtonUp();
   void ButtonDown();
   void ButtonLeft();
@@ -40,6 +43,10 @@ namespace Pages
   void ButtonB();
   void ButtonAB();
 
+  // Special access functions
+  MultiValues GetCurrentMultiValues();
+
+  // Debug info
   uint16_t GetTotalPageUsage();
   const char* GetPageUsage();
 }

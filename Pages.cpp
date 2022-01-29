@@ -30,6 +30,10 @@
 
 namespace 
 {
+  // NOTE: Could possibly save some memory by having only one page in memory at
+  //       a time by allocating the pages dynamically into a fixed size buffer,
+  //       like I did in my old version. But that adds complexity, which is the
+  //       reason I removed it.
   PageSingle    g_page_single;
   PageMulti     g_page_multi;
   PageNameMulti g_page_name_multi;
@@ -208,6 +212,12 @@ namespace Pages
 
     g_current_lower = !g_current_lower;
     ShowPage(g_current_lower ? g_current_lower_id : g_current_upper_id);
+  }
+
+
+  MultiValues GetCurrentMultiValues()
+  {
+    return g_page_multi.GetValues();
   }
 
 

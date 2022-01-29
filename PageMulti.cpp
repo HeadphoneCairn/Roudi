@@ -6,13 +6,6 @@
 #include "Roudi.h"
 #include "Utils.h"
 
-// TODO: Remove all global variables here. Danger of incorrect initiation order!!!
-
-namespace 
-{
-  MultiValues g_values;
-}
-
 namespace {
 
   PSTRING(PSTR_channel, "");
@@ -90,26 +83,35 @@ namespace {
 
 
 PageMulti::PageMulti(): 
-  Page(), m_which_multi(0xFF) {}
+  Page(), m_which(0xFF)
+{ 
+  GetMultiDefault(m_values);
+}
+
+MultiValues PageMulti::GetValues()
+{
+  return m_values;
+}
+
 
 void PageMulti::OnStart(uint8_t which_multi)
 {
-  m_which_multi = which_multi;
-  EE::GetMulti(m_which_multi, g_values);
+  m_which = which_multi;
+  EE::GetMulti(m_which, m_values);
 
   // Bind ui elements to values
-  m_ui_channel_1.Init(g_par_channel, &g_values.channel[0]);
-  m_ui_octave_1.Init(g_par_octave, &g_values.octave[0]);
-  m_ui_pitchbend_1.Init(g_par_pitchbend, &g_values.pbcc[0]);
-  m_ui_velocity_1.Init(g_par_velocity, &g_values.velocity[0]);
+  m_ui_channel_1.Init(g_par_channel, &m_values.channel[0]);
+  m_ui_octave_1.Init(g_par_octave, &m_values.octave[0]);
+  m_ui_pitchbend_1.Init(g_par_pitchbend, &m_values.pbcc[0]);
+  m_ui_velocity_1.Init(g_par_velocity, &m_values.velocity[0]);
 
-  m_ui_channel_2.Init(g_par_channel, &g_values.channel[1]);
-  m_ui_octave_2.Init(g_par_octave, &g_values.octave[1]);
-  m_ui_pitchbend_2.Init(g_par_pitchbend, &g_values.pbcc[1]);
-  m_ui_velocity_2.Init(g_par_velocity, &g_values.velocity[1]);
+  m_ui_channel_2.Init(g_par_channel, &m_values.channel[1]);
+  m_ui_octave_2.Init(g_par_octave, &m_values.octave[1]);
+  m_ui_pitchbend_2.Init(g_par_pitchbend, &m_values.pbcc[1]);
+  m_ui_velocity_2.Init(g_par_velocity, &m_values.velocity[1]);
 
-  m_ui_mode.Init(g_par_mode, &g_values.mode);
-  m_ui_split_note.Init(g_par_split_note, &g_values.split_note);
+  m_ui_mode.Init(g_par_mode, &m_values.mode);
+  m_ui_split_note.Init(g_par_split_note, &m_values.split_note);
 
   SetNumberOfLines(11);
 
@@ -118,8 +120,8 @@ void PageMulti::OnStart(uint8_t which_multi)
 
 const char* PageMulti::GetTitle()
 {
-  //sprintf(Screen::buffer, " %02d/%02d. %s ", m_which_multi + 1, EE::GetNumberOfMultis(), g_values.name);
-  sprintf(Screen::buffer, " %02d. %s ", m_which_multi + 1, g_values.name);
+  //sprintf(Screen::buffer, " %02d/%02d. %s ", m_which + 1, EE::GetNumberOfMultis(), m_values.name);
+  sprintf(Screen::buffer, " %02d. %s ", m_which + 1, m_values.name);
   return Screen::buffer;
 }
 
@@ -135,13 +137,15 @@ Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
     case 4: return DoubleCombiline(func, field, m_ui_mode, 12, 2, false, m_ui_split_note, 10, 0, false);
     case 5: return DefaultLine(func);
     case 6: // Save As ... 
-      if (func == DO_LEFT || func == DO_RIGHT) SaveAs();
+      if (func == DO_LEFT || func == DO_RIGHT)
+        SaveAs();
       return TextLine(func, PSTR_save_as);
     case 7: return TextLine(func, PSTR_remove);
     case 8: return TextLine(func, PSTR_move_left);
     case 9: return TextLine(func, PSTR_move_right);
     case 10: // New ...
-      if (func == DO_LEFT || func == DO_RIGHT) New();
+      if (func == DO_LEFT || func == DO_RIGHT)
+        New();
       return TextLine(func, PSTR_new);
     default: return DefaultLine(func);
   }
@@ -149,7 +153,7 @@ Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
 
 void PageMulti::SaveAs()
 {
-  Pages::SetNextPage(PAGE_NAME_MULTI, m_which_multi);
+  Pages::SetNextPage(PAGE_NAME_MULTI, m_which);
 }
 
 void PageMulti::New()
@@ -185,12 +189,12 @@ bool PageMulti::ActualOnLine(LineAction action, uint8_t line)
   } else if (line < m_number_of_combilines) { // combilines
     return action == LEFT ? m_lines[line].OnLeft() : m_lines[line].OnRight();
   } else if (line >= m_number_of_combilines + 1 && line <= m_number_of_combilines + 3) {  // Load presets
-    EE::GetSplit(line - m_number_of_combilines, g_values);
+    EE::GetSplit(line - m_number_of_combilines, m_values);
     gValues_ChannelValueToChannelIndex();
     return true;
   } else if (line >= m_number_of_combilines + 4 && line <= m_number_of_combilines + 6) {  // Save presets
     gValues_ChannelIndexToChannelValue();
-    EE::SetSplit(line - (m_number_of_combilines + 3), g_values);
+    EE::SetSplit(line - (m_number_of_combilines + 3), m_values);
     gValues_ChannelValueToChannelIndex();
     return false;
   } else
@@ -214,15 +218,15 @@ void PageMulti::SetMidiConfiguration()
   // TODO: If channel 0 and 1 are the same, just program one channel!
 
   for (int num=0; num < 2; num++) {  
-    g_next_midi_config.config.m_output_channel[num].m_channel = g_values.channel[num];
-    g_next_midi_config.config.m_output_channel[num].m_minimum_velocity = g_values.velocity[num] * 13;
-    g_next_midi_config.config.m_output_channel[num].m_allow_pitch_modulation = g_values.pbcc[num] != 0;
-    g_next_midi_config.config.m_output_channel[num].m_transpose = OctaveValueToOctaveDelta(g_values.octave[num]) * 12;
+    g_next_midi_config.config.m_output_channel[num].m_channel = m_values.channel[num];
+    g_next_midi_config.config.m_output_channel[num].m_minimum_velocity = m_values.velocity[num] * 13;
+    g_next_midi_config.config.m_output_channel[num].m_allow_pitch_modulation = m_values.pbcc[num] != 0;
+    g_next_midi_config.config.m_output_channel[num].m_transpose = OctaveValueToOctaveDelta(m_values.octave[num]) * 12;
     g_next_midi_config.config.m_output_channel[num].m_minimum_note = 0; 
     g_next_midi_config.config.m_output_channel[num].m_maximum_note = 127; 
   }
-  if (g_values.mode == 0) { // Split
-    const uint8_t split_note = max(1, g_values.split_note); // split_node must be at least 1
+  if (m_values.mode == 0) { // Split
+    const uint8_t split_note = max(1, m_values.split_note); // split_node must be at least 1
     g_next_midi_config.config.m_output_channel[0].m_maximum_note = split_note - 1;
     g_next_midi_config.config.m_output_channel[1].m_minimum_note = split_note;
   }

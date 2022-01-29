@@ -30,12 +30,11 @@ bool PageNameMulti::OnUpDown(UpDownAction action)
 {  
   bool redraw = PageName::OnUpDown(action);
   if (GetResult() == ACCEPT) {
-    uint8_t multi;
-    MultiValues values;
-    GetMultiDefault(values);
-    GetNameAndValue(values.name, multi);
-    EE::SetMulti(multi, values);
-    Pages::SetNextPage(PAGE_MULTI, multi);
+    uint8_t which_multi;
+    MultiValues values = Pages::GetCurrentMultiValues();
+    GetNameAndValue(values.name, which_multi);
+    EE::SetMulti(which_multi, values);
+    Pages::SetNextPage(PAGE_MULTI, which_multi);
   } else if (GetResult() == REJECT) {
     Pages::SetNextPage(PAGE_MULTI);
   }
