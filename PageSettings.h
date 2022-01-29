@@ -15,10 +15,10 @@ protected:
 private:
   bool ShowChannelMenu();
 private:
-  NewCombiline m_ui_input_channel;
-  NewCombiline m_ui_velocity_curve; 
-  NewCombiline m_ui_program_change; 
-  NewCombiline m_ui_brightness;  
+  Combiline m_ui_input_channel;
+  Combiline m_ui_velocity_curve; 
+  Combiline m_ui_program_change; 
+  Combiline m_ui_brightness;  
 
   struct SettingsValues m_values;
 };

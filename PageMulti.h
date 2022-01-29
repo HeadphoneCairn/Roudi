@@ -18,11 +18,11 @@ private:
 private:
   void SetMidiConfiguration();
 private:
-  NewCombiline m_ui_channel_1, m_ui_octave_1;
-  NewCombiline m_ui_pitchbend_1, m_ui_velocity_1;
-  NewCombiline m_ui_channel_2, m_ui_octave_2;
-  NewCombiline m_ui_pitchbend_2, m_ui_velocity_2;
-  NewCombiline m_ui_mode, m_ui_split_note;
+  Combiline m_ui_channel_1, m_ui_octave_1;
+  Combiline m_ui_pitchbend_1, m_ui_velocity_1;
+  Combiline m_ui_channel_2, m_ui_octave_2;
+  Combiline m_ui_pitchbend_2, m_ui_velocity_2;
+  Combiline m_ui_mode, m_ui_split_note;
 
 /*
 01. Dreadbox    oct: +1 

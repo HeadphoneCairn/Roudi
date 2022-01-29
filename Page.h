@@ -56,10 +56,10 @@ Page::LineResult DefaultLine(Page::LineFunction func);
 Page::LineResult TextLine(Page::LineFunction func, const char* pstring);
 Page::LineResult SingleCombiLine(
   Page::LineFunction func, 
-  NewCombiline& combiline, uint8_t len, uint8_t extra_padding, bool right_align
+  Combiline& combiline, uint8_t len, uint8_t extra_padding, bool right_align
 );
 Page::LineResult DoubleCombiline(
   Page::LineFunction func, uint8_t field, 
-  NewCombiline& combiline_1, uint8_t len_1, uint8_t extra_padding_1, bool right_align_1, 
-  NewCombiline& combiline_2, uint8_t len_2, uint8_t extra_padding_2, bool right_align_2 
+  Combiline& combiline_1, uint8_t len_1, uint8_t extra_padding_1, bool right_align_1, 
+  Combiline& combiline_2, uint8_t len_2, uint8_t extra_padding_2, bool right_align_2 
 );

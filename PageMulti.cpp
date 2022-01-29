@@ -16,7 +16,7 @@ namespace
 namespace {
 
   PSTRING(PSTR_channel, "");
-  void g_par_channel(NewParsPars& pars)
+  void g_par_channel(ParsPars& pars)
   {
     pars.types = TypePString|TypeFunction;
     pars.name = (void*) PSTR_channel;
@@ -25,7 +25,7 @@ namespace {
   }
 
   PSTRING(PSTR_octave, "oct: ");
-  void g_par_octave(NewParsPars& pars)
+  void g_par_octave(ParsPars& pars)
     {
     pars.types = TypePString|TypeFunction; 
     pars.name = (void*) PSTR_octave;
@@ -34,7 +34,7 @@ namespace {
     }
 
   PSTRING(PSTR_pitchbend, "    pb/cc: ");
-  void g_par_pitchbend(NewParsPars& pars)
+  void g_par_pitchbend(ParsPars& pars)
     {
     pars.types = TypePString|TypeFunction; 
     pars.name = (void*) PSTR_pitchbend;
@@ -50,7 +50,7 @@ namespace {
   }
 
   PSTRING(PSTR_velocity, "vel: ");
-  void g_par_velocity(NewParsPars& pars)
+  void g_par_velocity(ParsPars& pars)
     {
     pars.types = TypePString|TypeFunction; 
     pars.name = (void*) PSTR_velocity;
@@ -63,7 +63,7 @@ namespace {
   PSTRING(PSTR_single_layer, "SINGLE mode");
   PTABLE(PTAB_mode, PSTR_mode_split, PSTR_mode_layer, PSTR_single_layer);
   PSTRING(PSTR_mode, "");
-  void g_par_mode(NewParsPars& pars)
+  void g_par_mode(ParsPars& pars)
     {
     pars.types = TypePString|TypePTable;
     pars.name = (void*) PSTR_mode;
@@ -72,7 +72,7 @@ namespace {
     }
 
   PSTRING(PSTR_split_note, "split: ");
-  void g_par_split_note(NewParsPars& pars)
+  void g_par_split_note(ParsPars& pars)
     {
     pars.types = TypePString|TypeFunction; 
     pars.name = (void*) PSTR_split_note;

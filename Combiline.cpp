@@ -8,14 +8,14 @@
 #include <stdlib.h>
 
 
-NewCombiline::NewCombiline():
+Combiline::Combiline():
   m_par_function(nullptr),
   m_selected_value(nullptr)
 {   
   // TODO vul iets onnozel in om crash te voorkomen
 }
 
-void NewCombiline::Init(NewCombilineParameters par_function, uint8_t* selected_value)
+void Combiline::Init(CombilineParameters par_function, uint8_t* selected_value)
 {
   m_par_function = par_function;
   m_selected_value = selected_value;
@@ -24,7 +24,7 @@ void NewCombiline::Init(NewCombilineParameters par_function, uint8_t* selected_v
 
 PSTRING(PSTR_combiline_error, "ERROR"); 
 
-void NewCombiline::GetText(char* text, uint8_t text_len, Screen::Inversion& inversion, uint8_t start, uint8_t len, uint8_t extra_padding, bool right_align) 
+void Combiline::GetText(char* text, uint8_t text_len, Screen::Inversion& inversion, uint8_t start, uint8_t len, uint8_t extra_padding, bool right_align) 
 /*
 - text: this function will write to this string
 - text_len: this should be the length of the text* buffer (not including \0), it is a safety feature 
@@ -50,7 +50,7 @@ NOTE: Wanted to use sprintf with "%*.*s", but the variable width specifiers don'
   text += start; // we start writing to text at the start position
 
   // ----
-  NewParsPars m;
+  ParsPars m;
   m_par_function(m);
   // ----
 
@@ -71,7 +71,7 @@ NOTE: Wanted to use sprintf with "%*.*s", but the variable width specifiers don'
       const char *const * ptable = static_cast<const char *const *>(m.values);
       value = GetPStringFromPTable(ptable, *m_selected_value);
     } else if (m.types & TypeFunction) {
-      NewCombiLineFunction function = (NewCombiLineFunction)m.values;
+      CombiLineFunction function = (CombiLineFunction)m.values;
       value = function(*m_selected_value);
     }
     uint8_t inv_start = 0, inv_stop = 0;
@@ -98,12 +98,12 @@ NOTE: Wanted to use sprintf with "%*.*s", but the variable width specifiers don'
 }
 
 
-uint8_t* NewCombiline::GetSelectedValue()
+uint8_t* Combiline::GetSelectedValue()
 {
   return m_selected_value;
 }
 
-bool NewCombiline::OnLeft() 
+bool Combiline::OnLeft() 
 {
   if (*m_selected_value > 0) {
     (*m_selected_value)--;
@@ -113,10 +113,10 @@ bool NewCombiline::OnLeft()
   }
 }
 
-bool NewCombiline::OnRight() 
+bool Combiline::OnRight() 
 {
   // ----
-  NewParsPars m;
+  ParsPars m;
   m_par_function(m);
   // ---
 
@@ -128,7 +128,7 @@ bool NewCombiline::OnRight()
   }
 }
 
-void NewCombiline::UnitTest()
+void Combiline::UnitTest()
 {
   // TODO: check all possibilities
 }

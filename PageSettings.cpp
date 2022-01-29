@@ -49,7 +49,7 @@ PTABLE(PTAB_progchange, PSTR_progchange_0, PSTR_progchange_1);
 // memory.
 // Can't do pars = { ... } because it will use more memory again!
 
-static void line_input_channel(NewParsPars& pars)
+static void line_input_channel(ParsPars& pars)
 {
   pars.types = TypePString|TypeFunction;
   pars.name = (void*) PSTR_input_channel;
@@ -57,7 +57,7 @@ static void line_input_channel(NewParsPars& pars)
   pars.values = (void*) GetNumberPlusOne;
 }
 
-static void line_velocity_curve(NewParsPars& pars)
+static void line_velocity_curve(ParsPars& pars)
 {
   pars.types = TypePString|TypePTable;
   pars.name = (void*) PSTR_velocity_curve;
@@ -65,7 +65,7 @@ static void line_velocity_curve(NewParsPars& pars)
   pars.values = (void*) PTAB_velocity;
 }
 
-static void line_program_change(NewParsPars& pars)
+static void line_program_change(ParsPars& pars)
 {
   pars.types = TypePString|TypePTable;
   pars.name = (void*) PSTR_program_change;
@@ -73,7 +73,7 @@ static void line_program_change(NewParsPars& pars)
   pars.values = (void*) PTAB_progchange;
 }
 
-static void line_brightness(NewParsPars& pars)
+static void line_brightness(ParsPars& pars)
 {
   pars.types = TypePString|TypeFunction;
   pars.name = (void*) PSTR_brightness;
