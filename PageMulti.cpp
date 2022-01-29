@@ -113,7 +113,7 @@ void PageMulti::OnStart(uint8_t which_multi)
   m_ui_mode.Init(g_par_mode, &m_values.mode);
   m_ui_split_note.Init(g_par_split_note, &m_values.split_note);
 
-  SetNumberOfLines(11);
+  SetNumberOfLines(11, m_values.selected_line, m_values.selected_field, m_values.first_line);
 
   SetMidiConfiguration();
 }

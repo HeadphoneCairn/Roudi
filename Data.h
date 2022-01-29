@@ -66,6 +66,9 @@ void GetSingleDefault(struct SingleValues& values);
 
 struct MultiValues
 {
+  uint8_t selected_line;  // used to recall original position of "cursor" 
+  uint8_t selected_field; // used to recall original position of "cursor"
+  uint8_t first_line;     // used to recall original position of "cursor"
   char name[MaxNameLength + 1]; // We also store the /0
   uint8_t channel[2];  // saved to EEPROM as channel (0-15)
   uint8_t octave[2];
