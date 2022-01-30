@@ -245,13 +245,13 @@ namespace EE
   }
   
   void GetMulti(uint8_t which, MultiValues& values)
+  // I tried returning MultiValues instead having it as a output parameter,
+  // but that actually generated quite a lot of extra program code (128 bytes for 4 calls!)
+  // so I'm back to the output as a parameter way of working. 
   {
     GetMultiDefault(values);
-    if (which < GetNumberOfMultis()) {
+    if (which < GetNumberOfMultis())
       EEPROM_GET(start_of_multis + static_cast<uint16_t>(which) * multi_size, values);
-    } else {
-      GetMultiDefault(values); // just as a fallback in case a bad which is supplied
-    }
   }
 
   // ===== S E T T I N G S =====================================================

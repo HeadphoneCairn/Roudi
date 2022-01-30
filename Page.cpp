@@ -80,6 +80,7 @@ void Page::Start(uint8_t parameter)
   OnStart(parameter);
   Screen::Clear();
   Draw(0, 7);
+  // Line(DO_SELECTED, m_selected_line, m_selected_field); // Is this a good idea?
 }
 
 void Page::Stop()

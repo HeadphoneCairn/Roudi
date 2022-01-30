@@ -13,8 +13,15 @@ PageSingle::PageSingle(): Page()
 
 void PageSingle::OnStart(uint8_t)
 {
-  SetNumberOfLines(NumberOfChannels + 1);
-  // SetMidiConfiguration(g_selected_line);  // TODO
+  SingleValues values;
+  EE::GetSingle(values);
+  SetNumberOfLines(NumberOfChannels + 1, values.channel, 0, values.first_line);
+  SetMidiConfiguration(values.channel);
+}
+
+void PageSingle::OnStop(uint8_t selected_line, uint8_t first_line)
+{
+  SaveIfModified();
 }
 
 const char* PageSingle::GetTitle()
@@ -37,10 +44,13 @@ Page::LineResult PageSingle::Line(LineFunction func, uint8_t line, uint8_t field
   return {1, text, Screen::inversion_all, false};
 }
 
-
-void PageSingle::OnStop(uint8_t selected_line, uint8_t first_line)
+void PageSingle::SaveIfModified()
 {
-  //g_selected_channel = selected_line < m_number_of_channels ? EE::ChannelIndexToChannelValue(selected_line) : selected_line;
+  SingleValues values = {GetFirstLine(), GetSelectedLine()};
+  SingleValues stored_values;
+  EE::GetSingle(stored_values);
+  if (memcmp(&stored_values, &values, sizeof(values)) != 0)
+    EE::SetSingle(values);
 }
 
 void PageSingle::SetMidiConfiguration(uint8_t selected_line)

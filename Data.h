@@ -60,13 +60,14 @@ const uint8_t MaxNameLength = 12; // Max number of characters in channel name or
 
 struct SingleValues
 {
-  uint8_t channel; // saved to EEPROM as channel (0-15)
+  uint8_t first_line;  // used to recall original position of "cursor"
+  uint8_t channel;     // saved to EEPROM as channel (0-15), 16 means no channel
 };
 void GetSingleDefault(SingleValues& values);
 
 struct MultiValues
 {
-  uint8_t selected_line;  // used to recall original position of "cursor" 
+  uint8_t selected_line;  // used to recall original position of "cursor"
   uint8_t selected_field; // used to recall original position of "cursor"
   uint8_t first_line;     // used to recall original position of "cursor"
   char name[MaxNameLength + 1]; // We also store the /0

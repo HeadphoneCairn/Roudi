@@ -724,3 +724,4 @@ x Use 12 characters for channels anyway????
 x Allow for single mode, next to split and layer!
 - Uitroepteken in namen
 - Multi namen beperken tot hoofdletters + nummers + leestekens
+- Save which page was selected: single, multi 0, multi 1, ...
