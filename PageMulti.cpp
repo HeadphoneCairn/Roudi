@@ -114,7 +114,7 @@ void PageMulti::OnStart(uint8_t which_multi)
   SetMidiConfiguration();
 }
 
-void PageMulti::OnStop(uint8_t selected_line, uint8_t first_line)
+void PageMulti::OnStop()
 {
   SaveIfModified();  
 }

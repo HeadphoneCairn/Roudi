@@ -115,7 +115,7 @@ Page::LineResult PageSettings::Line(LineFunction func, uint8_t line, uint8_t fie
 }
 
 
-void PageSettings::OnStop(uint8_t selected_line, uint8_t first_line) 
+void PageSettings::OnStop() 
 {  
 
 /*

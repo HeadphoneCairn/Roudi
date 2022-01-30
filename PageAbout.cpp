@@ -92,7 +92,7 @@ Page::LineResult PageAbout::Line(LineFunction func, uint8_t line, uint8_t field)
 }
 
 
-void PageAbout::OnStop(uint8_t selected_line, uint8_t first_line)
+void PageAbout::OnStop()
 {
 }
 

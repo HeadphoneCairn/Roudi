@@ -38,7 +38,7 @@ protected:// to implement
   // field is number of selected field, 0xFF if none is selected
   virtual LineResult Line(LineFunction func, uint8_t line, uint8_t field) = 0;
   virtual void OnStart(uint8_t parameter = 0xFF) { return; }
-  virtual void OnStop(uint8_t selected_line, uint8_t first_line) { return; }
+  virtual void OnStop() { return; }
   enum UpDownAction { UP, DOWN };
   virtual bool OnUpDown(UpDownAction action); // returns whether to redraw screen
 private:

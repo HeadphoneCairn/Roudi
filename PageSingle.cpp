@@ -19,7 +19,7 @@ void PageSingle::OnStart(uint8_t)
   SetMidiConfiguration(values.channel);
 }
 
-void PageSingle::OnStop(uint8_t selected_line, uint8_t first_line)
+void PageSingle::OnStop()
 {
   SaveIfModified();
 }

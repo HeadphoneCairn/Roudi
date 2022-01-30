@@ -24,7 +24,7 @@ void PageChannels::OnStart(uint8_t)
   SetNumberOfLines(NumberOfChannels); 
 }
 
-void PageChannels::OnStop(uint8_t selected_line, uint8_t first_line)
+void PageChannels::OnStop()
 {
 
 //  if (selected_line = NumberOfChannels)

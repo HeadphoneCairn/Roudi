@@ -85,7 +85,7 @@ void Page::Start(uint8_t parameter)
 
 void Page::Stop()
 {
-  OnStop(m_selected_line, m_first_line);
+  OnStop();  // Used to pass m_selected_line, m_first_line, but they are now available in separate functions.
 }
 
 void Page::Up() 
