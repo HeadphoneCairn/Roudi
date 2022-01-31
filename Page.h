@@ -19,6 +19,7 @@ protected:
 public:
   void Start(uint8_t parameter = 0xFF); // Call this when you want to first display the page
   void Stop(); // Call this when you want to exit the page
+  void Timeout(); // Will be called by the main routine when no buttons have been pushed for a certain time
   void Up();
   void Down();
   void Left();
@@ -39,6 +40,7 @@ protected:// to implement
   virtual LineResult Line(LineFunction func, uint8_t line, uint8_t field) = 0;
   virtual void OnStart(uint8_t parameter = 0xFF) { return; }
   virtual void OnStop() { return; }
+  virtual void OnTimeout() { return; }
   enum UpDownAction { UP, DOWN };
   virtual bool OnUpDown(UpDownAction action); // returns whether to redraw screen
 private:

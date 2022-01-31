@@ -25,7 +25,8 @@ TODO
 
 NextMidiConfiguration g_next_midi_config;
 
-const bool g_show_logo = false; 
+const bool g_show_logo = false;
+unsigned long g_last_button_press;  // in ms
 
 void setup()
 {
@@ -49,6 +50,8 @@ void setup()
 
   if (g_show_logo)
     delay(1000);
+
+  g_last_button_press = millis();
 
   Pages::Start(); // Start showing the menus
 }
@@ -86,7 +89,6 @@ void loop()
   MidiboyInput::Event event;
   while (DinMidiboy.readInputEvent(event))
   {
-
     if (event.m_type == MidiboyInput::EVENT_DOWN)
     {
       switch (event.m_button)
@@ -119,7 +121,13 @@ void loop()
         break;
       }
     }
+    g_last_button_press = millis();
+  }
 
+  // Check for timeout since last button press
+  if (g_last_button_press && (millis() - g_last_button_press > Pages::timeout)) {
+    Pages::Timeout();
+    g_last_button_press = 0;
   }
 
   // --- Change the midig configuration ---

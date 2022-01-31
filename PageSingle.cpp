@@ -24,6 +24,11 @@ void PageSingle::OnStop()
   SaveIfModified();
 }
 
+void PageSingle::OnTimeout()
+{
+  SaveIfModified();
+}
+
 const char* PageSingle::GetTitle()
 {
   return GetPString(PSTR_page_single);

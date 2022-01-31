@@ -214,6 +214,12 @@ namespace Pages
     ShowPage(g_current_lower ? g_current_lower_id : g_current_upper_id);
   }
 
+  void Timeout()
+  {
+    // TODO Save the selected page to EEPROM
+    g_current_page->Timeout();
+  }
+
   uint16_t GetTotalPageUsage()
   {
     return sizeof(PageSingle) + sizeof(PageNameChannel) +

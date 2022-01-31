@@ -56,6 +56,17 @@ namespace Debug
     make_a_sound.tones(binglow);
   }
 
+  const uint16_t binghigh[] PROGMEM = {
+    NOTE_C7  + TONE_HIGH_VOLUME, 250, 
+    TONES_END
+  };
+
+  void BeepHigh()
+  {
+    make_a_sound.tones(binghigh);
+  }
+
+
 }
 
 #else // -----------------------------------------------------------------------

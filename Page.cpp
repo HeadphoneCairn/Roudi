@@ -88,6 +88,11 @@ void Page::Stop()
   OnStop();  // Used to pass m_selected_line, m_first_line, but they are now available in separate functions.
 }
 
+void Page::Timeout()
+{
+  OnTimeout();
+}
+
 void Page::Up() 
 {
   if (OnUpDown(UP)) {

@@ -712,11 +712,11 @@ x connect menus
 x Save first_line and selected line and field
 - save on switch
   x Multi
-  - single
+  x single
   - settings
 - save on timer
-  - multi
-  - single
+  x multi
+  x single
   - settings
 - Make fake Midi Monitor
 x Use 12 characters for channels anyway????
@@ -724,4 +724,4 @@ x Use 12 characters for channels anyway????
 x Allow for single mode, next to split and layer!
 - Uitroepteken in namen
 - Multi namen beperken tot hoofdletters + nummers + leestekens
-- Save which page was selected: single, multi 0, multi 1, ...
+- Save the selected page upon timeout: Maybe too much EEPROM access?

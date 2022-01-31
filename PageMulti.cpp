@@ -119,6 +119,11 @@ void PageMulti::OnStop()
   SaveIfModified();  
 }
 
+void PageMulti::OnTimeout()
+{
+  SaveIfModified();
+}
+
 const char* PageMulti::GetTitle()
 {
   //sprintf(Screen::buffer, " %02d/%02d. %s ", m_which + 1, EE::GetNumberOfMultis(), m_values.name);

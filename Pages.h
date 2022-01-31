@@ -41,6 +41,10 @@ namespace Pages
   void ButtonB();
   void ButtonAB();
 
+  // Timeout
+  void Timeout();
+  const unsigned long timeout = 5 * 1000; // in ms, OnTimeout is called on the active page when no button has been pushed for this time 
+
   // Debug info
   uint16_t GetTotalPageUsage();
   const char* GetPageUsage();
