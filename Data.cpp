@@ -261,8 +261,10 @@ namespace EE
   SettingsValues& GetSettingsRW()
   {
     static bool first_run = true;
-    static SettingsValues values; // Cache for settings. Not sure if this is faster than just always reading from the EEPROM.
-
+    static SettingsValues values; // Cache for settings. 
+                                  // For 1 byte, this is about double as fast as reading from EEPROM.
+                                  // For 4 bytes, this is about four times as fast as readinf from EEPROM.
+                                  // Keeping it like this for the moment. Not sure if I'll need the speed.
     if (first_run) {
       first_run = false;
       EEPROM_GET(start_of_settings, values);
