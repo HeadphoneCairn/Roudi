@@ -19,6 +19,4 @@ private:
   Combiline m_ui_velocity_curve; 
   Combiline m_ui_program_change; 
   Combiline m_ui_brightness;  
-
-  SettingsValues m_values;
 };

@@ -61,6 +61,7 @@ void PageSingle::SaveIfModified()
 void PageSingle::SetMidiConfiguration(uint8_t selected_line)
 {
   g_next_midi_config.config.SetDefaults();
+  g_next_midi_config.config.m_input_channel = EE::GetSettings().input_channel;
   if (selected_line < NumberOfChannels) {
     g_next_midi_config.config.m_nbr_output_channels = 1;
     g_next_midi_config.config.m_output_channel[0].m_channel = selected_line;

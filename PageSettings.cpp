@@ -89,11 +89,11 @@ PageSettings::PageSettings():
 
 void PageSettings::OnStart(uint8_t)
 {
-  EE::GetSettings(m_values);
-  m_ui_input_channel.Init(line_input_channel, &m_values.input_channel);
-  m_ui_velocity_curve.Init(line_velocity_curve, &m_values.velocity_curve);
-  m_ui_program_change.Init(line_program_change, &m_values.program_change);
-  m_ui_brightness.Init(line_brightness, &m_values.brightness);
+  SettingsValues& values = EE::GetSettingsRW();
+  m_ui_input_channel.Init(line_input_channel, &values.input_channel);
+  m_ui_velocity_curve.Init(line_velocity_curve, &values.velocity_curve);
+  m_ui_program_change.Init(line_program_change, &values.program_change);
+  m_ui_brightness.Init(line_brightness, &values.brightness);
   SetNumberOfLines(5);
 }
 
@@ -117,15 +117,7 @@ Page::LineResult PageSettings::Line(LineFunction func, uint8_t line, uint8_t fie
 
 void PageSettings::OnStop() 
 {  
-
-/*
-  struct SettingsValues m_stored_values;
-  EE::GetSettings(m_stored_values);
-  if (memcmp(&m_stored_values, &m_values, sizeof(m_values)) != 0) {
-    // Values have changed, must save
-    EE::SetSettings(m_values);
-  }
-*/
+  EE::SetSettings();
 }
 
 bool PageSettings::ShowChannelMenu()
@@ -133,4 +125,3 @@ bool PageSettings::ShowChannelMenu()
 //  Menus::SetNextMenu(MENU_CHANNELS);
   return false;
 }
-

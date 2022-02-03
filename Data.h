@@ -115,9 +115,9 @@ namespace EE
   void GetMulti(uint8_t which, MultiValues& values);
 
   // --- Settings ---
-  void SetSettings(const SettingsValues& values);
-  void GetSettings(SettingsValues& values);
-  SettingsValues GetSettings();
+  SettingsValues& GetSettingsRW();  // Read Write: Only to be used in the Settings Page
+  const SettingsValues& GetSettings(); // Read only
+  void SetSettings();
   
   // --- Channels ---
   // channel value: 0-15

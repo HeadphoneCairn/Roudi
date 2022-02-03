@@ -230,7 +230,7 @@ void PageMulti::SetMidiConfiguration()
 // In SPLIT mode, left channel will play on notes [0, split_note - 1], right on notes [split_note, 127]
 {
   g_next_midi_config.config.SetDefaults();
-//g_next_midi_config.config.m_input_channel = 0; // TODO ??????
+  g_next_midi_config.config.m_input_channel = EE::GetSettings().input_channel;
   g_next_midi_config.config.m_nbr_output_channels = 2;  
 
   // TODO: If channel 0 and 1 are the same, just program one channel!
