@@ -23,6 +23,7 @@ private:
   Combiline m_ui_pitchbend_2, m_ui_velocity_2;
   Combiline m_ui_mode, m_ui_split_note;
 private:
+  LineResult ActualLine(LineFunction func, uint8_t line, uint8_t field);
   void SaveIfModified();
   void SaveAs();
   void New();

@@ -32,3 +32,11 @@ Roudi = ROUter for miDIboy
 
 
 ## Changelog
+
+
+## Notes
+- There are two conventions for numbering notes in MIDI:
+  1. MIDI note 60 = C3 
+  2. MIDI note 60 = C4 = middle C = 261.63Hz, MIDI note 69 = A4 = 440.00Hz
+  We chose the second convention. 
+

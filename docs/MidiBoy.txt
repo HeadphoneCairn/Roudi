@@ -731,3 +731,18 @@ x Allow for single mode, next to split and layer!
   voor Single en Multi's.
   (Zou in theorie zelfs in EEPROM_PUT kunnen komen. Altijd eerst lezen om te zien of het
   wel veranderd is.)
+- Reactivate timeout = 5 * 1000
+- I think I actually can do a new of the pages. If I were to allocate something
+  inside the page I would need to free it before freeing the page. I think
+  in this way, the heap does not get fragmented. To research online.
+  This thought could have made life much easier when creating the UI. :-(
+- New setting:
+  Other input channels block/pass
+- New page
+  Midi monitor settings:
+  filter x,
+  filter Y,
+  ...
+- Play when velocity is smaller than x%? Useful?
+  Implemented as -70%, -80%, -90%, 0%, 10%, 20%, ...  
+  Or as <70, <80, <90, >0, >10, >20 ...

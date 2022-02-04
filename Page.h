@@ -52,8 +52,7 @@ private:
   uint8_t m_selected_field; // the selected field on the line: 0..
 };
 
-#define gPageBufferSize 45
-extern Page* g_page;
+
 
 // --- Line help functions ---
 Page::LineResult DefaultLine(Page::LineFunction func);

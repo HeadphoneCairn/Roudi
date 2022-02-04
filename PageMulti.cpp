@@ -134,6 +134,14 @@ const char* PageMulti::GetTitle()
 
 Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
 {
+  LineResult result = ActualLine(func, line, field);
+  if (result.redraw) // A setting has changed, so we update the midi configuration
+    SetMidiConfiguration();
+  return result;
+}
+
+Page::LineResult PageMulti::ActualLine(LineFunction func, uint8_t line, uint8_t field)
+{
   switch (line)
   {
     case 0: return DoubleCombiline(func, field, m_ui_channel_1, 16, 1, false, m_ui_octave_1, 7, 0, false);
@@ -189,43 +197,6 @@ void PageMulti::New()
     Debug::BeepLow();
 }
 
-
-#if 0
-
-bool PageMulti::OnLine(LineAction action, uint8_t line)
-{
-  bool redraw = ActualOnLine(action, line);
-  if (redraw) // A setting has changed, so we update the midi configuration
-    SetMidiConfiguration();
-  return redraw;
-}
-
-bool PageMulti::ActualOnLine(LineAction action, uint8_t line)
-{
-  if (action == SELECTED)
-    return false;
-
-  if (line == 4) { // Split note
-    return ChangeSplitNote(*(m_lines[line].GetSelectedValue()), action == LEFT);
-  } else if (line < m_number_of_combilines) { // combilines
-    return action == LEFT ? m_lines[line].OnLeft() : m_lines[line].OnRight();
-  } else if (line >= m_number_of_combilines + 1 && line <= m_number_of_combilines + 3) {  // Load presets
-    EE::GetSplit(line - m_number_of_combilines, m_values);
-    gValues_ChannelValueToChannelIndex();
-    return true;
-  } else if (line >= m_number_of_combilines + 4 && line <= m_number_of_combilines + 6) {  // Save presets
-    gValues_ChannelIndexToChannelValue();
-    EE::SetSplit(line - (m_number_of_combilines + 3), m_values);
-    gValues_ChannelValueToChannelIndex();
-    return false;
-  } else
-    return false;
-}
-
-#endif
-
-
-
 void PageMulti::SetMidiConfiguration()
 // In SPLIT mode, left channel will play on notes [0, split_note - 1], right on notes [split_note, 127]
 {
@@ -241,12 +212,13 @@ void PageMulti::SetMidiConfiguration()
     g_next_midi_config.config.m_output_channel[num].m_allow_pitch_modulation = m_values.pbcc[num] != 0;
     g_next_midi_config.config.m_output_channel[num].m_transpose = OctaveValueToOctaveDelta(m_values.octave[num]) * 12;
     g_next_midi_config.config.m_output_channel[num].m_minimum_note = 0; 
-    g_next_midi_config.config.m_output_channel[num].m_maximum_note = 127; 
+    g_next_midi_config.config.m_output_channel[num].m_maximum_note = 127;
+    g_next_midi_config.config.m_output_channel[num].m_minimum_velocity = m_values.velocity[num] * 13;
   }
   if (m_values.mode == 0) { // Split
     const uint8_t split_note = max(1, m_values.split_note); // split_node must be at least 1
-    g_next_midi_config.config.m_output_channel[0].m_maximum_note = split_note - 1;
-    g_next_midi_config.config.m_output_channel[1].m_minimum_note = split_note;
+    g_next_midi_config.config.m_output_channel[0].m_minimum_note = split_note;        // the first channel is the right one
+    g_next_midi_config.config.m_output_channel[1].m_maximum_note = split_note - 1;    // the second channel is the left one
   }
 
   g_next_midi_config.go = true;
