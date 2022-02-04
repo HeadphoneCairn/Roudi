@@ -40,3 +40,6 @@ Roudi = ROUter for miDIboy
   2. MIDI note 60 = C4 = middle C = 261.63Hz, MIDI note 69 = A4 = 440.00Hz
   We chose the second convention. 
 
+## Multi
+
+If you select the same channel twice, only the first channel will be used.

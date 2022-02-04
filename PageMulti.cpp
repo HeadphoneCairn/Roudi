@@ -199,14 +199,17 @@ void PageMulti::New()
 
 void PageMulti::SetMidiConfiguration()
 // In SPLIT mode, left channel will play on notes [0, split_note - 1], right on notes [split_note, 127]
+// 0: SPLIT, 1: LAYER, 2: SINGLE
 {
+  // If channel 0 and 1 are the same, just program one channel!
+  uint8_t active_mode = (m_values.channel[0] == m_values.channel[1]) ? 2 : m_values.mode;
+  uint8_t num_active_channels = (active_mode == 2) ? 1 : 2;
+
+  // Set the configuration
   g_next_midi_config.config.SetDefaults();
   g_next_midi_config.config.m_input_channel = EE::GetSettings().input_channel;
-  g_next_midi_config.config.m_nbr_output_channels = 2;  
-
-  // TODO: If channel 0 and 1 are the same, just program one channel!
-
-  for (int num=0; num < 2; num++) {  
+  g_next_midi_config.config.m_nbr_output_channels = num_active_channels;  
+  for (int num=0; num < num_active_channels; num++) {  
     g_next_midi_config.config.m_output_channel[num].m_channel = m_values.channel[num];
     g_next_midi_config.config.m_output_channel[num].m_minimum_velocity = m_values.velocity[num] * 13;
     g_next_midi_config.config.m_output_channel[num].m_allow_pitch_modulation = m_values.pbcc[num] != 0;
@@ -215,7 +218,7 @@ void PageMulti::SetMidiConfiguration()
     g_next_midi_config.config.m_output_channel[num].m_maximum_note = 127;
     g_next_midi_config.config.m_output_channel[num].m_minimum_velocity = m_values.velocity[num] * 13;
   }
-  if (m_values.mode == 0) { // Split
+  if (active_mode == 0) { // Split
     const uint8_t split_note = max(1, m_values.split_note); // split_node must be at least 1
     g_next_midi_config.config.m_output_channel[0].m_minimum_note = split_note;        // the first channel is the right one
     g_next_midi_config.config.m_output_channel[1].m_maximum_note = split_note - 1;    // the second channel is the left one

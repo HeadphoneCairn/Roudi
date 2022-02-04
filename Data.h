@@ -75,7 +75,7 @@ struct MultiValues
   uint8_t octave[2];
   uint8_t pbcc[2];
   uint8_t velocity[2]; // stored as 0 - 9, shown as 0% - 90%, interpreted as i*13 in range [0..127]
-  uint8_t mode;        // 0: SPLIT, 1: LAYER
+  uint8_t mode;        // 0: SPLIT, 1: LAYER, 2: SINGLE
   uint8_t split_note;
 };
 void GetMultiDefault(MultiValues& values);
