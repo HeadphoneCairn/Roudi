@@ -51,6 +51,9 @@ namespace {
     pars.values = (void*) GetPercentage;
     }
 
+  #define SPLIT_MODE 0
+  #define LAYER_MODE 1
+  #define SINGLE_MODE 2
   PSTRING(PSTR_mode_split, "SPLIT mode");
   PSTRING(PSTR_mode_layer, "LAYER mode");
   PSTRING(PSTR_single_layer, "SINGLE mode");
@@ -198,12 +201,10 @@ void PageMulti::New()
 }
 
 void PageMulti::SetMidiConfiguration()
-// In SPLIT mode, left channel will play on notes [0, split_note - 1], right on notes [split_note, 127]
-// 0: SPLIT, 1: LAYER, 2: SINGLE
 {
   // If channel 0 and 1 are the same, just program one channel!
-  uint8_t active_mode = (m_values.channel[0] == m_values.channel[1]) ? 2 : m_values.mode;
-  uint8_t num_active_channels = (active_mode == 2) ? 1 : 2;
+  uint8_t active_mode = (m_values.channel[0] == m_values.channel[1]) ? SINGLE_MODE : m_values.mode;
+  uint8_t num_active_channels = (active_mode == SINGLE_MODE) ? 1 : 2;
 
   // Set the configuration
   g_next_midi_config.config.SetDefaults();
@@ -218,10 +219,12 @@ void PageMulti::SetMidiConfiguration()
     g_next_midi_config.config.m_output_channel[num].m_maximum_note = 127;
     g_next_midi_config.config.m_output_channel[num].m_minimum_velocity = m_values.velocity[num] * 13;
   }
-  if (active_mode == 0) { // Split
+  if (active_mode == SPLIT_MODE) {
+    // In SPLIT_MODE, the top channel will be at the right side of the keyboard [split_note, 127]
+    // and the bottom channel will be at the left side of the keyboard [0, split_note - 1]. 
     const uint8_t split_note = max(1, m_values.split_note); // split_node must be at least 1
-    g_next_midi_config.config.m_output_channel[0].m_minimum_note = split_note;        // the first channel is the right one
-    g_next_midi_config.config.m_output_channel[1].m_maximum_note = split_note - 1;    // the second channel is the left one
+    g_next_midi_config.config.m_output_channel[0].m_minimum_note = split_note;
+    g_next_midi_config.config.m_output_channel[1].m_maximum_note = split_note - 1;
   }
 
   g_next_midi_config.go = true;

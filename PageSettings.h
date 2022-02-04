@@ -13,6 +13,7 @@ protected:
   virtual void OnStart(uint8_t dummy = 0xFF) override;
   virtual void OnStop() override;
 private:
+  LineResult LineInputChannel(LineFunction func);
   bool ShowChannelMenu();
 private:
   Combiline m_ui_input_channel;

@@ -97,6 +97,11 @@ void PageSettings::OnStart(uint8_t)
   SetNumberOfLines(5);
 }
 
+void PageSettings::OnStop() 
+{  
+  EE::SetSettings();
+}
+
 const char* PageSettings::GetTitle()
 {
   return GetPString(PSTR_page_settings);
@@ -106,7 +111,7 @@ Page::LineResult PageSettings::Line(LineFunction func, uint8_t line, uint8_t fie
 {
   switch (line)
   {
-    case 0: return SingleCombiLine(func, m_ui_input_channel,   24, 0, true);
+    case 0: return LineInputChannel(func);
     case 1: return SingleCombiLine(func, m_ui_velocity_curve,  24, 0, true);
     case 2: return SingleCombiLine(func, m_ui_program_change,  24, 0, true);
     case 3: return SingleCombiLine(func, m_ui_brightness,      24, 0, true);
@@ -114,10 +119,13 @@ Page::LineResult PageSettings::Line(LineFunction func, uint8_t line, uint8_t fie
   }
 }
 
-
-void PageSettings::OnStop() 
-{  
-  EE::SetSettings();
+Page::LineResult PageSettings::LineInputChannel(LineFunction func)
+{
+  LineResult result = SingleCombiLine(func, m_ui_input_channel,   24, 0, true);
+  if (result.redraw) { // input channel has changed
+    Debug::BeepHigh();
+  }
+  return result; 
 }
 
 bool PageSettings::ShowChannelMenu()
