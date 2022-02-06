@@ -58,30 +58,5 @@ namespace MidiProcessing
   void TreatInput();
   // Put the output messages on the output MIDI port
   void WriteToOutput();
-
-/*
-
-
-class NextMidiConfiguration
-{
-public:
-  MidiProcessing::Configuration config;
-  bool go = false;
-};
-
-extern NextMidiConfiguration g_next_midi_config;
-
-
-NextMidiConfiguration g_next_midi_config;
-  // When one of the menus wants to change the midi processing, it will fill in g_next_midi_config.config
-  // with the required config and set g_next_midi_config.go to true; 
-  if (g_next_midi_config.go) {
-    bool success = MidiProcessing::SetConfiguration(g_next_midi_config.config);
-    g_next_midi_config.go = !success;
-  }
-
-
-*/
-
-
+  
 }

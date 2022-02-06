@@ -42,7 +42,7 @@ void loop()
   // --- Get button and midi messages ---
   DinMidiboy.think();
 
-  // --- Parse input midi messages and write result to output queu ---
+  // --- Parse input midi messages and write result to output queue ---
   MidiProcessing::TreatInput();
 
   // --- Treat buttons ---
@@ -111,10 +111,10 @@ void loop()
     g_last_button_press = 0;
   }
 
-  // --- Change the MIDI configuration if needed ---
+  // --- Change the midi configuration if needed ---
   MidiProcessing::ActivateNextConfigurationIfAvailable();
 
-  // --- Write to MIDI ---
+  // --- Write to midi ---
   MidiProcessing::WriteToOutput();
 }
 

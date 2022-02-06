@@ -11,10 +11,10 @@ PSTRING(PSTR_page_about, " ABOUT ROUDI ");
 
 //                      1234567890123456789012345
 PSTRING(PSTR_about_00, "");
-PSTRING(PSTR_about_01, "          Roudi");
-PSTRING(PSTR_about_02, " ROUter for miDI messages");
-PSTRING(PSTR_about_03, "       version 0.1");
-PSTRING(PSTR_about_04, "        2019-2022");
+PSTRING(PSTR_about_01, "         Roudi");
+PSTRING(PSTR_about_02, "ROUter for miDI messages");
+PSTRING(PSTR_about_03, "      version 0.1");
+PSTRING(PSTR_about_04, "       2019-2022");
 PSTRING(PSTR_about_05, "");
 PSTRING(PSTR_about_06, "Made by Headphone Cairn");
 PSTRING(PSTR_about_07, "Software for the Blokas");
