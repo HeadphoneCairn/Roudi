@@ -4,18 +4,20 @@
 
 enum PageID
 {
-  // --- AB pages ---
+  // --- Lower pages ---
   PAGE_SINGLE       = 0,
   PAGE_MULTI        = 1,
-  PAGE_SETTINGS     = 2,
-  PAGE_ABOUT        = 3,
+  PAGE_ABOUT        = 2,
+
+  // --- Upper pages ---
+  PAGE_MONITOR      = 10,
+  PAGE_SETTINGS     = 11,
 
   // --- Popup pages ---
   PAGE_NAME_CHANNEL = 101,
   PAGE_NAME_MULTI   = 102,
   
   // --- Special pages ---
-  PAGE_DEBUG        = 254,
   PAGE_NONE         = 255
 };
 

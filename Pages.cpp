@@ -1,12 +1,13 @@
 #include "Pages.h"
 
-#include "PageSingle.h"
-#include "PageMulti.h"
 #include "PageAbout.h"
-#include "PageSettings.h"
-#include "PageNameChannel.h"
 #include "PageChannels.h"
+#include "PageMonitor.h"
+#include "PageMulti.h"
+#include "PageNameChannel.h"
 #include "PageNameMulti.h"
+#include "PageSettings.h"
+#include "PageSingle.h"
 
 #include "Debug.h"
 #include "Data.h"
@@ -35,14 +36,15 @@ namespace
   //       like I did in my old version. But that adds complexity, which is the
   //       reason I removed it.
   PageSingle    g_page_single;
+  PageNameChannel g_page_name_channel;
   PageMulti     g_page_multi;
   PageNameMulti g_page_name_multi;
   PageAbout     g_page_about;
+  PageMonitor   g_page_monitor;
   PageSettings  g_page_settings;
-  PageNameChannel g_page_name_channel;
 
   PageID g_current_lower_id = PAGE_SINGLE;
-  PageID g_current_upper_id = PAGE_SETTINGS;
+  PageID g_current_upper_id = PAGE_MONITOR;
   Page*  g_current_page     = nullptr;
   bool   g_current_lower    = true;
   uint8_t g_current_multi   = 0;
@@ -52,9 +54,6 @@ namespace
   // if so requested by the current page. 
   PageID g_next_page_id = PAGE_NONE;
   uint8_t g_next_page_data = 0xFF;
-
-
-
 }
 
 namespace Pages
@@ -80,6 +79,7 @@ namespace Pages
           g_current_multi = data; 
         break;
       case PAGE_ABOUT:    g_current_page = &g_page_about; break;
+      case PAGE_MONITOR:  g_current_page = &g_page_monitor; break;
       case PAGE_SETTINGS: g_current_page = &g_page_settings; break;
       case PAGE_NAME_CHANNEL: g_current_page = &g_page_name_channel; break;
       case PAGE_NAME_MULTI:   g_current_page = &g_page_name_multi; break;
@@ -161,7 +161,8 @@ namespace Pages
       }
     } else {
       switch (g_current_upper_id) {
-        case PAGE_SETTINGS: page_to_show = PAGE_SETTINGS; break;
+        case PAGE_MONITOR: page_to_show = PAGE_SETTINGS; break;
+        case PAGE_SETTINGS: page_to_show = PAGE_MONITOR; break;
       }
     }
   
@@ -196,7 +197,8 @@ namespace Pages
       }
     } else {
       switch (g_current_upper_id) {
-        case PAGE_SETTINGS: page_to_show = PAGE_SETTINGS; break;
+        case PAGE_MONITOR: page_to_show = PAGE_SETTINGS; break;
+        case PAGE_SETTINGS: page_to_show = PAGE_MONITOR; break;
       }
     }
 
@@ -224,17 +226,17 @@ namespace Pages
   {
     return sizeof(PageSingle) + sizeof(PageNameChannel) +
            sizeof(PageMulti) + sizeof(PageNameMulti) +
-           sizeof(PageSettings) + 
+           sizeof(PageMonitor) + sizeof(PageSettings) + 
            sizeof(PageAbout);
   }
 
-  PSTRING(PSTR_page_usage, "%d %d %d %d %d %d");
+  PSTRING(PSTR_page_usage, "%d %d %d %d %d %d %d");
   const char* GetPageUsage()
   {
     snprintf(data_scratch, sizeof(data_scratch), GetPString(PSTR_page_usage),
              sizeof(PageSingle), sizeof(PageNameChannel),
              sizeof(PageMulti), sizeof(PageNameMulti),
-             sizeof(PageSettings), 
+             sizeof(PageMonitor), sizeof(PageSettings), 
              sizeof(PageAbout));
     return data_scratch;
   }

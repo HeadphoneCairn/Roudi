@@ -59,7 +59,7 @@ PTABLE(PTAB_about_text,
 
 PSTRING(PSTR_about_memory, " free memory: %d bytes");
 PSTRING(PSTR_about_pages,  " pages total: %d bytes");
-PSTRING(PSTR_about_sizeof, "    -> %s");
+PSTRING(PSTR_about_sizeof, " -> %s");
 
 
 PageAbout::PageAbout(): Page()

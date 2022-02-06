@@ -14,6 +14,7 @@ namespace
   Configuration configuration;                 // currently active MIDI configuration
   Configuration g_next_configuration;          // next configuration, to be set if ...
   bool g_next_configuration_available = false; // ... next_confuration_available = true 
+  MidiInListener g_midi_in_listener = nullptr;
   
   typedef TFifo<midi_event_t, uint8_t, 128> fifo_t; // uses 512 bytes of RAM: 4 x 128
 
@@ -321,13 +322,21 @@ namespace MidiProcessing
     }
   }
 
+  void SetMidiInListener(MidiInListener midi_in_listener)
+  {
+    g_midi_in_listener = midi_in_listener;
+  }
+
   void TreatInput()
   {
     while (g_output_queue.hasSpaceFor(Configuration::m_max_number_of_output_channels /*number of involved output channels*/) && DinMidiboy.dinMidi().available())
     {
       midi_event_t event;
-      if (g_decoder.process(DinMidiboy.dinMidi().read(), event))
+      if (g_decoder.process(DinMidiboy.dinMidi().read(), event)) {
         ProcessInputEvent(event, g_output_queue);
+        if (g_midi_in_listener)
+          g_midi_in_listener(event);
+      }
     }
   }
   

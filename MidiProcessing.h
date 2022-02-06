@@ -2,6 +2,8 @@
 
 #include <Arduino.h> // for uint8_t
 
+struct midi_event_t;
+
 namespace MidiProcessing
 {  
   //==============================================================================
@@ -15,11 +17,12 @@ namespace MidiProcessing
   public:
     OutputConfiguration();
     void SetDefaults();
+  public:    
     uint8_t m_channel;                      // [0, 15]
     uint8_t m_minimum_note, m_maximum_note; // transmit notes in [m_minimum_note, m_maximum_note] range
     uint8_t m_minimum_velocity;             // only transmit notes with velocity >= m_minimum_velocity
     bool m_allow_pitch_modulation;          // whether to transmit pitch bend and modulation 
-    int8_t m_transpose;                     // [-128, 127], transpose notes before transmitting  
+    int8_t m_transpose;                     // [-128, 127], transpose notes before transmitting
   };
 
   class Configuration
@@ -27,6 +30,7 @@ namespace MidiProcessing
   public:
     Configuration();
     void SetDefaults();
+  public:
     uint8_t m_input_channel;
     uint8_t m_nbr_output_channels;
     enum { m_max_number_of_output_channels = 2};
@@ -54,9 +58,13 @@ namespace MidiProcessing
   // reattempted after writing the queue to MIDI out
   bool ActivateNextConfigurationIfAvailable();
 
+  // This interface can be used to get notified of every incoming MIDI message
+  typedef void (*MidiInListener) (const midi_event_t& event);
+  void SetMidiInListener(MidiInListener midi_in_listener);
+
   // Read from the input MIDI port, convert the messages and put them on the output queue
   void TreatInput();
   // Put the output messages on the output MIDI port
   void WriteToOutput();
-  
+
 }
