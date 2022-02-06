@@ -94,7 +94,7 @@ void PageSettings::OnStart(uint8_t)
   m_ui_velocity_curve.Init(line_velocity_curve, &values.velocity_curve);
   m_ui_program_change.Init(line_program_change, &values.program_change);
   m_ui_brightness.Init(line_brightness, &values.brightness);
-  SetNumberOfLines(5);
+  SetNumberOfLines(10);
 }
 
 void PageSettings::OnStop() 
@@ -112,16 +112,16 @@ Page::LineResult PageSettings::Line(LineFunction func, uint8_t line, uint8_t fie
   switch (line)
   {
     case 0: return LineInputChannel(func);
-    case 1: return SingleCombiLine(func, m_ui_velocity_curve,  24, 0, true);
-    case 2: return SingleCombiLine(func, m_ui_program_change,  24, 0, true);
-    case 3: return SingleCombiLine(func, m_ui_brightness,      24, 0, true);
-    default: return DefaultLine(func);
+    case 1: return SingleCombiLine(func, m_ui_velocity_curve,  Screen::MaxCharsCanvas, 0, true);
+    case 2: return SingleCombiLine(func, m_ui_program_change,  Screen::MaxCharsCanvas, 0, true);
+    default: return SingleCombiLine(func, m_ui_brightness,     Screen::MaxCharsCanvas, 0, true);
+    //default: return DefaultLine(func);
   }
 }
 
 Page::LineResult PageSettings::LineInputChannel(LineFunction func)
 {
-  LineResult result = SingleCombiLine(func, m_ui_input_channel,   24, 0, true);
+  LineResult result = SingleCombiLine(func, m_ui_input_channel, Screen::MaxCharsCanvas, 0, true);
   if (result.redraw) { // input channel has changed
     Debug::BeepHigh();
   }

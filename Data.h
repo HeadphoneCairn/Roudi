@@ -22,7 +22,7 @@ const char* GetPStringFromPTable(const char *const ptable[], uint8_t which);
 //TODO Define PTableType???
 
 // Scratch Pad for temporary string construnction
-extern char data_scratch[Screen::MaxCharsCanvasComplete + 1];
+extern char data_scratch[Screen::MaxCharsCanvas + 1];
 
 
 //==============================================================================

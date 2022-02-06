@@ -14,7 +14,7 @@
 //==============================================================================
 
 static char progmem_string_buffer[30]; // for internal use, must have enough chars to fit all PSTRINGs!
-char data_scratch[Screen::MaxCharsCanvasComplete + 1]; // for internal an external use
+char data_scratch[Screen::MaxCharsCanvas + 1]; // for internal an external use
 
 const char* GetPString(const char* pstring)
 {

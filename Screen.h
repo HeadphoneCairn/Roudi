@@ -9,12 +9,11 @@ namespace Screen
     CanvasScrollbar
   };
 
-  const uint8_t MaxCharsCanvasComplete = 25;
-  const uint8_t MaxCharsCanvasScrollbar = 24;
+  const uint8_t MaxCharsCanvas = 25;
 
   // Use buffer as temporary space to manipulate a string before sending it to the screen
   // It has enough space for a string with the length of the full the screen (plus place for \0).
-  const uint8_t buffer_len = MaxCharsCanvasComplete;
+  const uint8_t buffer_len = MaxCharsCanvas;
   extern char buffer[buffer_len + 1];
 
   enum LineStyle { 

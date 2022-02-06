@@ -6,7 +6,7 @@
 
 namespace Screen
 {
-  char buffer[MaxCharsCanvasComplete + 1];
+  char buffer[buffer_len + 1];
   const uint8_t font_width = 4;
 
   // Remarks:
@@ -14,8 +14,10 @@ namespace Screen
   // - When InvertGiven is used, pixel column left and right from stop and start will also be inverted.
   // - We will only allow as many characters as can fit in the canvas.
   //   Current font is 4x7 (we truncate 5x7 font at 4)
-  //   - CanvasComplete, 0..127: 1 + 25 * (4 + 1) = 126 pixels, 2 left unused
-  //   - CanvasScrollbar, 0..122: 1 + 24 * (4 + 1) = 121 pixels, 2 left unused, 5 pixel empty 
+  //     0..127: 1 + 25 * (4 + 1) = 126 pixels, 2 left unused
+  // - canvas_type
+  //   - CanvasComplete, 0..127: all canvas is cleared if requested
+  //   - CanvasScrollbar, 0..125: the last two pixels are not modified 
   // - If column > possible chars on canvas, we wrap
   //   if row > possible lines (8), we wrap
   // - Too long text is cut off
@@ -28,12 +30,13 @@ namespace Screen
     Inversion inversion
     )
   { 
+//    const uint8_t emphasis_bits = 0b00000010;
 //    const uint8_t emphasis_bits = 0b00111100;
     const uint8_t emphasis_bits = 0b01010100;
 
     // --- Some canvas calculations ---
     const uint8_t canvas_min = 0; 
-    const uint8_t canvas_max = canvas_type == CanvasComplete ? 127 : 122;
+    const uint8_t canvas_max = canvas_type == CanvasComplete ? 127 : 125;
     const uint8_t canvas_width = canvas_max - canvas_min + 1; 
     const uint8_t canvas_max_chars = (canvas_width - 1) / (font_width + 1);
 
