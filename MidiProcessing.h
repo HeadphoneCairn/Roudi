@@ -42,14 +42,46 @@ namespace MidiProcessing
 
   // Initialize (must be called before any other function)
   void Init();
-  // Change the midi processing
-  // Returns true on success
-  //         false if output queue was full, in which case the call should be 
-  //                reattempted after writing the queue to MIDI out
-  bool SetConfiguration(const Configuration& new_configuration);
+
+  // Get the current active configuration
+  const Configuration& GetConfiguration();
+  // Changing the midi processing consists of two steps:
+  // - Use SetNextConfiguration to specify the next configuration
+  // - Call ActivateNextConfigurationIfAvailable until it returns true  
+  void SetNextConfiguration(const Configuration& next_configuration);
+  // ActivateNextConfiguration returns true on success, but false
+  // if output queue was full, in which case the call should be 
+  // reattempted after writing the queue to MIDI out
+  bool ActivateNextConfigurationIfAvailable();
+
   // Read from the input MIDI port, convert the messages and put them on the output queue
   void TreatInput();
   // Put the output messages on the output MIDI port
   void WriteToOutput();
+
+/*
+
+
+class NextMidiConfiguration
+{
+public:
+  MidiProcessing::Configuration config;
+  bool go = false;
+};
+
+extern NextMidiConfiguration g_next_midi_config;
+
+
+NextMidiConfiguration g_next_midi_config;
+  // When one of the menus wants to change the midi processing, it will fill in g_next_midi_config.config
+  // with the required config and set g_next_midi_config.go to true; 
+  if (g_next_midi_config.go) {
+    bool success = MidiProcessing::SetConfiguration(g_next_midi_config.config);
+    g_next_midi_config.go = !success;
+  }
+
+
+*/
+
 
 }

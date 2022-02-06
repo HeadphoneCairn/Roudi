@@ -1,19 +1,3 @@
-/*
-
-TODO
-- Scrollbar for the menu
-- Read from EEPROM
-- kop logo + naam bedenken
-- rotate values if beyond end
-- channel visualization
-
-  Text buffers (length of screen line):
-  - Screen::buffer: fill it and supply it to Screen::Print
-  - progmem_string_buffer: used for reading string from PROGMEM
-  - data_scratch: names read from eeprom and for all other things
-
- */
-
 #include "Roudi.h"
 #include "Debug.h"
 #include "DinMidiboy.h"
@@ -22,11 +6,8 @@ TODO
 #include "Pages.h"
 #include "MidiProcessing.h"
 
-
-NextMidiConfiguration g_next_midi_config;
-
 const bool g_show_logo = false;
-unsigned long g_last_button_press;  // in ms
+unsigned long g_last_button_press = 0;  // in ms
 
 void setup()
 {
@@ -130,13 +111,8 @@ void loop()
     g_last_button_press = 0;
   }
 
-  // --- Change the midig configuration ---
-  // When one of the menus wants to change the midi processing, it will fill in g_next_midi_config.config
-  // with the required config and set g_next_midi_config.go to true; 
-  if (g_next_midi_config.go) {
-    bool success = MidiProcessing::SetConfiguration(g_next_midi_config.config);
-    g_next_midi_config.go = !success;
-  }
+  // --- Change the MIDI configuration if needed ---
+  MidiProcessing::ActivateNextConfigurationIfAvailable();
 
   // --- Write to MIDI ---
   MidiProcessing::WriteToOutput();

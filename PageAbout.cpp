@@ -3,8 +3,8 @@
 #include "Debug.h"
 #include "Data.h"
 #include "MemoryFree.h"
+#include "MidiProcessing.h"
 #include "Pages.h"
-#include "Roudi.h"
 
 
 PSTRING(PSTR_page_about, " ABOUT ROUDI "); 
@@ -97,7 +97,7 @@ void PageAbout::OnStop()
 
 void PageAbout::SetMidiConfiguration()
 {
-  g_next_midi_config.config.SetDefaults();
-  g_next_midi_config.config.m_nbr_output_channels = 0;
-  g_next_midi_config.go = true;
+  MidiProcessing::Configuration next_config;
+  next_config.m_nbr_output_channels = 0;
+  MidiProcessing::SetNextConfiguration(next_config);
 }

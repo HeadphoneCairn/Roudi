@@ -2,8 +2,8 @@
 
 #include "Debug.h"
 #include "Data.h"
+#include "MidiProcessing.h"
 #include "Pages.h"
-#include "Roudi.h"
 #include "Utils.h"
 
 namespace {
@@ -207,25 +207,24 @@ void PageMulti::SetMidiConfiguration()
   uint8_t num_active_channels = (active_mode == SINGLE_MODE) ? 1 : 2;
 
   // Set the configuration
-  g_next_midi_config.config.SetDefaults();
-  g_next_midi_config.config.m_input_channel = EE::GetSettings().input_channel;
-  g_next_midi_config.config.m_nbr_output_channels = num_active_channels;  
+  MidiProcessing::Configuration next_config;
+  next_config.m_input_channel = EE::GetSettings().input_channel;
+  next_config.m_nbr_output_channels = num_active_channels;  
   for (int num=0; num < num_active_channels; num++) {  
-    g_next_midi_config.config.m_output_channel[num].m_channel = m_values.channel[num];
-    g_next_midi_config.config.m_output_channel[num].m_minimum_velocity = m_values.velocity[num] * 13;
-    g_next_midi_config.config.m_output_channel[num].m_allow_pitch_modulation = m_values.pbcc[num] != 0;
-    g_next_midi_config.config.m_output_channel[num].m_transpose = OctaveValueToOctaveDelta(m_values.octave[num]) * 12;
-    g_next_midi_config.config.m_output_channel[num].m_minimum_note = 0; 
-    g_next_midi_config.config.m_output_channel[num].m_maximum_note = 127;
-    g_next_midi_config.config.m_output_channel[num].m_minimum_velocity = m_values.velocity[num] * 13;
+    next_config.m_output_channel[num].m_channel = m_values.channel[num];
+    next_config.m_output_channel[num].m_minimum_velocity = m_values.velocity[num] * 13;
+    next_config.m_output_channel[num].m_allow_pitch_modulation = m_values.pbcc[num] != 0;
+    next_config.m_output_channel[num].m_transpose = OctaveValueToOctaveDelta(m_values.octave[num]) * 12;
+    next_config.m_output_channel[num].m_minimum_note = 0; 
+    next_config.m_output_channel[num].m_maximum_note = 127;
+    next_config.m_output_channel[num].m_minimum_velocity = m_values.velocity[num] * 13;
   }
   if (active_mode == SPLIT_MODE) {
     // In SPLIT_MODE, the top channel will be at the right side of the keyboard [split_note, 127]
     // and the bottom channel will be at the left side of the keyboard [0, split_note - 1]. 
     const uint8_t split_note = max(1, m_values.split_note); // split_node must be at least 1
-    g_next_midi_config.config.m_output_channel[0].m_minimum_note = split_note;
-    g_next_midi_config.config.m_output_channel[1].m_maximum_note = split_note - 1;
+    next_config.m_output_channel[0].m_minimum_note = split_note;
+    next_config.m_output_channel[1].m_maximum_note = split_note - 1;
   }
-
-  g_next_midi_config.go = true;
+  MidiProcessing::SetNextConfiguration(next_config);
 }

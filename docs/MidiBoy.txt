@@ -760,6 +760,7 @@ x New multi menu???
   +1       octave         0
   off       pb/cc        on
   0%       velocity      0%
+- rotate values if beyond end ?
 
 
 

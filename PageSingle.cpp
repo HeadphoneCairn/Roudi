@@ -2,8 +2,8 @@
 
 #include "Debug.h"
 #include "Data.h"
+#include "MidiProcessing.h"
 #include "Pages.h"
-#include "Roudi.h"
 
 PSTRING(PSTR_page_single, " SINGLE "); 
 
@@ -60,13 +60,13 @@ void PageSingle::SaveIfModified()
 
 void PageSingle::SetMidiConfiguration(uint8_t selected_line)
 {
-  g_next_midi_config.config.SetDefaults();
-  g_next_midi_config.config.m_input_channel = EE::GetSettings().input_channel;
+  MidiProcessing::Configuration next_config;
+    next_config.m_input_channel = EE::GetSettings().input_channel;
   if (selected_line < NumberOfChannels) {
-    g_next_midi_config.config.m_nbr_output_channels = 1;
-    g_next_midi_config.config.m_output_channel[0].m_channel = selected_line;
+    next_config.m_nbr_output_channels = 1;
+    next_config.m_output_channel[0].m_channel = selected_line;
   } else {
-    g_next_midi_config.config.m_nbr_output_channels = 0;
+    next_config.m_nbr_output_channels = 0;
   }
-  g_next_midi_config.go = true;
+  MidiProcessing::SetNextConfiguration(next_config);
 }

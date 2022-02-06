@@ -7,14 +7,13 @@
 #include <fifo.h>
 #include <midi_serialization.h>
 
-namespace MidiProcessing
-{
-  Configuration configuration;
-}
-
 namespace
 {
   using namespace MidiProcessing;
+
+  Configuration configuration;                 // currently active MIDI configuration
+  Configuration g_next_configuration;          // next configuration, to be set if ...
+  bool g_next_configuration_available = false; // ... next_confuration_available = true 
   
   typedef TFifo<midi_event_t, uint8_t, 128> fifo_t; // uses 512 bytes of RAM: 4 x 128
 
@@ -293,12 +292,27 @@ namespace MidiProcessing
 */
   }
 
-  bool SetConfiguration(const Configuration& new_configuration)
+  const Configuration& GetConfiguration()
   {
+    return configuration;
+  }
+   
+  void SetNextConfiguration(const Configuration& next_configuration)
+  {
+    g_next_configuration_available = true;
+    g_next_configuration = next_configuration;
+  }
+
+  bool ActivateNextConfigurationIfAvailable()
+  {
+    if (!g_next_configuration_available)
+      return true;
+
     if (SwitchOffAllNotes(g_output_queue)) {
       // The messages to switch of the notes on the output channels have been put on the output queue.
       // We can safely change the configuration.
-      configuration = new_configuration;
+      configuration = g_next_configuration;
+      g_next_configuration_available = false;
       return true;
     } else {
       // Output queue is full, cannot add note offs
