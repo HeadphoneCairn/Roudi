@@ -59,6 +59,7 @@ namespace MidiProcessing
   bool ActivateNextConfigurationIfAvailable();
 
   // This interface can be used to get notified of every incoming MIDI message
+  // WARNING: The midi_in_listener MUST return as quickly as possible!
   typedef void (*MidiInListener) (const midi_event_t& event);
   void SetMidiInListener(MidiInListener midi_in_listener);
 

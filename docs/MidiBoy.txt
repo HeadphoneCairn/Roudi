@@ -761,6 +761,9 @@ x New multi menu???
   off       pb/cc        on
   0%       velocity      0%
 - rotate values if beyond end ?
+- Coding style:
+  - Add const to member functions if necessary. And to their parameters.
+  - Consider i_, o_, m_
 
 
 
