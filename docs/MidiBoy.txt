@@ -697,15 +697,19 @@ GetLine(line, field, what=nrfields/text/, out)
      out.redraw = ... 
 
 
+
+
+
+
 TODO:
 x Make single menu
 x Make settings menu
 x Create menu switching with A and B and A+B
 x about menu
-  - also show used memory
-  - memory used by page classes
-  // TODO: bekijk verschil sizeof(Screen::buffer) Screen::buffer_len !!!!
-  // TODO: waarom toont hij ABOUT page eerst???  
+  x also show used memory
+  x memory used by page classes
+  x TODO: bekijk verschil sizeof(Screen::buffer) Screen::buffer_len !!!!
+  x TODO: waarom toont hij ABOUT page eerst???  
 x Put everything on disk
 x Channels menu
 x connect menus 
@@ -747,3 +751,16 @@ x Allow for single mode, next to split and layer!
   Implemented as -70%, -80%, -90%, 0%, 10%, 20%, ...  
   Or as <70, <80, <90, >0, >10, >20 ...
 - Settings should change MIDI configuration on the fly!
+x Make scrollbar canvas 25 chars wide
+x New multi menu???
+  ======== 1. MULTI =======
+  SPLIT mode      split: C4
+  01       channel       05
+  Typhon             Erebus
+  +1       octave         0
+  off       pb/cc        on
+  0%       velocity      0%
+
+
+
+

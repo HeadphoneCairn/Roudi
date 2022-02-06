@@ -88,7 +88,6 @@ Page::LineResult PageAbout::Line(LineFunction func, uint8_t line, uint8_t field)
   else
     snprintf(Screen::buffer, sizeof(Screen::buffer), GetPString(PSTR_about_sizeof), Pages::GetPageUsage());
   return {1, Screen::buffer, Screen::inversion_all, false};
-// TODO: bekijk verschil sizeof(Screen::buffer) Screen::buffer_len !!!!
 }
 
 
