@@ -148,10 +148,10 @@ Page::LineResult PageMulti::ActualLine(LineFunction func, uint8_t line, uint8_t 
   switch (line)
   {
     case 0: return DoubleCombiline(func, field, m_ui_channel_1, 16, 1, false, m_ui_octave_1, 7, 0, false);
-    case 1: return DoubleCombiline(func, field, m_ui_pitchbend_1, 14, 2, false, m_ui_velocity_1, 8, 0, false);
+    case 1: return DoubleCombiline(func, field, m_ui_pitchbend_1, 14, 3, false, m_ui_velocity_1, 8, 0, false);
     case 2: return DoubleCombiline(func, field, m_ui_channel_2, 16, 1, false, m_ui_octave_2, 7, 0, false);
-    case 3: return DoubleCombiline(func, field, m_ui_pitchbend_2, 14, 2, false, m_ui_velocity_2, 8, 0, false);
-    case 4: return DoubleCombiline(func, field, m_ui_mode, 12, 2, false, m_ui_split_note, 10, 0, false);
+    case 3: return DoubleCombiline(func, field, m_ui_pitchbend_2, 14, 3, false, m_ui_velocity_2, 8, 0, false);
+    case 4: return DoubleCombiline(func, field, m_ui_mode, 12, 3, false, m_ui_split_note, 10, 0, false);
     case 5: return DefaultLine(func);
     case 6: // Save As ... 
       if (func == DO_LEFT || func == DO_RIGHT)
