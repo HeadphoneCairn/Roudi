@@ -12,7 +12,7 @@ PSTRING(PSTR_page_about, " ABOUT ROUDI ");
 //                      1234567890123456789012345
 PSTRING(PSTR_about_00, "");
 PSTRING(PSTR_about_01, "          Roudi");
-PSTRING(PSTR_about_02, "ROUter for miDI messages");
+PSTRING(PSTR_about_02, " ROUter for miDI messages");
 PSTRING(PSTR_about_03, "       version 0.1");
 PSTRING(PSTR_about_04, "        2019-2022");
 PSTRING(PSTR_about_05, "");
@@ -98,6 +98,7 @@ void PageAbout::OnStop()
 void PageAbout::SetMidiConfiguration()
 {
   MidiProcessing::Configuration next_config;
+  next_config.m_input_channel = EE::GetSettings().input_channel;
   next_config.m_nbr_output_channels = 0;
   MidiProcessing::SetNextConfiguration(next_config);
 }

@@ -1,7 +1,8 @@
 #include "PageSettings.h"
+
 #include "Data.h"
 #include "Debug.h"
-#include "Pages.h"
+#include "MidiProcessing.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -94,7 +95,7 @@ void PageSettings::OnStart(uint8_t)
   m_ui_velocity_curve.Init(line_velocity_curve, &values.velocity_curve);
   m_ui_program_change.Init(line_program_change, &values.program_change);
   m_ui_brightness.Init(line_brightness, &values.brightness);
-  SetNumberOfLines(10);
+  SetNumberOfLines(4);
 }
 
 void PageSettings::OnStop() 
@@ -114,8 +115,8 @@ Page::LineResult PageSettings::Line(LineFunction func, uint8_t line, uint8_t fie
     case 0: return LineInputChannel(func);
     case 1: return SingleCombiLine(func, m_ui_velocity_curve,  Screen::MaxCharsCanvas, 0, true);
     case 2: return SingleCombiLine(func, m_ui_program_change,  Screen::MaxCharsCanvas, 0, true);
-    default: return SingleCombiLine(func, m_ui_brightness,     Screen::MaxCharsCanvas, 0, true);
-    //default: return DefaultLine(func);
+    case 3: return SingleCombiLine(func, m_ui_brightness,     Screen::MaxCharsCanvas, 0, true);
+    default: return DefaultLine(func);
   }
 }
 
@@ -124,6 +125,9 @@ Page::LineResult PageSettings::LineInputChannel(LineFunction func)
   LineResult result = SingleCombiLine(func, m_ui_input_channel, Screen::MaxCharsCanvas, 0, true);
   if (result.redraw) { // input channel has changed
     Debug::BeepHigh();
+    MidiProcessing::Configuration next_config = MidiProcessing::GetConfiguration();
+    next_config.m_input_channel = m_ui_input_channel.GetSelectedValue();
+    MidiProcessing::SetNextConfiguration(next_config);
   }
   return result; 
 }

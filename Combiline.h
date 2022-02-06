@@ -23,7 +23,7 @@ public:
   void Init(CombilineParameters par_function, uint8_t* selected_value);
   void GetText(char* text, uint8_t text_len, Screen::Inversion& inversion, uint8_t start, uint8_t len, uint8_t extra_padding=0, bool right_align=false);
   Screen::Inversion GetInversion();
-  uint8_t* GetSelectedValue();
+  uint8_t GetSelectedValue();
   bool OnLeft();
   bool OnRight();
 public:

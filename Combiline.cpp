@@ -97,10 +97,9 @@ NOTE: Wanted to use sprintf with "%*.*s", but the variable width specifiers don'
   return;
 }
 
-
-uint8_t* Combiline::GetSelectedValue()
+uint8_t Combiline::GetSelectedValue()
 {
-  return m_selected_value;
+  return *m_selected_value;
 }
 
 bool Combiline::OnLeft() 
