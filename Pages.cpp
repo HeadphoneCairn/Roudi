@@ -241,4 +241,9 @@ namespace Pages
     return data_scratch;
   }
 
+  // TODO remove
+  void DrawRemoveMe()
+  {
+    g_current_page->DrawRemoveMe();
+  }
 }

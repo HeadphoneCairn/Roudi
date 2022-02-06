@@ -50,4 +50,6 @@ namespace Pages
   // Debug info
   uint16_t GetTotalPageUsage();
   const char* GetPageUsage();
+
+  void DrawRemoveMe();   // TODO remove
 }

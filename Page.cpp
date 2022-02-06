@@ -151,6 +151,11 @@ void Page::Right()
     Draw(1, 7); // TODO: should draw only one selected line!!!, well not really for undo of page a complete redraw is necessary
 }
 
+void Page::DrawRemoveMe()    // TODO remove
+{
+  Draw(1, 7);
+}
+
 void Page::Draw(uint8_t from, uint8_t to) // from..to are the lines to draw 
 {
   //Debug::Beep();

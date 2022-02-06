@@ -740,6 +740,8 @@ x Allow for single mode, next to split and layer!
   inside the page I would need to free it before freeing the page. I think
   in this way, the heap does not get fragmented. To research online.
   This thought could have made life much easier when creating the UI. :-(
+  (PS: could be very useful for the midi monitor which takes up quite some data for the
+  message buffer.)
 - New setting:
   Other input channels block/pass
 - New page

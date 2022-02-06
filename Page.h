@@ -24,6 +24,7 @@ public:
   void Down();
   void Left();
   void Right();
+  void DrawRemoveMe();  // TODO remove
 public:
   enum LineFunction { GET_NUMBER_OF_FIELDS, GET_TEXT, DO_SELECTED, DO_LEFT, DO_RIGHT };
   struct LineResult {
