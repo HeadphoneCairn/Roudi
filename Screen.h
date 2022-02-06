@@ -59,5 +59,4 @@ namespace Screen
 
   // Draw a wiggly line on a specified row
   void DrawWiggle(uint8_t row);
-
 }

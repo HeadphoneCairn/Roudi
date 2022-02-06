@@ -144,7 +144,7 @@ namespace Screen
   }
 
   // Draw a wiggly line on a specified row
-  void draw_wiggle(uint8_t row)
+  void DrawWiggle(uint8_t row)
   {
     const uint8_t wiggle[] = {
       0b10000001,
@@ -164,7 +164,7 @@ namespace Screen
 
 
 
-  /*
+/*
   // To test:
   // - extra long text
   // - zero length text
@@ -177,33 +177,34 @@ namespace Screen
   void DrawTest()
   {
     Clear();
-    Print(CanvasComplete, 0, 0xFF, " A - SINGLE ", LineEmphasis, InvertNone);
-    Print(CanvasScrollbar, 2, 0, "01. Pianodubekeklekjejkljejeklej", LineClear, InvertAll);
+    Print(CanvasComplete, 0, 0xFF, " A - SINGLE ", LineEmphasis, inversion_none);
     DrawWiggle(1);
-    Print(CanvasScrollbar, 3, 15, "Kut met peren", LineLeave, InvertAll);
-    Print(CanvasScrollbar, 4, 0xFF, "Midden", LineLeave, InvertAll);
-    Print(CanvasScrollbar, 5, 2, "En nog meer midden", LineLeave, InvertAll);
-    Print(CanvasScrollbar, 6, 4, "En dit is een wreed lange tekst, wellicht te lang", LineClear, InvertAll);
-    Print(CanvasScrollbar, 7, 6, "", LineClear, InvertNone);
+    Print(CanvasScrollbar, 2, 0, "01. Pianodubekeklekjejkljejeklej", LineClear, inversion_all);
+    Print(CanvasScrollbar, 3, 15, "Kut met peren", LineLeave, inversion_all);
+    Print(CanvasScrollbar, 4, 0xFF, "Midden", LineLeave, inversion_all);
+    Print(CanvasScrollbar, 5, 2, "En nog meer midden", LineLeave, inversion_all);
+    Print(CanvasScrollbar, 6, 4, "En dit is een wreed lange tekst, wellicht te lang", LineClear, inversion_all);
+    Print(CanvasScrollbar, 7, 6, "", LineClear, inversion_none);
   }
   void DrawA()
   {
     Clear();
-    Print(CanvasScrollbar, 0, 0xFF, " A - SINGLE ", LineEmphasis, InvertNone);
-    Print(CanvasScrollbar, 1, 1, "    Disabled", LineClear, InvertAll);
-    Print(CanvasScrollbar, 2, 1, "01. Piano", LineClear, InvertNone);
-    Print(CanvasScrollbar, 3, 1, "02. Erebus", LineClear, InvertNone);
-    Print(CanvasScrollbar, 4, 1, "03. Typhon", LineClear, InvertNone);
-    Print(CanvasScrollbar, 5, 1, "04. Prophet 6", LineClear, InvertNone);
+    Print(CanvasScrollbar, 0, 0xFF, " A - SINGLE ", LineEmphasis, inversion_none);
+    Print(CanvasScrollbar, 1, 1, "    Disabled", LineClear, inversion_all);
+    Print(CanvasScrollbar, 2, 1, "01. Piano", LineClear, inversion_none);
+    Print(CanvasScrollbar, 3, 1, "02. Erebus", LineClear, inversion_none);
+    Print(CanvasScrollbar, 4, 1, "03. Typhon", LineClear, inversion_none);
+    Print(CanvasScrollbar, 5, 1, "04. Prophet 6", LineClear, inversion_none);
   }
   void DrawUISettings()
   {
     Clear();
-    Print(CanvasScrollbar, 0, 0xFF, " UI Settings ", LineEmphasis, InvertNone);
-    Print(CanvasScrollbar, 1, 0, "Channel order      alpha", LineClear, InvertNone);
-    Print(CanvasScrollbar, 2, 0, "Channel number      show", LineClear, InvertGiven, 20, 23);
-    Print(CanvasScrollbar, 3, 0, "Split inc/dec     octave", LineClear, InvertNone);
-    Print(CanvasScrollbar, 4, 0, "Screen brightness     50", LineClear, InvertGiven, 0, 16);
+    Print(CanvasScrollbar, 0, 0xFF, " UI Settings ", LineEmphasis, inversion_none);
+    Print(CanvasScrollbar, 1, 0, "Channel order      alpha", LineClear, inversion_none);
+    Print(CanvasScrollbar, 2, 0, "Channel number      show", LineClear, {InvertGiven, 20, 23});
+    Print(CanvasScrollbar, 3, 0, "Split inc/dec     octave", LineClear, inversion_none);
+    Print(CanvasScrollbar, 4, 0, "Screen brightness     50", LineClear, {InvertGiven, 0, 16});
   }
-  */
+*/
+  
 }
