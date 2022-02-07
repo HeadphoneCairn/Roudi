@@ -2,7 +2,9 @@
 
 #include "Page.h"
 
-struct midi_event_t;
+namespace {
+  struct midi_msg_t;
+}
 
 class PageMonitor: public Page
 {
@@ -14,7 +16,7 @@ protected:
   virtual void OnStart(uint8_t dummy = 0xFF) override;
   virtual void OnStop() override;
 private:
-  LineResult LineDecode(const midi_event_t& event);
+  LineResult LineDecode(const midi_msg_t& event);
 };
 
 

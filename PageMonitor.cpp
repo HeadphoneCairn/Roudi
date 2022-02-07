@@ -41,12 +41,22 @@ class TCircularBuffer
 
 namespace {
 
-  const uint8_t g_num_messages = 64;
-  TCircularBuffer<midi_event_t, uint8_t, g_num_messages> g_messages;
+  struct midi_msg_t {
+    midi_event_t event;
+    uint8_t input:1;
+  };
 
-  void Listen(const midi_event_t& event)
+  const uint8_t g_num_messages = 64;
+  TCircularBuffer<midi_msg_t, uint8_t, g_num_messages> g_messages;
+
+  void ListenIn(const midi_event_t& event)
   {
-    g_messages.Push(event);
+    g_messages.Push({event, 1});
+    SetRedrawNext();
+  }
+  void ListenOut(const midi_event_t& event)
+  {
+    g_messages.Push({event, 0});
     SetRedrawNext();
   }
 
@@ -61,14 +71,16 @@ void PageMonitor::OnStart(uint8_t)
   memset(&g_messages, 0, sizeof(g_messages));
   SetNumberOfLines(g_num_messages, g_num_messages - 1);
 
-  // Attach listener
-  MidiProcessing::SetMidiInListener(Listen);
+  // Attach listeners
+  MidiProcessing::SetMidiInListener(ListenIn);
+  MidiProcessing::SetMidiOutListener(ListenOut);
 }
 
 void PageMonitor::OnStop()
 {
-  // Detach listener
+  // Detach listeners
   MidiProcessing::SetMidiInListener(nullptr);
+  MidiProcessing::SetMidiOutListener(nullptr);
 }
 
 const char* PageMonitor::GetTitle()
@@ -84,29 +96,73 @@ Page::LineResult PageMonitor::Line(LineFunction func, uint8_t line, uint8_t fiel
     return { 1, nullptr, Screen::inversion_none, false };
 }
 
+PSTRING(PSTR_mm_channel,           "%02d ");
+PSTRING(PSTR_mm_note_off,          "note off %d, vel %d");
+PSTRING(PSTR_mm_note_on,           "note on %d, vel %d");
+PSTRING(PSTR_mm_key_pressure,      "key pressure %d %d");
+PSTRING(PSTR_mm_cc,                "CC#%d %d");
+PSTRING(PSTR_mm_program_change,    "program change %d");
+PSTRING(PSTR_mm_channel_pressure,  "channel pressure %d");
+PSTRING(PSTR_mm_pitch_bend,        "pitch bend %lu");
+PSTRING(PSTR_mm_unknown,           "unknown message");
 
-Page::LineResult PageMonitor::LineDecode(const midi_event_t& event)
+/*
+TODO 
+- snprintf! to prevent buffer overrun
+- note instead of key number!!!  
+- type of CC: mod/volume/bank select/...
+- all F.. thingies
+- sysex, how to show
+- running status ???
+- implemen settings and filters
+*/
+
+Page::LineResult PageMonitor::LineDecode(const midi_msg_t& msg)
 {
+  const midi_event_t& e = msg.event;
   char* text = Screen::buffer;
-  if (event.m_event == 0)
-    text[0] = 0;
-  else {
+  text[0] = 0;
 
-    if (event.m_event == 0x8 || event.m_event == 0x9) {
-      const uint8_t channel = event.m_data[0] & 0x0f;
-      const uint8_t note = event.m_data[1];
-      const uint8_t velocity = event.m_data[2];
-      sprintf(text, "ch%02d: note %d %s, v=%d", 
-        channel + 1, 
-        note,
-        event.m_event==0x8 ? "OFF" : "ON",
-        velocity
-        );
-    } else
-      strcpy(text, "unknown message");
-
+  if (e.m_event != 0) {
+    text[0] = msg.input ? 'I' : 'O';
+    text++;
+    if (e.m_event >= 0x8 && e.m_event <= 0xe) {
+      const uint8_t channel = e.m_data[0] & 0x0f;
+      text += sprintf(text, GetPString(PSTR_mm_channel), channel + 1);
+      switch (e.m_event)
+      { 
+        case 0x8:
+          sprintf(text, GetPString(PSTR_mm_note_off), e.m_data[1], e.m_data[2]);
+          break;
+        case 0x9:
+          sprintf(text, GetPString(PSTR_mm_note_on), e.m_data[1], e.m_data[2]);
+          break;
+        case 0xa:
+          sprintf(text, GetPString(PSTR_mm_key_pressure), e.m_data[1], e.m_data[2]);
+          break;
+        case 0xb:
+          sprintf(text, GetPString(PSTR_mm_cc), e.m_data[1], e.m_data[2]);
+          break;
+        case 0xc:
+          sprintf(text, GetPString(PSTR_mm_program_change), e.m_data[1]);
+          break;
+        case 0xd:
+          sprintf(text, GetPString(PSTR_mm_channel_pressure), e.m_data[1]);
+          break;
+        case 0xe:
+          sprintf(text, GetPString(PSTR_mm_pitch_bend), static_cast<unsigned long>(e.m_data[2]) * 128ul + static_cast<unsigned long>(e.m_data[1]));
+          break;
+        default:
+          strcpy(text, GetPString(PSTR_mm_unknown));
+          break;
+      }
+    } else if (e.m_event == 0xf) {
+      strcpy(text, "sysex enzo");
+    } else {
+      strcpy(text, GetPString(PSTR_mm_unknown));
+    }
   }
 
-  return { 1, text, Screen::inversion_all, false };
+  return { 1, Screen::buffer, Screen::inversion_all, false };
 }
 

@@ -3,7 +3,7 @@ Name              Hex values           Decimal       Data bytes
 --- Channel specific ---                                                     
 Note Off          80-8F                128-143       2 (note number, velocity)
 Note On           90-9F                144-159       2 (note number, velocity)
-Key Pressure      A0-AF                160-175       2 (note number, pressure)
+Key Pressure      A0-AF                160-175       2 (note number, pressure)           
 Control Change    B0-BF                176-191       2 (controller number, value)
   (continuous controller)                               00: bank select (met program change erna)
                                                         01: modulation wheel

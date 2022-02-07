@@ -14,7 +14,8 @@ namespace
   Configuration configuration;                 // currently active MIDI configuration
   Configuration g_next_configuration;          // next configuration, to be set if ...
   bool g_next_configuration_available = false; // ... next_confuration_available = true 
-  MidiInListener g_midi_in_listener = nullptr;
+  MidiListener g_midi_in_listener = nullptr;
+  MidiListener g_midi_out_listener = nullptr;
   
   typedef TFifo<midi_event_t, uint8_t, 128> fifo_t; // uses 512 bytes of RAM: 4 x 128
 
@@ -322,9 +323,14 @@ namespace MidiProcessing
     }
   }
 
-  void SetMidiInListener(MidiInListener midi_in_listener)
+  void SetMidiInListener(MidiListener midi_listener)
   {
-    g_midi_in_listener = midi_in_listener;
+    g_midi_in_listener = midi_listener;
+  }
+
+  void SetMidiOutListener(MidiListener midi_listener)
+  {
+    g_midi_out_listener = midi_listener;
   }
 
   void TreatInput()
@@ -349,6 +355,8 @@ namespace MidiProcessing
       uint8_t n = UsbToMidi::process(event, msg);
       for (uint8_t i=0; i<n; ++i)
         DinMidiboy.dinMidi().write(msg[i]);
+      if (g_midi_out_listener)
+        g_midi_out_listener(event);
     }
   }
 

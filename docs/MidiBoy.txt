@@ -697,11 +697,24 @@ GetLine(line, field, what=nrfields/text/, out)
      out.redraw = ... 
 
 
+=== Midi Monitor ===
+
+
+0123456789012345678901234
+I01 note off C3#, vel 64       80-8F: note off
+I01 note on C3#, vel 127       90-9F: note on
+I01 key pressure C3# 127       A0-AF: key pressure
+I01 CC#127 127, mod            B0-BF: CCs
+I01 program change 127         C0-CF: program change 
+I01 channel pressure 127       D0-DF: channel pressure
+I01 pitch bend 127+127         E0-EF: pitch bend
 
 
 
 
-TODO:
+
+
+=== TODO ===
 x Make single menu
 x Make settings menu
 x Create menu switching with A and B and A+B
