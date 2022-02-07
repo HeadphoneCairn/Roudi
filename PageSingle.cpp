@@ -61,7 +61,7 @@ void PageSingle::SaveIfModified()
 void PageSingle::SetMidiConfiguration(uint8_t selected_line)
 {
   MidiProcessing::Configuration next_config;
-  next_config.m_input_channel = EE::GetSettings().input_channel;
+  next_config.m_input_channel = EE::Settings().input_channel;
   if (selected_line < NumberOfChannels) {
     next_config.m_nbr_output_channels = 1;
     next_config.m_output_channel[0].m_channel = selected_line;

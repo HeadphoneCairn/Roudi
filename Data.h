@@ -115,10 +115,10 @@ namespace EE
   void GetMulti(uint8_t which, MultiValues& values);
 
   // --- Settings ---
-  SettingsValues& GetSettingsRW();  // Read Write: Only to be used in the Settings Page
-  const SettingsValues& GetSettings(); // Read only
-  void SetSettings();
-  
+  SettingsValues& SettingsRW();     // Access the settings values in write/read mode, only used in Settings Page
+  const SettingsValues& Settings(); // Access the settings values in read mode, all other code
+  void SetSettings();               // Write the settings values to EEPROM
+
   // --- Channels ---
   // channel value: 0-15
   // channel number: 1-16

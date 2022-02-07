@@ -766,7 +766,10 @@ x New multi menu???
 - Coding style:
   - Add const to member functions if necessary. And to their parameters.
   - Consider i_, o_, m_
-
+- Settings:
+  - velocity curve
+  - filters: program change
+  - screen brightness
 
 
 

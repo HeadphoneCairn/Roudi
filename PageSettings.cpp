@@ -90,7 +90,7 @@ PageSettings::PageSettings():
 
 void PageSettings::OnStart(uint8_t)
 {
-  SettingsValues& values = EE::GetSettingsRW();
+  SettingsValues& values = EE::SettingsRW();
   m_ui_input_channel.Init(line_input_channel, &values.input_channel);
   m_ui_velocity_curve.Init(line_velocity_curve, &values.velocity_curve);
   m_ui_program_change.Init(line_program_change, &values.program_change);

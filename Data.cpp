@@ -191,7 +191,7 @@ namespace EE
 
   struct EE_Header
   {
-    uint16_t magic_number = 0x2B3F;
+    uint16_t magic_number = 0x2B40;
     uint8_t version = 1;
   };
 
@@ -257,36 +257,31 @@ namespace EE
 
   // ===== S E T T I N G S =====================================================
 
+  SettingsValues g_settings_values; // Global variabel to have direct speedy access to the settings,
+                                    // without having to read from the EEPROM
 
-  SettingsValues& GetSettingsRW()
+  SettingsValues& SettingsRW()
   {
-    static bool first_run = true;
-    static SettingsValues values; // Cache for settings. 
-                                  // For 1 byte, this is about double as fast as reading from EEPROM.
-                                  // For 4 bytes, this is about four times as fast as readinf from EEPROM.
-                                  // Keeping it like this for the moment. Not sure if I'll need the speed.
-    if (first_run) {
-      first_run = false;
-      EEPROM_GET(start_of_settings, values);
-    }
-    return values;
+    return g_settings_values;
   }
 
-  const SettingsValues& GetSettings()
+  const SettingsValues& Settings()
   {
-    return GetSettingsRW();
+    return g_settings_values;
   }
 
-  void SetSettings()
+  void SetSettings() 
   {
     SettingsValues eeprom_values; 
     EEPROM_GET(start_of_settings, eeprom_values);
-    SettingsValues current_values = GetSettings();
-    if (memcmp(&eeprom_values, &current_values, sizeof(eeprom_values)) != 0) 
-      EEPROM_PUT(start_of_settings, current_values);    
+    if (memcmp(&eeprom_values, &g_settings_values, sizeof(eeprom_values)) != 0) 
+      EEPROM_PUT(start_of_settings, g_settings_values);    
   }
 
-
+  void GetSettings()
+  {
+    EEPROM_GET(start_of_settings, g_settings_values);
+  }
 
   // ===== C H A N N E L S =====================================================
 
@@ -351,7 +346,7 @@ namespace EE
 
   static void InitSettings()
   {
-    GetSettingsDefault(GetSettingsRW());
+    GetSettingsDefault(g_settings_values);
     EE::SetSettings();
   }
 
@@ -375,6 +370,7 @@ namespace EE
 
   void Init()
   {
+    // Write default data to EEPROM, if there is no data yet
     uint16_t stored_magic_number;
     EEPROM_GET(start_of_header, stored_magic_number);
     EE_Header header;
@@ -385,6 +381,8 @@ namespace EE
       InitSettings();
       InitChannels();
     }
+    // Read the data that is constantly in memory for speedy access
+    GetSettings();  
   }
 }
 

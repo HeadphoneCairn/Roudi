@@ -98,7 +98,7 @@ void PageAbout::OnStop()
 void PageAbout::SetMidiConfiguration()
 {
   MidiProcessing::Configuration next_config;
-  next_config.m_input_channel = EE::GetSettings().input_channel;
+  next_config.m_input_channel = EE::Settings().input_channel;
   next_config.m_nbr_output_channels = 0;
   MidiProcessing::SetNextConfiguration(next_config);
 }
