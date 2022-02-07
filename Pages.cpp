@@ -222,6 +222,11 @@ namespace Pages
     g_current_page->Timeout();
   }
 
+  void Redraw()
+  {
+    g_current_page->Redraw();
+  }
+
   uint16_t GetTotalPageUsage()
   {
     return sizeof(PageSingle) + sizeof(PageNameChannel) +
@@ -241,9 +246,4 @@ namespace Pages
     return data_scratch;
   }
 
-  // TODO remove
-  void DrawRemoveMe()
-  {
-    g_current_page->DrawRemoveMe();
-  }
 }

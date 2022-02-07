@@ -47,9 +47,10 @@ namespace Pages
   void Timeout();
   const unsigned long timeout = 900 * 1000; // in ms, OnTimeout is called on the active page when no button has been pushed for this time 
 
+  // Redraw the current page
+  void Redraw();
+
   // Debug info
   uint16_t GetTotalPageUsage();
   const char* GetPageUsage();
-
-  void DrawRemoveMe();   // TODO remove
 }

@@ -20,11 +20,11 @@ public:
   void Start(uint8_t parameter = 0xFF); // Call this when you want to first display the page
   void Stop(); // Call this when you want to exit the page
   void Timeout(); // Will be called by the main routine when no buttons have been pushed for a certain time
+  void Redraw();  // Will be called by the main routine when the page needs redrawing even if no button has been pushed
   void Up();
   void Down();
   void Left();
   void Right();
-  void DrawRemoveMe();  // TODO remove
 public:
   enum LineFunction { GET_NUMBER_OF_FIELDS, GET_TEXT, DO_SELECTED, DO_LEFT, DO_RIGHT };
   struct LineResult {

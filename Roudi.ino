@@ -8,6 +8,12 @@
 
 const bool g_show_logo = false;
 unsigned long g_last_button_press = 0;  // in ms
+bool g_redraw_next = false;
+
+void SetRedrawNext()
+{
+  g_redraw_next = true;
+}
 
 void setup()
 {
@@ -116,6 +122,17 @@ void loop()
 
   // --- Write to midi ---
   MidiProcessing::WriteToOutput();
+
+  // --- Redraw page if needed ---
+  // This is used for the MIDI Monitor to update its page when new MIDI
+  // messages have arrived.
+  // It is done after the treatment of the input and output MIDI queue
+  // so that when many message arrive at the "same" time, we update only
+  // once.
+  if (g_redraw_next) {
+    Pages::Redraw();
+    g_redraw_next = false;
+  }
 }
 
 

@@ -3,7 +3,7 @@
 #include "Debug.h"
 #include "Data.h"
 #include "MidiProcessing.h"
-#include "Pages.h"  // TODO Remove me
+#include "Roudi.h"
 
 #include <midi_serialization.h>
 
@@ -47,7 +47,7 @@ namespace {
   void Listen(const midi_event_t& event)
   {
     g_messages.Push(event);
-    Pages::DrawRemoveMe(); // TODO remove: crap,   also can this conflict with buttons presses and such, best do from Roudi.ini, like next_page ...
+    SetRedrawNext();
   }
 
 }
