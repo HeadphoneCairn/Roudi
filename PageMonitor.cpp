@@ -98,6 +98,23 @@ Page::LineResult PageMonitor::Line(LineFunction func, uint8_t line, uint8_t fiel
 
 
 
+PSTRING(PSTR_cc_00, "bank");
+PSTRING(PSTR_cc_01, "modwheel");
+PSTRING(PSTR_cc_07, "volume");
+PSTRING(PSTR_cc_default, "-");
+
+
+static const char* GetCCName(uint8_t cc)
+{
+  switch(cc) {
+    case 0x00: return GetPString(PSTR_cc_00);
+    case 0x01: return GetPString(PSTR_cc_01);
+    case 0x07: return GetPString(PSTR_cc_07);
+    default:   return GetPString(PSTR_cc_default);
+  }
+}
+
+
 PSTRING(PSTR_mm_channel,           "%c%02d ");
 PSTRING(PSTR_mm_no_channel,        "%c-- ");
 PSTRING(PSTR_mm_unknown,           "unknown message");
@@ -105,7 +122,7 @@ PSTRING(PSTR_mm_unknown,           "unknown message");
 PSTRING(PSTR_mm_note_off,          "note off %s, vel %d");   // 0x8. 
 PSTRING(PSTR_mm_note_on,           "note on %s, vel %d");    // 0x9.
 PSTRING(PSTR_mm_key_pressure,      "key pressure %s %d");    // 0xa.
-PSTRING(PSTR_mm_cc,                "CC#%d %d");              // 0xb.
+PSTRING(PSTR_mm_cc,                "CC#%d %s %d");         // 0xb.
 PSTRING(PSTR_mm_program_change,    "program change %d");     // 0xc.
 PSTRING(PSTR_mm_channel_pressure,  "channel pressure %d");   // 0xd.
 PSTRING(PSTR_mm_pitch_bend,        "pitch bend %lu");        // 0xe.
@@ -143,10 +160,10 @@ Page::LineResult PageMonitor::LineDecode(const midi_msg_t& msg)
   // --- The output text ---
   char* text = Screen::buffer;
   text[0] = 0;
-  // --- Temporary storage for note name ---
-  const uint8_t max_note_name_len = 4; // max note name string length = 4 => C#-1
-  char note_name[max_note_name_len + 1];
-  note_name[max_note_name_len] = 0;
+  // --- Temporary string storage ---
+  const uint8_t max_temp_len = 10;
+  char temp[max_temp_len + 1];
+  temp[max_temp_len] = 0;
 
   // --- Add the decode message to text (if there is a message) ---
   if (e.m_event != 0) {
@@ -163,19 +180,20 @@ Page::LineResult PageMonitor::LineDecode(const midi_msg_t& msg)
       switch (e.m_event)
       { 
         case 0x8:
-          strncpy(note_name, GetNoteName(e.m_data[1]), max_note_name_len);
-          sprintf(text, GetPString(PSTR_mm_note_off), note_name, e.m_data[2]);
+          strncpy(temp, GetNoteName(e.m_data[1]), max_temp_len);
+          sprintf(text, GetPString(PSTR_mm_note_off), temp, e.m_data[2]);
           break;
         case 0x9:
-          strncpy(note_name, GetNoteName(e.m_data[1]), max_note_name_len);
-          sprintf(text, GetPString(PSTR_mm_note_on), note_name, e.m_data[2]);
+          strncpy(temp, GetNoteName(e.m_data[1]), max_temp_len);
+          sprintf(text, GetPString(PSTR_mm_note_on), temp, e.m_data[2]);
           break;
         case 0xa:
-          strncpy(note_name, GetNoteName(e.m_data[1]), max_note_name_len);
-          sprintf(text, GetPString(PSTR_mm_key_pressure), note_name, e.m_data[2]);
+          strncpy(temp, GetNoteName(e.m_data[1]), max_temp_len);
+          sprintf(text, GetPString(PSTR_mm_key_pressure), temp, e.m_data[2]);
           break;
         case 0xb:
-          sprintf(text, GetPString(PSTR_mm_cc), e.m_data[1], e.m_data[2]);
+          strncpy(temp, GetCCName(e.m_data[1]), max_temp_len);
+          sprintf(text, GetPString(PSTR_mm_cc), e.m_data[1], temp, e.m_data[2]);
           break;
         case 0xc:
           sprintf(text, GetPString(PSTR_mm_program_change), e.m_data[1]);

@@ -783,6 +783,7 @@ x New multi menu???
   - velocity curve
   - filters: program change
   - screen brightness
+- Need thorough test of MIDI monitor with all kinds of messages, including sysex
 
 
 
