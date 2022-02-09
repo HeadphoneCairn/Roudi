@@ -784,6 +784,7 @@ x New multi menu???
   - filters: program change
   - screen brightness
 - Need thorough test of MIDI monitor with all kinds of messages, including sysex
-
-
+- None in Single wilt zeggen: blokkeer alles komende van input Channel
+  Maar in about moet gewoon alles doorgestuurd worden op alle kanalen, een beetje een MIDI Thru dus.
+- Should I do something with NRPN or RPN in MIDI monitor?
 
