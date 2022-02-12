@@ -12,11 +12,11 @@ Control Change    B0-BF                176-191       2 (controller number, value
                                                         40: sustain pedal
                                                         78: All Sound Off
                                                         79: Reset all Controllers
-                                                        7A: Local Control
+                                                        7A: Local Control  // on=make sound, off=no sound
                                                         7B: All Notes Off
                                                         7C: Omni Off
                                                         7D: Omni On
-                                                        7E: Mone Off
+                                                        7E: Mono Off
                                                         7F: Mono On
 Program Change    C0-CF                192-207       1 (program number)
 Channel Pressure  D0-DF                208-223       1 (pressure)
@@ -27,20 +27,20 @@ System Exclusive  F0                   240           variable (manufactor id, wh
 End of System Ex  F7                   247           0
 
 --- System Common --- => common to all receiving devices.
-MIDI Time Code 1/4 Frame   F1          241           1 (timecode nibble)
-Song Position Pointer      F2          242           2 (MSB, LSB)
-Song Select                F3          243           1 (song number)
-Tune Request               F6          246           0
+MIDI Time Code 1/4 Frame   F1          241           1 (timecode nibble)  // based on SMPTE timecode
+Song Position Pointer      F2          242           2 (MSB, LSB)         // where to start in sequence upon FB
+Song Select                F3          243           1 (song number)      // which song to play
+Tune Request               F6          246           0                    // ask synth to start tuning routine
 
 --- System real time! ---
-Timing Clock      F8                   248
-Start             FA                   250
-Continue          FB                   251
-Stop              FC                   252
-Active Sensing    FE                   254
-System Reset      FF                   255
+Timing Clock      F8                   248     // used to lock two MIDI devices to same temp, changes with tempo = MIDI sync
+Start             FA                   250     // start the sequence from the beginning
+Continue          FB                   251     // start the sequence from the position pointer
+Stop              FC                   252     // stop the sequence
+Active Sensing    FE                   254     // regularly sent by device to say it is still alive
+System Reset      FF                   255     // tells a MIDI device to reset itself
 
-Command bytes always start with a 1, so >= 80 (80 - FF)
+Command bytes always start with a 1, so >= 80 (80 - FF), and are also called Status bytes
 Data bytes always start with a 0, so <80 (00 - 7F)
 So only 7 bits available for the real data = 0..127
 
@@ -49,7 +49,7 @@ Channel in command is 0..15, but is called 1 to 16 in real life
 
 Remarks:
 - Note on with velocity 00 is the same as note off.
-- Oppassen voor te weinig ontvangen data bytes voor een commando!
+- Oppassen voor te weinig ontvangen data bytes voor een commando! Moet typisch ge-ignored worden.
 - Oppassen voor RUNNING STATUS = te veel bytes voor een commando:
   command byte + data bytes + data bytes + data bytes 
   bvb: channel aftertouch
@@ -59,4 +59,8 @@ Remarks:
    middle of another message, and they can even pop up in the middle of Running Status without
    interrupting it (i.e., they are not interpreted as new Command bytes).
 - MSB = most significant byte, LSB = least significant byte
-
+- Modes:
+  - Omni on (CC 7D): device respond to all channels,
+    Omni off (CC 7C): responds to one channel (or a selection of channels in case of multitrimmbality)
+  - Poly (CC 7F): device responds to multiple notes polyphonically (like a chord), 
+    Mono (CC 7E): respond to one note at a time

@@ -712,6 +712,30 @@ I01 pitch bend 127+127         E0-EF: pitch bend
 
 
 
+====================
+Filter setup
+
+                                    Monitor     Settings              Split
+Input/Output                        I, O, IO
+Input Channel                       input/all   input/all
+
+Note Off          80-8F             v           \ Note on/off
+Note On           90-9F             v           /
+Key Pressure      A0-AF             v           v
+Control Change    B0-BF             v           v
+  cc00: bank select                 v           v                        (together with program change)
+  cc01: modulation wheel                                              v
+Program Change    C0-CF             v           v                        (includes cc0 bank select)
+Channel Pressure  D0-DF             v           v                     v
+Pitch Bend        E0-EF             v           v                     v
+System Exclusice: F0, F7            v           v
+Time Sync: F1, F8                   v           v               
+Sequencing: F2, F3, FA, FB, FC      v           v
+Active Sensing: FE                  v           v
+Other: F6, FF                       v           v
+
+
+
 
 
 === TODO ===
@@ -773,8 +797,11 @@ x New multi menu???
   01       channel       05
   Typhon             Erebus
   +1       octave         0
-  off       pb/cc        on
   0%       velocity      0%
+  off        pb          on
+           modwheel
+  on         cc          on
+  velocity toch in 0 tot 120????
 - rotate values if beyond end ?
 - Coding style:
   - Add const to member functions if necessary. And to their parameters.
@@ -787,4 +814,9 @@ x New multi menu???
 - None in Single wilt zeggen: blokkeer alles komende van input Channel
   Maar in about moet gewoon alles doorgestuurd worden op alle kanalen, een beetje een MIDI Thru dus.
 - Should I do something with NRPN or RPN in MIDI monitor?
-
+- Do change if MIDI config only when all notes have been released.
+  Or force note release before doing switch.
+  But SysEx and stuff. And running status...
+- Can monitor cope with running state?
+- Add Manufacturor to Midi Monitor SysEx
+- Add Panic to MIDI Monitor or Single/Multi????

@@ -7,13 +7,7 @@
 
 #include <midi_serialization.h>
 
-PSTRING(PSTR_page_monitor, " MIDI MONITOR "); 
-/*
-Options:
-  Show: in, out, in+out
-  Show: only from our input channel and its output channels
-  Filter: sysex, ...
-*/
+PSTRING(PSTR_page_monitor, " MONITOR "); 
 
 // Very simple circular buffer.
 // Note that if IndexType is uint8_t, N should be <= 128
@@ -226,7 +220,7 @@ PSTRING(PSTR_mm_key_pressure,      "key pressure %s %d");    // 0xa.
 PSTRING(PSTR_mm_cc,                "CC#%d %s %d");           // 0xb.
 PSTRING(PSTR_mm_program_change,    "program change %d");     // 0xc.
 PSTRING(PSTR_mm_channel_pressure,  "channel pressure %d");   // 0xd.
-PSTRING(PSTR_mm_pitch_bend,        "pitch bend %lu");        // 0xe.
+PSTRING(PSTR_mm_pitch_bend,        "pitch bend %ld");        // 0xe.
 
 PSTRING(PSTR_mm_sysex_start,       "sysex start");           // 0xf0
 PSTRING(PSTR_mm_time_code,         "time code %d");          // 0xf1           
@@ -303,7 +297,8 @@ Page::LineResult PageMonitor::LineDecode(const midi_msg_t& msg)
           sprintf(text, GetPString(PSTR_mm_channel_pressure), e.m_data[1]);
           break;
         case 0xe:
-          sprintf(text, GetPString(PSTR_mm_pitch_bend), static_cast<unsigned long>(e.m_data[2]) * 128ul + static_cast<unsigned long>(e.m_data[1])); // LSB, MSB
+          //sprintf(text, GetPString(PSTR_mm_pitch_bend), static_cast<long>(e.m_data[2]) * 128ul + static_cast<long>(e.m_data[1])); // LSB, MSB
+          sprintf(text, GetPString(PSTR_mm_pitch_bend), static_cast<long>(e.m_data[2]) * 128L + static_cast<long>(e.m_data[1]) - 8192L); // LSB, MSB, centered around 0
           break;
         default:
           strcpy(text, GetPString(PSTR_mm_unknown));
