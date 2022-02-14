@@ -51,6 +51,6 @@ namespace Pages
   void Redraw();
 
   // Debug info
-  uint16_t GetTotalPageUsage();
+  uint16_t GetBiggestPageUsage();
   const char* GetPageUsage();
 }

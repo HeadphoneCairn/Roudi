@@ -1,3 +1,4 @@
+#if 0
 #include "PageMonitorSettings.h"
 
 #include "Data.h"
@@ -33,62 +34,54 @@ Options:
 
 PSTRING(PSTR_page_monitor_settings,   " MONITOR SETTINGS ");
 
-PSTRING(PSTR_input_channel,   "Input channel");
-PSTRING(PSTR_velocity_curve,  "Velocity curve");
-PSTRING(PSTR_program_change,  "Program change");
-PSTRING(PSTR_brightness,      "Screen brightness");
-
-PSTRING(PSTR_ellipsis_0,        "...");
-PTABLE(PTAB_ellipsis, PSTR_ellipsis_0);
 
 
-PSTRING(PSTR_velocity_0, "soft");
-PSTRING(PSTR_velocity_1, "medium");
-PSTRING(PSTR_velocity_2, "hard");
-PTABLE(PTAB_velocity, PSTR_velocity_0, PSTR_velocity_1, PSTR_velocity_2);
+PSTRING(PSTR_FILTER_NOTE_OFF,           "Note off");
+PSTRING(PSTR_FILTER_NOTE_ON,            "Note on" );
+PSTRING(PSTR_FILTER_KEY_PRESSURE,       "Key pressure");
+PSTRING(PSTR_FILTER_CONTROL_CHANGE,     "Control change");
+PSTRING(PSTR_FILTER_PROGRAM_CHANGE,     "Program change");
+PSTRING(PSTR_FILTER_CHANNEL_PRESSURE,   "Channel pressure");
+PSTRING(PSTR_FILTER_PITCH_BEND,         "Pitch bend");
+PSTRING(PSTR_FILTER_SYSTEM_EXCLUSIVE,   "System exclusive");
+PSTRING(PSTR_FILTER_TIME_SYNC,          "Time sync");
+PSTRING(PSTR_FILTER_TRANSPORT,          "Transport");
+PSTRING(PSTR_FILTER_ACTIVE_SENSING,     "Active sensing");
+PSTRING(PSTR_FILTER_OTHER,              "Other");
 
-PSTRING(PSTR_progchange_0, "block");
-PSTRING(PSTR_progchange_1, "allow");
-PTABLE(PTAB_progchange, PSTR_progchange_0, PSTR_progchange_1);
+
+struct filter_settings {
+  uint8_t note_off;
+  uint8_t note_on;
+  uint8_t key_pressure;
+  uint8_t control_change;
+  uint8_t program_change;
+  uint8_t channel_pressure;
+  uint8_t pitch_bend;
+  uint8_t system_exclusive;
+  uint8_t time_sync;
+  uint8_t transport;
+  uint8_t active_sensing;
+  uint8_t other;
+};
+filter_settings g_filter_settings;
+
+// Pffff not sure what to do with CombiLine: should I include the pstring in the function,
+// or add it to the class. Also, should I use bitfields for the filters to save memory???
 
 
+PSTRING(PSTR_monitor_filter_0, "hide");
+PSTRING(PSTR_monitor_filter_1, "show");
+PTABLE(PTAB_monitor_filter, PSTR_monitor_filter_0, PSTR_monitor_filter_1);
 
-// 3 bytes per line is reached by using function to store parameters
-// instead of storing them in memory. Looks horrible, but uses less
-// memory.
-// Can't do pars = { ... } because it will use more memory again!
 
-static void line_input_channel(ParsPars& pars)
+static void line_monitor_filter_(ParsPars& pars)
 {
-  pars.types = TypePString|TypeFunction;
-  pars.name = (void*) PSTR_input_channel;
-  pars.number_of_values = 16;
-  pars.values = (void*) GetNumberPlusOne;
-}
-
-static void line_velocity_curve(ParsPars& pars)
-{
-  pars.types = TypePString|TypePTable;
-  pars.name = (void*) PSTR_velocity_curve;
-  pars.number_of_values = PTAB_velocity_size;
-  pars.values = (void*) PTAB_velocity;
-}
-
-static void line_program_change(ParsPars& pars)
-{
-  pars.types = TypePString|TypePTable;
-  pars.name = (void*) PSTR_program_change;
-  pars.number_of_values = PTAB_progchange_size;
+  pars.types = TypePTable;
+  pars.number_of_values = PTAB_monitor_filter_size;
   pars.values = (void*) PTAB_progchange;
 }
 
-static void line_brightness(ParsPars& pars)
-{
-  pars.types = TypePString|TypeFunction;
-  pars.name = (void*) PSTR_brightness;
-  pars.number_of_values = 10;
-  pars.values = (void*) GetNumberPlusOne;
-}
 
 
 
@@ -145,3 +138,5 @@ bool PageMonitorSettings::ShowChannelMenu()
 //  Menus::SetNextMenu(MENU_CHANNELS);
   return false;
 }
+
+#endif

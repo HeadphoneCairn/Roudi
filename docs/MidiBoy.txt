@@ -820,3 +820,5 @@ x New multi menu???
 - Can monitor cope with running state?
 - Add Manufacturor to Midi Monitor SysEx
 - Add Panic to MIDI Monitor or Single/Multi????
+- Consider moving the name of a combiline to the combiline itself instead of putting it in the function.
+  Nice but uses 2 bytes extra, per combiline.

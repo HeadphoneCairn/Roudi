@@ -9,7 +9,9 @@
 extern "C" {
 #endif
 
-int freeMemory();
+int getFreeMemory();
+int getNumberOfHeapFragments();
+int getMallocMargin();
 
 #ifdef  __cplusplus
 }

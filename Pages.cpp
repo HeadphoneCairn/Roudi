@@ -227,12 +227,16 @@ namespace Pages
     g_current_page->Redraw();
   }
 
-  uint16_t GetTotalPageUsage()
+  uint16_t GetBiggestPageUsage()
   {
-    return sizeof(PageSingle) + sizeof(PageNameChannel) +
-           sizeof(PageMulti) + sizeof(PageNameMulti) +
-           sizeof(PageMonitor) + sizeof(PageSettings) + 
-           sizeof(PageAbout);
+    return
+      max(sizeof(PageSingle), 
+      max(sizeof(PageNameChannel), 
+      max(sizeof(PageMulti), 
+      max(sizeof(PageNameMulti), 
+      max(sizeof(PageMonitor),
+      max(sizeof(PageSettings), sizeof(PageAbout)))))));
+
   }
 
   PSTRING(PSTR_page_usage, "%d %d %d %d %d %d %d");

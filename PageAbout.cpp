@@ -57,9 +57,12 @@ PTABLE(PTAB_about_text,
 
 
 
-PSTRING(PSTR_about_memory, " free memory: %d bytes");
-PSTRING(PSTR_about_pages,  " pages total: %d bytes");
-PSTRING(PSTR_about_sizeof, " -> %s");
+PSTRING(PSTR_about_free_heap,    " free heap mem: %d bytes");
+PSTRING(PSTR_about_min_stack,    " min stack mem: %d bytes");
+PSTRING(PSTR_about_heap_frag_ok, " heap fragments: %d");
+PSTRING(PSTR_about_heap_frag_nok," heap fragments: %d !!!");
+PSTRING(PSTR_about_biggest_page, " biggest page: %d bytes");
+PSTRING(PSTR_about_sizeof,       " > %s");
 
 
 PageAbout::PageAbout(): Page()
@@ -68,7 +71,7 @@ PageAbout::PageAbout(): Page()
 
 void PageAbout::OnStart(uint8_t)
 {
-  SetNumberOfLines(PTAB_about_text_size + 3);
+  SetNumberOfLines(PTAB_about_text_size + 5);
   SetMidiConfiguration(); // TODO
 }
 
@@ -82,9 +85,15 @@ Page::LineResult PageAbout::Line(LineFunction func, uint8_t line, uint8_t field)
   if (line < PTAB_about_text_size)
     return {1, GetPStringFromPTable(PTAB_about_text, line), Screen::inversion_all, false};
   else if (line == PTAB_about_text_size)
-    snprintf(Screen::buffer, sizeof(Screen::buffer), GetPString(PSTR_about_memory), freeMemory());
+    snprintf(Screen::buffer, sizeof(Screen::buffer), GetPString(PSTR_about_free_heap), getFreeMemory()-getMallocMargin());
   else if (line == PTAB_about_text_size + 1)
-    snprintf(Screen::buffer, sizeof(Screen::buffer), GetPString(PSTR_about_pages), Pages::GetTotalPageUsage());
+    snprintf(Screen::buffer, sizeof(Screen::buffer), GetPString(PSTR_about_min_stack), getMallocMargin());
+  else if (line == PTAB_about_text_size + 2)
+    snprintf(Screen::buffer, sizeof(Screen::buffer), 
+            GetPString((getNumberOfHeapFragments() == 1) ? PSTR_about_heap_frag_ok: PSTR_about_heap_frag_nok), 
+            getNumberOfHeapFragments());
+  else if (line == PTAB_about_text_size + 3)
+    snprintf(Screen::buffer, sizeof(Screen::buffer), GetPString(PSTR_about_biggest_page), Pages::GetBiggestPageUsage());
   else
     snprintf(Screen::buffer, sizeof(Screen::buffer), GetPString(PSTR_about_sizeof), Pages::GetPageUsage());
   return {1, Screen::buffer, Screen::inversion_all, false};
