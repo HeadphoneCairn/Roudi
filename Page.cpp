@@ -250,7 +250,7 @@ Page::LineResult DoubleCombiline(
 }
 
 
-Page::LineResult BoolLine(Page::LineFunction func, const char* name, uint8_t& value, const char* true_value, const char* false_value)
+Page::LineResult BoolLine(Page::LineFunction func, const char* name, uint8_t& value, const char* false_value, const char* true_value, bool invert_all)
 {
   char* text = Screen::buffer;
   text[0] = 0;
@@ -264,7 +264,8 @@ Page::LineResult BoolLine(Page::LineFunction func, const char* name, uint8_t& va
     if (name_len + tf_value_len <= Screen::buffer_len) { // safety precaution
       PadRight(text, Screen::buffer_len - (name_len + tf_value_len));
       strcat(text, tf_value);
-      inversion = { Screen::InvertGiven, static_cast<uint8_t>(Screen::buffer_len - tf_value_len), Screen::buffer_len };
+      if (!invert_all)
+        inversion = { Screen::InvertGiven, static_cast<uint8_t>(Screen::buffer_len - tf_value_len), Screen::buffer_len };
     }
   } else if (func == Page::DO_LEFT || func == Page::DO_RIGHT) {
     value = !value;
