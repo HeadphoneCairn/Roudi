@@ -19,5 +19,8 @@ private:
   Combiline m_ui_input_channel;
   Combiline m_ui_velocity_curve; 
   Combiline m_ui_program_change; 
-  Combiline m_ui_brightness;  
+  Combiline m_ui_brightness;
+private:
+  static uint8_t m_selected_line;
+  static uint8_t m_first_line;
 };

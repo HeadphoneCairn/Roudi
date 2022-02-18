@@ -65,14 +65,23 @@ PSTRING(PSTR_about_biggest_page, " biggest page: %d bytes");
 PSTRING(PSTR_about_sizeof,       " > %s");
 
 
+uint8_t PageAbout::m_selected_line = 0;
+uint8_t PageAbout::m_first_line = 0;
+
 PageAbout::PageAbout(): Page()
 {
 }
 
 void PageAbout::OnStart(uint8_t)
 {
-  SetNumberOfLines(PTAB_about_text_size + 5);
+  SetNumberOfLines(PTAB_about_text_size + 5, m_selected_line, 0, m_first_line);
   SetMidiConfiguration(); // TODO
+}
+
+void PageAbout::OnStop()
+{
+  m_selected_line = GetSelectedLine();
+  m_first_line = GetFirstLine();
 }
 
 const char* PageAbout::GetTitle()
@@ -97,11 +106,6 @@ Page::LineResult PageAbout::Line(LineFunction func, uint8_t line, uint8_t field)
   else
     snprintf(Screen::buffer, sizeof(Screen::buffer), GetPString(PSTR_about_sizeof), Pages::GetPageUsage());
   return {1, Screen::buffer, Screen::inversion_all, false};
-}
-
-
-void PageAbout::OnStop()
-{
 }
 
 void PageAbout::SetMidiConfiguration()

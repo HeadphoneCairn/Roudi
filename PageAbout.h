@@ -13,6 +13,9 @@ protected:
   virtual void OnStop() override;
 private:
   void SetMidiConfiguration();
+private:
+  static uint8_t m_selected_line;
+  static uint8_t m_first_line;
 };
 
 
