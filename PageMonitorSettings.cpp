@@ -13,6 +13,8 @@
 Options:
   Show: in, out, in+out
   Show: only from our input channel and its output channels
+  > show all and > hide all   plus 
+
   Filter: sysex, ...
 */
 
@@ -88,45 +90,27 @@ const char* PageMonitorSettings::GetTitle()
   return GetPString(PSTR_page_monitor_settings);
 }
 
-Page::LineResult BoolLine(Page::LineFunction func, const char* name, uint8_t& value, const char* true_value, const char* false_value)
+Page::LineResult FilterLine(Page::LineFunction func, const char* name, uint8_t& value)
 {
-  char* text = Screen::buffer;
-  text[0] = 0;
-  bool redraw = false;
-  Screen::Inversion inversion = Screen::inversion_all;
-  if (func == Page::GET_TEXT) {
-    strncat(text, GetPString(name), Screen::buffer_len); // always terminates with a zero!, unlike strncpy
-    const uint8_t name_len = strlen(text);
-    const char* tf_value = GetPString(value ? true_value : false_value);
-    const uint8_t tf_value_len = strlen(tf_value);
-    if (name_len + tf_value_len <= Screen::buffer_len) { // safety precaution
-      PadRight(text, Screen::buffer_len - (name_len + tf_value_len));
-      strcat(text, tf_value);
-      inversion = { Screen::InvertGiven, static_cast<uint8_t>(Screen::buffer_len - tf_value_len), Screen::buffer_len };
-    }
-  } else if (func == Page::DO_LEFT || func == Page::DO_RIGHT) {
-    value = !value;
-    redraw = true;
-  }
-  return { 1, text, inversion, redraw };
+  return BoolLine(func, name, value, PSTR_monitor_filter_0, PSTR_monitor_filter_1);
 }
 
 Page::LineResult PageMonitorSettings::Line(LineFunction func, uint8_t line, uint8_t field)
 {
   switch (line)
   {
-    case  0: return BoolLine(func, PSTR_FILTER_NOTE_OFF,          g_filter_settings.note_off,        PSTR_monitor_filter_0, PSTR_monitor_filter_1);
-    case  1: return BoolLine(func, PSTR_FILTER_NOTE_ON,           g_filter_settings.note_on,         PSTR_monitor_filter_0, PSTR_monitor_filter_1);
-    case  2: return BoolLine(func, PSTR_FILTER_KEY_PRESSURE,      g_filter_settings.key_pressure,    PSTR_monitor_filter_0, PSTR_monitor_filter_1);
-    case  3: return BoolLine(func, PSTR_FILTER_CONTROL_CHANGE,    g_filter_settings.control_change,  PSTR_monitor_filter_0, PSTR_monitor_filter_1);
-    case  4: return BoolLine(func, PSTR_FILTER_PROGRAM_CHANGE,    g_filter_settings.program_change,  PSTR_monitor_filter_0, PSTR_monitor_filter_1);
-    case  5: return BoolLine(func, PSTR_FILTER_CHANNEL_PRESSURE,  g_filter_settings.channel_pressure,PSTR_monitor_filter_0, PSTR_monitor_filter_1);
-    case  6: return BoolLine(func, PSTR_FILTER_PITCH_BEND,        g_filter_settings.pitch_bend,      PSTR_monitor_filter_0, PSTR_monitor_filter_1);
-    case  7: return BoolLine(func, PSTR_FILTER_SYSTEM_EXCLUSIVE,  g_filter_settings.system_exclusive,PSTR_monitor_filter_0, PSTR_monitor_filter_1);
-    case  8: return BoolLine(func, PSTR_FILTER_TIME_SYNC,         g_filter_settings.time_sync,       PSTR_monitor_filter_0, PSTR_monitor_filter_1);
-    case  9: return BoolLine(func, PSTR_FILTER_TRANSPORT,         g_filter_settings.transport,       PSTR_monitor_filter_0, PSTR_monitor_filter_1); 
-    case 10: return BoolLine(func, PSTR_FILTER_ACTIVE_SENSING,    g_filter_settings.active_sensing,  PSTR_monitor_filter_0, PSTR_monitor_filter_1);
-    case 11: return BoolLine(func, PSTR_FILTER_OTHER,             g_filter_settings.other,           PSTR_monitor_filter_0, PSTR_monitor_filter_1);
+    case  0: return FilterLine(func, PSTR_FILTER_NOTE_OFF,          g_filter_settings.note_off         );
+    case  1: return FilterLine(func, PSTR_FILTER_NOTE_ON,           g_filter_settings.note_on          );
+    case  2: return FilterLine(func, PSTR_FILTER_KEY_PRESSURE,      g_filter_settings.key_pressure     );
+    case  3: return FilterLine(func, PSTR_FILTER_CONTROL_CHANGE,    g_filter_settings.control_change   );
+    case  4: return FilterLine(func, PSTR_FILTER_PROGRAM_CHANGE,    g_filter_settings.program_change   );
+    case  5: return FilterLine(func, PSTR_FILTER_CHANNEL_PRESSURE,  g_filter_settings.channel_pressure );
+    case  6: return FilterLine(func, PSTR_FILTER_PITCH_BEND,        g_filter_settings.pitch_bend       );
+    case  7: return FilterLine(func, PSTR_FILTER_SYSTEM_EXCLUSIVE,  g_filter_settings.system_exclusive );
+    case  8: return FilterLine(func, PSTR_FILTER_TIME_SYNC,         g_filter_settings.time_sync        );
+    case  9: return FilterLine(func, PSTR_FILTER_TRANSPORT,         g_filter_settings.transport        ); 
+    case 10: return FilterLine(func, PSTR_FILTER_ACTIVE_SENSING,    g_filter_settings.active_sensing   );
+    case 11: return FilterLine(func, PSTR_FILTER_OTHER,             g_filter_settings.other            );
     default: return DefaultLine(func);
   }
 }

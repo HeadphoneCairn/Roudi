@@ -248,3 +248,27 @@ Page::LineResult DoubleCombiline(
 
   return {2, nullptr, Screen::inversion_none, false};  
 }
+
+
+Page::LineResult BoolLine(Page::LineFunction func, const char* name, uint8_t& value, const char* true_value, const char* false_value)
+{
+  char* text = Screen::buffer;
+  text[0] = 0;
+  bool redraw = false;
+  Screen::Inversion inversion = Screen::inversion_all;
+  if (func == Page::GET_TEXT) {
+    strncat(text, GetPString(name), Screen::buffer_len); // always terminates with a zero!, unlike strncpy
+    const uint8_t name_len = strlen(text);
+    const char* tf_value = GetPString(value ? true_value : false_value);
+    const uint8_t tf_value_len = strlen(tf_value);
+    if (name_len + tf_value_len <= Screen::buffer_len) { // safety precaution
+      PadRight(text, Screen::buffer_len - (name_len + tf_value_len));
+      strcat(text, tf_value);
+      inversion = { Screen::InvertGiven, static_cast<uint8_t>(Screen::buffer_len - tf_value_len), Screen::buffer_len };
+    }
+  } else if (func == Page::DO_LEFT || func == Page::DO_RIGHT) {
+    value = !value;
+    redraw = true;
+  }
+  return { 1, text, inversion, redraw };
+}
