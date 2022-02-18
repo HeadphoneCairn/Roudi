@@ -5,52 +5,23 @@
 #include "MidiProcessing.h"
 #include "Roudi.h"
 
-#include <midi_serialization.h>
 
 PSTRING(PSTR_page_monitor, " MONITOR "); 
 
-// Very simple circular buffer.
-// Note that if IndexType is uint8_t, N should be <= 128
-template <typename T, typename IndexType, const IndexType N>
-class TCircularBuffer
-{
-  public:
-    TCircularBuffer(): m_first(0) {
-      // We consider the buffer as always full.
-      // But we memset as to mark an element as kind of empty.
-      memset(&m_buffer, 0, sizeof(m_buffer));
-    }
-    void Push(const T& element) {
-      // Removes first element from buffer and inserts a last element
-      m_buffer[m_first] = element;
-      m_first = (m_first+1) % N;
-    }
-    const T& operator[](IndexType i) const { 
-      return m_buffer[(m_first+i) % N];
-      }
-  private:
-    IndexType m_first;
-    T m_buffer[N];
-};
 
 namespace {
 
-  struct midi_msg_t {
-    midi_event_t event;
-    uint8_t input:1;
-  };
-
-  const uint8_t g_num_messages = 64;
-  TCircularBuffer<midi_msg_t, uint8_t, g_num_messages> g_messages;
-
-  void ListenIn(const midi_event_t& event)
+  // Could possibly turn this into one function by using the data pointer 
+  void ListenIn(const midi_event_t& event, void* data)
   {
-    g_messages.Push({event, 1});
+    PageMonitor* page_monitor = static_cast<PageMonitor*>(data);
+    page_monitor->g_messages.Push({event, 1});
     SetRedrawNext();
   }
-  void ListenOut(const midi_event_t& event)
+  void ListenOut(const midi_event_t& event, void* data)
   {
-    g_messages.Push({event, 0});
+    PageMonitor* page_monitor = static_cast<PageMonitor*>(data);
+    page_monitor->g_messages.Push({event, 0});
     SetRedrawNext();
   }
 
@@ -66,15 +37,15 @@ void PageMonitor::OnStart(uint8_t)
   SetNumberOfLines(g_num_messages, g_num_messages - 1);
 
   // Attach listeners
-  MidiProcessing::SetMidiInListener(ListenIn);
-  MidiProcessing::SetMidiOutListener(ListenOut);
+  MidiProcessing::SetMidiInListener({ListenIn, this});  
+  MidiProcessing::SetMidiOutListener({ListenOut, this});
 }
 
 void PageMonitor::OnStop()
 {
   // Detach listeners
-  MidiProcessing::SetMidiInListener(nullptr);
-  MidiProcessing::SetMidiOutListener(nullptr);
+  MidiProcessing::SetMidiInListener({nullptr, nullptr});
+  MidiProcessing::SetMidiOutListener({nullptr, nullptr});
 }
 
 const char* PageMonitor::GetTitle()

@@ -14,8 +14,8 @@ namespace
   Configuration configuration;                 // currently active MIDI configuration
   Configuration g_next_configuration;          // next configuration, to be set if ...
   bool g_next_configuration_available = false; // ... next_confuration_available = true 
-  MidiListener g_midi_in_listener = nullptr;
-  MidiListener g_midi_out_listener = nullptr;
+  MidiListener g_midi_in_listener = {nullptr, nullptr};
+  MidiListener g_midi_out_listener = {nullptr, nullptr};
   
   typedef TFifo<midi_event_t, uint8_t, 128> fifo_t; // uses 512 bytes of RAM: 4 x 128
 
@@ -323,12 +323,12 @@ namespace MidiProcessing
     }
   }
 
-  void SetMidiInListener(MidiListener midi_listener)
+  void SetMidiInListener(const MidiListener& midi_listener)
   {
     g_midi_in_listener = midi_listener;
   }
 
-  void SetMidiOutListener(MidiListener midi_listener)
+  void SetMidiOutListener(const MidiListener& midi_listener)
   {
     g_midi_out_listener = midi_listener;
   }
@@ -340,8 +340,8 @@ namespace MidiProcessing
       midi_event_t event;
       if (g_decoder.process(DinMidiboy.dinMidi().read(), event)) {
         ProcessInputEvent(event, g_output_queue);
-        if (g_midi_in_listener)
-          g_midi_in_listener(event);
+        if (g_midi_in_listener.call_back)
+          g_midi_in_listener.call_back(event, g_midi_in_listener.data);
       }
     }
   }
@@ -355,8 +355,8 @@ namespace MidiProcessing
       uint8_t n = UsbToMidi::process(event, msg);
       for (uint8_t i=0; i<n; ++i)
         DinMidiboy.dinMidi().write(msg[i]);
-      if (g_midi_out_listener)
-        g_midi_out_listener(event);
+      if (g_midi_out_listener.call_back)
+        g_midi_out_listener.call_back(event, g_midi_out_listener.data);
     }
   }
 

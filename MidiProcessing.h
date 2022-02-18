@@ -60,9 +60,12 @@ namespace MidiProcessing
 
   // This interface can be used to get notified of every incoming MIDI message
   // WARNING: The midi_listener MUST return as quickly as possible!
-  typedef void (*MidiListener) (const midi_event_t& event);
-  void SetMidiInListener(MidiListener midi_listener);
-  void SetMidiOutListener(MidiListener midi_listener);
+  struct MidiListener {
+    void (*call_back) (const midi_event_t& event, void* data);
+    void* data;
+  };
+  void SetMidiInListener(const MidiListener& midi_listener);
+  void SetMidiOutListener(const MidiListener& midi_listener);
 
   // Read from the input MIDI port, convert the messages and put them on the output queue
   void TreatInput();
