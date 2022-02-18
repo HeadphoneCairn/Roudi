@@ -15,13 +15,13 @@ namespace {
   void ListenIn(const midi_event_t& event, void* data)
   {
     PageMonitor* page_monitor = static_cast<PageMonitor*>(data);
-    page_monitor->g_messages.Push({event, 1});
+    page_monitor->m_messages.Push({event, 1});
     SetRedrawNext();
   }
   void ListenOut(const midi_event_t& event, void* data)
   {
     PageMonitor* page_monitor = static_cast<PageMonitor*>(data);
-    page_monitor->g_messages.Push({event, 0});
+    page_monitor->m_messages.Push({event, 0});
     SetRedrawNext();
   }
 
@@ -33,8 +33,8 @@ PageMonitor::PageMonitor(): Page()
 
 void PageMonitor::OnStart(uint8_t)
 {
-  memset(&g_messages, 0, sizeof(g_messages));
-  SetNumberOfLines(g_num_messages, g_num_messages - 1);
+  //////memset(&m_messages, 0, sizeof(m_messages));
+  SetNumberOfLines(m_num_messages, m_num_messages - 1);
 
   // Attach listeners
   MidiProcessing::SetMidiInListener({ListenIn, this});  
@@ -56,7 +56,7 @@ const char* PageMonitor::GetTitle()
 Page::LineResult PageMonitor::Line(LineFunction func, uint8_t line, uint8_t field)
 {
   if (func == GET_TEXT)
-    return LineDecode(g_messages[line]);
+    return LineDecode(m_messages[line]);
   else
     return { 1, nullptr, Screen::inversion_none, false };
 }

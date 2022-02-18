@@ -35,3 +35,28 @@ private:
 // --- String functions ---
 // Pad string 'text' with 'len' * 'c' characters
 void PadRight(char* text, uint8_t len, char c = ' '); 
+
+// --- Simple Circular Buffer ---
+// Very simple circular buffer.
+// Note that if IndexType is uint8_t, N should be <= 128
+template <typename T, typename IndexType, const IndexType N>
+class TCircularBuffer
+{
+  public:
+    TCircularBuffer(): m_first(0) {
+      // We consider the buffer as always full.
+      // But we memset as to mark an element as kind of empty.
+      memset(&m_buffer, 0, sizeof(m_buffer));
+    }
+    void Push(const T& element) {
+      // Removes first element from buffer and inserts a last element
+      m_buffer[m_first] = element;
+      m_first = (m_first+1) % N;
+    }
+    const T& operator[](IndexType i) const { 
+      return m_buffer[(m_first+i) % N];
+      }
+  private:
+    IndexType m_first;
+    T m_buffer[N];
+};
