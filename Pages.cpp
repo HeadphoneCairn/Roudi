@@ -3,6 +3,7 @@
 #include "PageAbout.h"
 #include "PageChannels.h"
 #include "PageMonitor.h"
+#include "PageMonitorSettings.h"
 #include "PageMulti.h"
 #include "PageNameChannel.h"
 #include "PageNameMulti.h"
@@ -72,6 +73,7 @@ namespace Pages
       case PAGE_ABOUT:        g_current_page = new PageAbout; break;
       case PAGE_MONITOR:      g_current_page = new PageMonitor; break;
       case PAGE_SETTINGS:     g_current_page = new PageSettings; break;
+      case PAGE_MONITOR_SETTINGS: g_current_page = new PageMonitorSettings; break;
       case PAGE_NAME_CHANNEL: g_current_page = new PageNameChannel; break;
       case PAGE_NAME_MULTI:   g_current_page = new PageNameMulti; break;
       default:                g_current_page = new PageSingle; break;
@@ -151,8 +153,9 @@ namespace Pages
       }
     } else {
       switch (g_current_upper_id) {
-        case PAGE_MONITOR: page_to_show = PAGE_SETTINGS; break;
+        case PAGE_MONITOR: page_to_show = PAGE_MONITOR_SETTINGS; break;
         case PAGE_SETTINGS: page_to_show = PAGE_MONITOR; break;
+        case PAGE_MONITOR_SETTINGS: page_to_show = PAGE_SETTINGS; break;
       }
     }
   
@@ -187,7 +190,8 @@ namespace Pages
     } else {
       switch (g_current_upper_id) {
         case PAGE_MONITOR: page_to_show = PAGE_SETTINGS; break;
-        case PAGE_SETTINGS: page_to_show = PAGE_MONITOR; break;
+        case PAGE_SETTINGS: page_to_show = PAGE_MONITOR_SETTINGS; break;
+        case PAGE_MONITOR_SETTINGS: page_to_show = PAGE_MONITOR; break;
       }
     }
 

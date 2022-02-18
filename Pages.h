@@ -12,6 +12,7 @@ enum PageID
   // --- Upper pages ---
   PAGE_MONITOR      = 10,
   PAGE_SETTINGS     = 11,
+  PAGE_MONITOR_SETTINGS = 12,
 
   // --- Popup pages ---
   PAGE_NAME_CHANNEL = 101,

@@ -1,26 +1,12 @@
-#if 0
 #include "PageMonitorSettings.h"
 
 #include "Data.h"
 #include "Debug.h"
+#include "Utils.h"
 
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-/*
-
-·[MIDI Settings]       ·
-·Input channel       01·
-·Velocity        normal·      normal|custom|none  (none = velocity 64)
-·Program change   block·      block|allow   (includes bank select)
-·Screen brightness     ·
-
-Future:
-·Custom Velocity   MENU·
-·CC Mapping        MENU
-
-*/
 
 
 /*
@@ -72,15 +58,6 @@ filter_settings g_filter_settings;
 
 PSTRING(PSTR_monitor_filter_0, "hide");
 PSTRING(PSTR_monitor_filter_1, "show");
-PTABLE(PTAB_monitor_filter, PSTR_monitor_filter_0, PSTR_monitor_filter_1);
-
-
-static void line_monitor_filter_(ParsPars& pars)
-{
-  pars.types = TypePTable;
-  pars.number_of_values = PTAB_monitor_filter_size;
-  pars.values = (void*) PTAB_progchange;
-}
 
 
 
@@ -91,17 +68,19 @@ PageMonitorSettings::PageMonitorSettings():
 
 void PageMonitorSettings::OnStart(uint8_t)
 {
+/*
   SettingsValues& values = EE::SettingsRW();
   m_ui_input_channel.Init(line_input_channel, &values.input_channel);
   m_ui_velocity_curve.Init(line_velocity_curve, &values.velocity_curve);
   m_ui_program_change.Init(line_program_change, &values.program_change);
   m_ui_brightness.Init(line_brightness, &values.brightness);
-  SetNumberOfLines(4);
+*/
+  SetNumberOfLines(12);
 }
 
 void PageMonitorSettings::OnStop() 
 {  
-  EE::SetSettings();
+//  EE::SetSettings();
 }
 
 const char* PageMonitorSettings::GetTitle()
@@ -109,34 +88,48 @@ const char* PageMonitorSettings::GetTitle()
   return GetPString(PSTR_page_monitor_settings);
 }
 
+Page::LineResult BoolLine(Page::LineFunction func, const char* name, uint8_t& value, const char* true_value, const char* false_value)
+{
+  char* text = Screen::buffer;
+  text[0] = 0;
+  bool redraw = false;
+  Screen::Inversion inversion = Screen::inversion_all;
+  if (func == Page::GET_TEXT) {
+    strncat(text, GetPString(name), Screen::buffer_len); // always terminates with a zero!, unlike strncpy
+    const uint8_t name_len = strlen(text);
+    const char* tf_value = GetPString(value ? true_value : false_value);
+    const uint8_t tf_value_len = strlen(tf_value);
+    if (name_len + tf_value_len <= Screen::buffer_len) { // safety precaution
+      PadRight(text, Screen::buffer_len - (name_len + tf_value_len));
+      strcat(text, tf_value);
+      inversion = { Screen::InvertGiven, static_cast<uint8_t>(Screen::buffer_len - tf_value_len), Screen::buffer_len };
+    }
+  } else if (func == Page::DO_LEFT || func == Page::DO_RIGHT) {
+    value = !value;
+    redraw = true;
+  }
+  return { 1, text, inversion, redraw };
+}
+
 Page::LineResult PageMonitorSettings::Line(LineFunction func, uint8_t line, uint8_t field)
 {
   switch (line)
   {
-    case 0: return LineInputChannel(func);
-    case 1: return SingleCombiLine(func, m_ui_velocity_curve,  Screen::MaxCharsCanvas, 0, true);
-    case 2: return SingleCombiLine(func, m_ui_program_change,  Screen::MaxCharsCanvas, 0, true);
-    case 3: return SingleCombiLine(func, m_ui_brightness,     Screen::MaxCharsCanvas, 0, true);
+    case  0: return BoolLine(func, PSTR_FILTER_NOTE_OFF,          g_filter_settings.note_off,        PSTR_monitor_filter_0, PSTR_monitor_filter_1);
+    case  1: return BoolLine(func, PSTR_FILTER_NOTE_ON,           g_filter_settings.note_on,         PSTR_monitor_filter_0, PSTR_monitor_filter_1);
+    case  2: return BoolLine(func, PSTR_FILTER_KEY_PRESSURE,      g_filter_settings.key_pressure,    PSTR_monitor_filter_0, PSTR_monitor_filter_1);
+    case  3: return BoolLine(func, PSTR_FILTER_CONTROL_CHANGE,    g_filter_settings.control_change,  PSTR_monitor_filter_0, PSTR_monitor_filter_1);
+    case  4: return BoolLine(func, PSTR_FILTER_PROGRAM_CHANGE,    g_filter_settings.program_change,  PSTR_monitor_filter_0, PSTR_monitor_filter_1);
+    case  5: return BoolLine(func, PSTR_FILTER_CHANNEL_PRESSURE,  g_filter_settings.channel_pressure,PSTR_monitor_filter_0, PSTR_monitor_filter_1);
+    case  6: return BoolLine(func, PSTR_FILTER_PITCH_BEND,        g_filter_settings.pitch_bend,      PSTR_monitor_filter_0, PSTR_monitor_filter_1);
+    case  7: return BoolLine(func, PSTR_FILTER_SYSTEM_EXCLUSIVE,  g_filter_settings.system_exclusive,PSTR_monitor_filter_0, PSTR_monitor_filter_1);
+    case  8: return BoolLine(func, PSTR_FILTER_TIME_SYNC,         g_filter_settings.time_sync,       PSTR_monitor_filter_0, PSTR_monitor_filter_1);
+    case  9: return BoolLine(func, PSTR_FILTER_TRANSPORT,         g_filter_settings.transport,       PSTR_monitor_filter_0, PSTR_monitor_filter_1); 
+    case 10: return BoolLine(func, PSTR_FILTER_ACTIVE_SENSING,    g_filter_settings.active_sensing,  PSTR_monitor_filter_0, PSTR_monitor_filter_1);
+    case 11: return BoolLine(func, PSTR_FILTER_OTHER,             g_filter_settings.other,           PSTR_monitor_filter_0, PSTR_monitor_filter_1);
     default: return DefaultLine(func);
   }
 }
 
-Page::LineResult PageMonitorSettings::LineInputChannel(LineFunction func)
-{
-  LineResult result = SingleCombiLine(func, m_ui_input_channel, Screen::MaxCharsCanvas, 0, true);
-  if (result.redraw) { // input channel has changed
-    Debug::BeepHigh();
-    MidiProcessing::Configuration next_config = MidiProcessing::GetConfiguration();
-    next_config.m_input_channel = m_ui_input_channel.GetSelectedValue();
-    MidiProcessing::SetNextConfiguration(next_config);
-  }
-  return result; 
-}
 
-bool PageMonitorSettings::ShowChannelMenu()
-{
-//  Menus::SetNextMenu(MENU_CHANNELS);
-  return false;
-}
 
-#endif

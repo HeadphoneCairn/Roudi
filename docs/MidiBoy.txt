@@ -822,4 +822,5 @@ x New multi menu???
 - Add Panic to MIDI Monitor or Single/Multi????
 - Consider moving the name of a combiline to the combiline itself instead of putting it in the function.
   Nice but uses 2 bytes extra, per combiline.
-- Allocate pages on heap instead of stack
+x Allocate pages on heap instead of stack
+- Replace dangerous strncpy with strncat or snprintf ? 

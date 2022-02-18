@@ -1,5 +1,3 @@
-#if 0
-
 #pragma once
 
 #include "Data.h"
@@ -23,5 +21,3 @@ private:
   Combiline m_ui_program_change; 
   Combiline m_ui_brightness;  
 };
-
-#endif
