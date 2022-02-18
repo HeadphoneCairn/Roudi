@@ -26,12 +26,6 @@ PSTRING(PSTR_FILTER_TRANSPORT,          "Transport");
 PSTRING(PSTR_FILTER_ACTIVE_SENSING,     "Active sensing");
 PSTRING(PSTR_FILTER_OTHER,              "Other");
 
-PSTRING(PSTR_MIDIMON_CHANNELS,    "Show channels");
-PSTRING(PSTR_MIDIMON_INOUT,       "Show in, out");
-PSTRING(PSTR_MIDIMON_SHOW_ALL,    "> Show all");
-PSTRING(PSTR_MIDIMON_HIDE_ALL,    "> Hide all");
-
-
 struct filter_settings {
   uint8_t note_off;
   uint8_t note_on;
@@ -47,16 +41,37 @@ struct filter_settings {
   uint8_t other;
 };
 
+
+
+
+PSTRING(PSTR_MIDIMON_CHANNELS,    "Channels to show");
+PSTRING(PSTR_MIDIMON_INOUT,       "IO to show");
+PSTRING(PSTR_MIDIMON_SHOW_ALL,    "> Show all");
+PSTRING(PSTR_MIDIMON_HIDE_ALL,    "> Hide all");
+
 struct midi_monitor_settings
 {
-  uint8_t all_channels;
-  uint8_t in_out; // 0=input + output, 1 = input, 2 = output
+  uint8_t all_channels; // 0 = no, only the involved input and output channels, 1 = all
+  uint8_t in_out; // 0 = input + output, 1 = input, 2 = output
   filter_settings filter;
 };
 
 midi_monitor_settings midimon_settings;
 
+PSTRING(PSTR_MIDIMON_channels_0, "routed");
+PSTRING(PSTR_MIDIMON_channels_1, "all");
 
+PSTRING(PSTR_MIDIMON_inout_0, "in and out");
+PSTRING(PSTR_MIDIMON_inout_1, "only input");
+PSTRING(PSTR_MIDIMON_inout_2, "only output");
+PTABLE(PTAB_MIDIMON_inout, PSTR_MIDIMON_inout_0, PSTR_MIDIMON_inout_1, PSTR_MIDIMON_inout_2);
+static void line_inout(ParsPars& pars)
+{
+  pars.types = TypePString|TypePTable;
+  pars.name = (void*) PSTR_MIDIMON_INOUT;
+  pars.number_of_values = PTAB_MIDIMON_inout_size;
+  pars.values = (void*) PTAB_MIDIMON_inout;
+}
 
 PSTRING(PSTR_monitor_filter_0, "    ");
 PSTRING(PSTR_monitor_filter_1, "show");
@@ -89,7 +104,8 @@ void PageMonitorSettings::OnStart(uint8_t)
   m_ui_program_change.Init(line_program_change, &values.program_change);
   m_ui_brightness.Init(line_brightness, &values.brightness);
 */
-  SetNumberOfLines(16);
+  m_ui_inout.Init(line_inout, &midimon_settings.in_out);
+  SetNumberOfLines(17);
 }
 
 void PageMonitorSettings::OnStop() 
@@ -106,20 +122,23 @@ Page::LineResult PageMonitorSettings::Line(LineFunction func, uint8_t line, uint
 {
   switch (line)
   {
-    case  0: return FilterLine(func, PSTR_FILTER_NOTE_OFF,          midimon_settings.filter.note_off         );
-    case  1: return FilterLine(func, PSTR_FILTER_NOTE_ON,           midimon_settings.filter.note_on          );
-    case  2: return FilterLine(func, PSTR_FILTER_KEY_PRESSURE,      midimon_settings.filter.key_pressure     );
-    case  3: return FilterLine(func, PSTR_FILTER_CONTROL_CHANGE,    midimon_settings.filter.control_change   );
-    case  4: return FilterLine(func, PSTR_FILTER_PROGRAM_CHANGE,    midimon_settings.filter.program_change   );
-    case  5: return FilterLine(func, PSTR_FILTER_CHANNEL_PRESSURE,  midimon_settings.filter.channel_pressure );
-    case  6: return FilterLine(func, PSTR_FILTER_PITCH_BEND,        midimon_settings.filter.pitch_bend       );
-    case  7: return FilterLine(func, PSTR_FILTER_SYSTEM_EXCLUSIVE,  midimon_settings.filter.system_exclusive );
-    case  8: return FilterLine(func, PSTR_FILTER_TIME_SYNC,         midimon_settings.filter.time_sync        );
-    case  9: return FilterLine(func, PSTR_FILTER_TRANSPORT,         midimon_settings.filter.transport        ); 
-    case 10: return FilterLine(func, PSTR_FILTER_ACTIVE_SENSING,    midimon_settings.filter.active_sensing   );
-    case 11: return FilterLine(func, PSTR_FILTER_OTHER,             midimon_settings.filter.other            );
-    case 12: return AllFiltersLine(func, PSTR_MIDIMON_SHOW_ALL, 1);
-    case 13: return AllFiltersLine(func, PSTR_MIDIMON_HIDE_ALL, 0);
+    case  0: return BoolLine(func, PSTR_MIDIMON_CHANNELS, midimon_settings.all_channels, PSTR_MIDIMON_channels_0, PSTR_MIDIMON_channels_1);
+    case  1: return SingleCombiLine(func, m_ui_inout,  Screen::MaxCharsCanvas, 0, true);
+    case  2: return FilterLine(func, PSTR_FILTER_NOTE_OFF,          midimon_settings.filter.note_off         );
+    case  3: return FilterLine(func, PSTR_FILTER_NOTE_ON,           midimon_settings.filter.note_on          );
+    case  4: return FilterLine(func, PSTR_FILTER_KEY_PRESSURE,      midimon_settings.filter.key_pressure     );
+    case  5: return FilterLine(func, PSTR_FILTER_CONTROL_CHANGE,    midimon_settings.filter.control_change   );
+    case  6: return FilterLine(func, PSTR_FILTER_PROGRAM_CHANGE,    midimon_settings.filter.program_change   );
+    case  7: return FilterLine(func, PSTR_FILTER_CHANNEL_PRESSURE,  midimon_settings.filter.channel_pressure );
+    case  8: return FilterLine(func, PSTR_FILTER_PITCH_BEND,        midimon_settings.filter.pitch_bend       );
+    case  9: return FilterLine(func, PSTR_FILTER_SYSTEM_EXCLUSIVE,  midimon_settings.filter.system_exclusive );
+    case 10: return FilterLine(func, PSTR_FILTER_TIME_SYNC,         midimon_settings.filter.time_sync        );
+    case 11: return FilterLine(func, PSTR_FILTER_TRANSPORT,         midimon_settings.filter.transport        ); 
+    case 12: return FilterLine(func, PSTR_FILTER_ACTIVE_SENSING,    midimon_settings.filter.active_sensing   );
+    case 13: return FilterLine(func, PSTR_FILTER_OTHER,             midimon_settings.filter.other            );
+    case 14: return DefaultLine(func);
+    case 15: return AllFiltersLine(func, PSTR_MIDIMON_SHOW_ALL, 1);
+    case 16: return AllFiltersLine(func, PSTR_MIDIMON_HIDE_ALL, 0);
     default: return DefaultLine(func);
   }
 }

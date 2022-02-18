@@ -824,3 +824,7 @@ x New multi menu???
   Nice but uses 2 bytes extra, per combiline.
 x Allocate pages on heap instead of stack
 - Replace dangerous strncpy with strncat or snprintf ? 
+- Can I replace Combiline by just a function like BoolLine ??
+  For simplicity and memory and code savings?
+  Hmmm, but what about DoubleCombiline than?
+- MIDI monitor, "IO to show line" must be completely selectable
