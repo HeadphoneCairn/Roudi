@@ -33,7 +33,7 @@ PageMonitor::PageMonitor(): Page()
 
 void PageMonitor::OnStart(uint8_t)
 {
-  //////memset(&m_messages, 0, sizeof(m_messages));
+  //////memset(&m_messages, 0, sizeof(m_messages));   was needed when the page was kept in memory
   SetNumberOfLines(m_num_messages, m_num_messages - 1);
 
   // Attach listeners

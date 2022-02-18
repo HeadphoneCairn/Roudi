@@ -31,38 +31,30 @@
 
 namespace 
 {
-  // NOTE: Could possibly save some memory by having only one page in memory at
-  //       a time by allocating the pages dynamically into a fixed size buffer,
-  //       like I did in my old version. But that adds complexity, which is the
-  //       reason I removed it.
-  PageSingle    g_page_single;
-  PageNameChannel g_page_name_channel;
-  PageMulti     g_page_multi;
-  PageNameMulti g_page_name_multi;
-  PageAbout     g_page_about;
-  PageMonitor   g_page_monitor;
-  PageSettings  g_page_settings;
-
-  PageID g_current_lower_id = PAGE_SINGLE;
-  PageID g_current_upper_id = PAGE_MONITOR;
-  Page*  g_current_page     = nullptr;
-  bool   g_current_lower    = true;
+  PageID  g_current_lower_id = PAGE_SINGLE;
+  PageID  g_current_upper_id = PAGE_MONITOR;
+  Page*   g_current_page     = nullptr;
+  bool    g_current_lower    = true;
   uint8_t g_current_multi   = 0;
-
 
   // The page that should be started when Left/Right/Up/Down returns
   // if so requested by the current page. 
-  PageID g_next_page_id = PAGE_NONE;
+  PageID  g_next_page_id = PAGE_NONE;
   uint8_t g_next_page_data = 0xFF;
 }
 
 namespace Pages
 {
   void ShowPage(PageID page_id, uint8_t data = 0xFF /*, uint8_t selected_line = 0, uint8_t first_line = 0xFF*/)
+  // We now allocate the pages dynamically.
+  // The library for dynamic allocation adds about 600 bytes of code :(
   {
     // --- Stop previous page ---
-    if (g_current_page)
+    if (g_current_page) {
       g_current_page->Stop();
+      delete g_current_page;
+      g_current_page = nullptr;
+    }
     
     // --- Start requested page ---
     if (g_current_lower)
@@ -70,20 +62,19 @@ namespace Pages
     else
       g_current_upper_id = page_id;
     switch(page_id) {
-      case PAGE_SINGLE:   g_current_page = &g_page_single; break;
-      case PAGE_MULTI:    
-        g_current_page = &g_page_multi; 
-        if (data == 0xFF)
-          data = g_current_multi; 
-        else 
-          g_current_multi = data; 
-        break;
-      case PAGE_ABOUT:    g_current_page = &g_page_about; break;
-      case PAGE_MONITOR:  g_current_page = &g_page_monitor; break;
-      case PAGE_SETTINGS: g_current_page = &g_page_settings; break;
-      case PAGE_NAME_CHANNEL: g_current_page = &g_page_name_channel; break;
-      case PAGE_NAME_MULTI:   g_current_page = &g_page_name_multi; break;
-      default:            g_current_page = &g_page_single; break;
+      case PAGE_SINGLE:       g_current_page = new PageSingle; break;
+      case PAGE_MULTI:        g_current_page = new PageMulti; 
+                              if (data == 0xFF)
+                                data = g_current_multi; 
+                              else 
+                                g_current_multi = data; 
+                              break;
+      case PAGE_ABOUT:        g_current_page = new PageAbout; break;
+      case PAGE_MONITOR:      g_current_page = new PageMonitor; break;
+      case PAGE_SETTINGS:     g_current_page = new PageSettings; break;
+      case PAGE_NAME_CHANNEL: g_current_page = new PageNameChannel; break;
+      case PAGE_NAME_MULTI:   g_current_page = new PageNameMulti; break;
+      default:                g_current_page = new PageSingle; break;
     }
     g_current_page->Start(data);
   }
@@ -135,8 +126,7 @@ namespace Pages
   void ButtonA() 
   {
     // Ignore A/B for some pages
-    if (g_current_page == &g_page_name_channel ||
-        g_current_page == &g_page_name_multi)
+    if (g_current_lower && (g_current_lower_id == PAGE_NAME_CHANNEL || g_current_lower_id == PAGE_NAME_MULTI))
       return;
 
     // Go to previous page
@@ -172,9 +162,8 @@ namespace Pages
   void ButtonB()
   {
     // Ignore A/B for some pages
-    if (g_current_page == &g_page_name_channel ||
-        g_current_page == &g_page_name_multi)
-      return;
+    if (g_current_lower && (g_current_lower_id == PAGE_NAME_CHANNEL || g_current_lower_id == PAGE_NAME_MULTI))
+       return;
 
     // Go to next page
     uint8_t data = 0xFF;
@@ -208,8 +197,7 @@ namespace Pages
   void ButtonAB()
   {
     // Ignore A/B for some pages
-    if (g_current_page == &g_page_name_channel ||
-        g_current_page == &g_page_name_multi)
+    if (g_current_lower && (g_current_lower_id == PAGE_NAME_CHANNEL || g_current_lower_id == PAGE_NAME_MULTI))
       return;
 
     g_current_lower = !g_current_lower;

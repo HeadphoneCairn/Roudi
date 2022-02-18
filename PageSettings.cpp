@@ -82,7 +82,10 @@ static void line_brightness(ParsPars& pars)
   pars.values = (void*) GetNumberPlusOne;
 }
 
-
+namespace {
+  uint8_t g_selected_line = 0;
+  uint8_t g_first_line = 0;
+}
 
 PageSettings::PageSettings(): 
   Page()
@@ -95,11 +98,13 @@ void PageSettings::OnStart(uint8_t)
   m_ui_velocity_curve.Init(line_velocity_curve, &values.velocity_curve);
   m_ui_program_change.Init(line_program_change, &values.program_change);
   m_ui_brightness.Init(line_brightness, &values.brightness);
-  SetNumberOfLines(4);
+  SetNumberOfLines(4, g_selected_line, 0, g_first_line);
 }
 
 void PageSettings::OnStop() 
 {  
+  g_selected_line = GetSelectedLine();
+  g_first_line = GetFirstLine();
   EE::SetSettings();
 }
 
