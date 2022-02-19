@@ -14,6 +14,7 @@ protected:
   virtual void OnStop() override;
 private:
   LineResult LineInputChannel(LineFunction func);
+  LineResult LineFilter(LineFunction func, const char* name, uint8_t& value);
   bool ShowChannelMenu();
 private:
   Combiline m_ui_input_channel;
