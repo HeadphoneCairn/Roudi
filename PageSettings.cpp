@@ -2,6 +2,7 @@
 
 #include "Data.h"
 #include "Debug.h"
+#include "MidiFilter.h"
 #include "MidiProcessing.h"
 
 #include <string.h>
@@ -97,7 +98,7 @@ void PageSettings::OnStart(uint8_t)
   m_ui_velocity_curve.Init(line_velocity_curve, &values.velocity_curve);
   m_ui_program_change.Init(line_program_change, &values.program_change);
   m_ui_brightness.Init(line_brightness, &values.brightness);
-  SetNumberOfLines(4, m_selected_line, 0, m_first_line);
+  SetNumberOfLines(5, m_selected_line, 0, m_first_line);
 }
 
 void PageSettings::OnStop() 
@@ -112,6 +113,17 @@ const char* PageSettings::GetTitle()
   return GetPString(PSTR_page_settings);
 }
 
+
+PSTRING(PSTR_monitor_fltr_0, "top");
+PSTRING(PSTR_monitor_fltr_1, "flop");
+Page::LineResult FltrLine(Page::LineFunction func, const char* name, uint8_t& value)
+{
+  return BoolLine(func, name, value, PSTR_monitor_fltr_0, PSTR_monitor_fltr_1);
+}
+
+
+uint8_t brol = 0;
+
 Page::LineResult PageSettings::Line(LineFunction func, uint8_t line, uint8_t field)
 {
   switch (line)
@@ -120,6 +132,7 @@ Page::LineResult PageSettings::Line(LineFunction func, uint8_t line, uint8_t fie
     case 1: return SingleCombiLine(func, m_ui_velocity_curve,  Screen::MaxCharsCanvas, 0, true);
     case 2: return SingleCombiLine(func, m_ui_program_change,  Screen::MaxCharsCanvas, 0, true);
     case 3: return SingleCombiLine(func, m_ui_brightness,     Screen::MaxCharsCanvas, 0, true);
+    case 4: return FltrLine(func, PSTR_filter_note_off, brol);
     default: return DefaultLine(func);
   }
 }

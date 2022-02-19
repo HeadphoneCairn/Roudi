@@ -11,9 +11,10 @@
 //==============================================================================
 
 // Use these macros to define the strings and tables of strings to be put in PROGMEM
-#define PSTRING(name, value) static const char name[] PROGMEM = value
-#define PTABLE(name, ...)    static const char *const name[] PROGMEM = { __VA_ARGS__ }; \
-                             static constexpr uint8_t name##_size = sizeof(name) / sizeof(*name);
+#define PSTRING(name, value) const char name[] PROGMEM = value
+#define PSTRINGREF(name)     extern const char name[];
+#define PTABLE(name, ...)    const char *const name[] PROGMEM = { __VA_ARGS__ }; \
+                             constexpr uint8_t name##_size = sizeof(name) / sizeof(*name);
 
 // Use these functions to read the strings from PROGMEM
 // The returned string remains in memory until the next call to GetPString... 
@@ -88,6 +89,24 @@ struct SettingsValues
   uint8_t brightness;       // 
 };
 void GetSettingsDefault(SettingsValues& values);
+
+
+struct FilterSettingsValues {
+  uint8_t note_off;
+  uint8_t note_on;
+  uint8_t key_pressure;
+  uint8_t control_change;
+  uint8_t program_change;
+  uint8_t channel_pressure;
+  uint8_t pitch_bend;
+  uint8_t system_exclusive;
+  uint8_t time_sync;
+  uint8_t transport;
+  uint8_t active_sensing;
+  uint8_t other;
+};
+
+
 
 
 
