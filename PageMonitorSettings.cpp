@@ -10,14 +10,14 @@
 #include <stdlib.h>
 
 
-struct midi_monitor_settings
+struct MidiMonitorSettings
 {
   uint8_t all_channels; // 0 = no, only the involved input and output channels, 1 = all
   uint8_t in_out; // 0 = input + output, 1 = input, 2 = output
   FilterSettingsValues filter;
 };
 
-midi_monitor_settings midimon_settings;
+MidiMonitorSettings midimon_settings;
 
 
 
@@ -29,7 +29,7 @@ PSTRING(PSTR_midimon_inout,       "IO to show");
 PSTRING(PSTR_midimon_channels_0, "routed");
 PSTRING(PSTR_midimon_channels_1, "all");
 
-PSTRING(PSTR_monitor_filter_0, "    ");
+PSTRING(PSTR_monitor_filter_0, "hide");
 PSTRING(PSTR_monitor_filter_1, "show");
 
 PSTRING(PSTR_midimon_inout_0, "in and out");

@@ -137,10 +137,15 @@ void GetMultiDefault(MultiValues& values)
   values.split_note = 60; // C4
 }
 
+void GetFilterSettingsDefault(FilterSettingsValues& values)
+{
+  memset(&values, 1, sizeof(values)); // sizeof of a reference gives the size of the referenced, so ok!
+}
+
 void GetSettingsDefault(SettingsValues& values)
 {
   memset(&values, 0, sizeof(values)); // sizeof of a reference gives the size of the referenced, so ok!
-  values.input_channel = 3;
+  GetFilterSettingsDefault(values.filter);
 }
 
 //==============================================================================

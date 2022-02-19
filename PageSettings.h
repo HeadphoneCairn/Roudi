@@ -15,11 +15,10 @@ protected:
 private:
   LineResult LineInputChannel(LineFunction func);
   LineResult LineFilter(LineFunction func, const char* name, uint8_t& value);
-  bool ShowChannelMenu();
+  LineResult LineMessageFilter(LineFunction func);
 private:
   Combiline m_ui_input_channel;
-  Combiline m_ui_velocity_curve; 
-  Combiline m_ui_program_change; 
+  Combiline m_ui_velocity_curve;
   Combiline m_ui_brightness;
 private:
   static uint8_t m_selected_line;

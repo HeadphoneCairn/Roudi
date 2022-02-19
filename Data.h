@@ -81,16 +81,6 @@ struct MultiValues
 };
 void GetMultiDefault(MultiValues& values);
 
-struct SettingsValues
-{
-  uint8_t input_channel;    // stored as 0-15, shown as 1-16
-  uint8_t velocity_curve;   // 
-  uint8_t program_change;   // 
-  uint8_t brightness;       // 
-};
-void GetSettingsDefault(SettingsValues& values);
-
-
 struct FilterSettingsValues {
   uint8_t note_off;
   uint8_t note_on;
@@ -105,6 +95,17 @@ struct FilterSettingsValues {
   uint8_t active_sensing;
   uint8_t other;
 };
+void GetFilterSettingsDefault(FilterSettingsValues& values);
+
+struct SettingsValues
+{
+  uint8_t input_channel;    // stored as 0-15, shown as 1-16
+  uint8_t block_other;      // 0: no, 1: yes
+  uint8_t velocity_curve;   // 
+  uint8_t brightness;       //
+  FilterSettingsValues filter;
+};
+void GetSettingsDefault(SettingsValues& values);
 
 
 
