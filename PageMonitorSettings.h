@@ -14,6 +14,8 @@ protected:
   virtual void OnStop() override;
 private:
   LineResult LineFilter(LineFunction func, const char* name, uint8_t& value);
+  LineResult LineAllFilters(LineFunction func, FilterSettingsValues& filters);
 private:
   Combiline m_ui_inout;
+  MidiMonSettingsValues m_settings;
 };

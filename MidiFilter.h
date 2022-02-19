@@ -19,4 +19,4 @@ PSTRINGREF(PSTR_filter_transport);
 PSTRINGREF(PSTR_filter_active_sensing);
 PSTRINGREF(PSTR_filter_other);
 
-Page::LineResult MessageFilterLine(Page::LineFunction func, FilterSettingsValues& filters);
+PSTRINGREF(PSTR_filter_messages);

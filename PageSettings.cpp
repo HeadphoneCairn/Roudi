@@ -78,7 +78,7 @@ void PageSettings::OnStart(uint8_t)
   m_ui_input_channel.Init(line_input_channel, &values.input_channel);
   m_ui_velocity_curve.Init(line_velocity_curve, &values.velocity_curve);
   m_ui_brightness.Init(line_brightness, &values.brightness);
-  SetNumberOfLines(15, m_selected_line, 0, m_first_line);
+  SetNumberOfLines(16, m_selected_line, 0, m_first_line);
 }
 
 void PageSettings::OnStop() 
@@ -102,17 +102,22 @@ Page::LineResult PageSettings::Line(LineFunction func, uint8_t line, uint8_t fie
     case  1: return BoolLine(func, PSTR_block_other, settings.block_other, PSTR_block_other_0, PSTR_block_other_1);
     case  2: return SingleCombiLine(func, m_ui_velocity_curve,  Screen::MaxCharsCanvas, 0, true);
     case  3: return SingleCombiLine(func, m_ui_brightness,     Screen::MaxCharsCanvas, 0, true);
-    case  4: return LineMessageFilter(func);
-    case  5: return LineFilter(func, PSTR_filter_key_pressure,      settings.filter.key_pressure     );
-    case  6: return LineFilter(func, PSTR_filter_control_change,    settings.filter.control_change   );
-    case  7: return LineFilter(func, PSTR_filter_program_change,    settings.filter.program_change   );
-    case  8: return LineFilter(func, PSTR_filter_channel_pressure,  settings.filter.channel_pressure );
-    case  9: return LineFilter(func, PSTR_filter_pitch_bend,        settings.filter.pitch_bend       );
-    case 10: return LineFilter(func, PSTR_filter_system_exclusive,  settings.filter.system_exclusive );
-    case 11: return LineFilter(func, PSTR_filter_time_sync,         settings.filter.time_sync        );
-    case 12: return LineFilter(func, PSTR_filter_transport,         settings.filter.transport        ); 
-    case 13: return LineFilter(func, PSTR_filter_active_sensing,    settings.filter.active_sensing   );
-    case 14: return LineFilter(func, PSTR_filter_other,             settings.filter.other            );
+    case  4: return TextLine(func, PSTR_filter_messages);
+    case  5: {
+             Page::LineResult result = LineFilter(func, PSTR_filter_note_on_off, settings.filter.note_off);
+             settings.filter.note_on = settings.filter.note_off; // on and off should be filter together
+             return result; 
+             }
+    case  6: return LineFilter(func, PSTR_filter_key_pressure,      settings.filter.key_pressure     );
+    case  7: return LineFilter(func, PSTR_filter_control_change,    settings.filter.control_change   );
+    case  8: return LineFilter(func, PSTR_filter_program_change,    settings.filter.program_change   );
+    case  9: return LineFilter(func, PSTR_filter_channel_pressure,  settings.filter.channel_pressure );
+    case 10: return LineFilter(func, PSTR_filter_pitch_bend,        settings.filter.pitch_bend       );
+    case 11: return LineFilter(func, PSTR_filter_system_exclusive,  settings.filter.system_exclusive );
+    case 12: return LineFilter(func, PSTR_filter_time_sync,         settings.filter.time_sync        );
+    case 13: return LineFilter(func, PSTR_filter_transport,         settings.filter.transport        ); 
+    case 14: return LineFilter(func, PSTR_filter_active_sensing,    settings.filter.active_sensing   );
+    case 15: return LineFilter(func, PSTR_filter_other,             settings.filter.other            );
     default: return DefaultLine(func);
   }
 }
@@ -133,12 +138,3 @@ Page::LineResult PageSettings::LineFilter(Page::LineFunction func, const char* n
 {
   return BoolLine(func, name, value, PSTR_monitor_fltr_0, PSTR_monitor_fltr_1);
 }
-
-Page::LineResult PageSettings::LineMessageFilter(Page::LineFunction func)
-{
-  SettingsValues& settings = EE::SettingsRW();
-  Page::LineResult result = MessageFilterLine(func, settings.filter);
-  settings.filter.note_on = settings.filter.note_off = 1; // Notes can never be filtered.
-  return result;  
-}
-

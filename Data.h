@@ -108,7 +108,13 @@ struct SettingsValues
 void GetSettingsDefault(SettingsValues& values);
 
 
-
+struct MidiMonSettingsValues
+{
+  uint8_t all_channels; // 0 = all, 1 = no, only the involved input and output channels
+  uint8_t in_out;       // 0 = input + output, 1 = input, 2 = output
+  FilterSettingsValues filter;
+};
+void GetMidiMonSettingsDefault(MidiMonSettingsValues& values);
 
 
 //==============================================================================
@@ -146,6 +152,10 @@ namespace EE
   void SetChannelName(uint8_t channel_value, const char* channel_name);
   const char* GetChannelName(uint8_t channel_value);
   const char* GetChannelNameFormatted(uint8_t channel_value);
+
+  // --- Midi Monitor Settings ---
+  void SetMidiMonSettings(const MidiMonSettingsValues& values);
+  void GetMidiMonSettings(MidiMonSettingsValues& values);
 }
 
 

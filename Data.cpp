@@ -148,6 +148,13 @@ void GetSettingsDefault(SettingsValues& values)
   GetFilterSettingsDefault(values.filter);
 }
 
+void GetMidiMonSettingsDefault(MidiMonSettingsValues& values)
+{
+  memset(&values, 0, sizeof(values)); // sizeof of a reference gives the size of the referenced, so ok!
+  GetFilterSettingsDefault(values.filter);
+}
+
+
 //==============================================================================
 //
 //                             E E P R O M
@@ -161,11 +168,12 @@ namespace EE
   EEPROM has 1024 bytes:
 
   0000-0007: Header (8 bytes)
-  0008-0071: Settings: 4 bytes (64 bytes)
-  0072-0279: Channels names: 16 x (12 chars + zero) (208 bytes)
-  0280-0287: Single: 1 byte for selected line (=channel), 1 for first line (8 bytes)
-  0288-0291: Multi header: only number of multis for the moment (4 bytes)
-  0292-0723: Multi x 12 (432 bytes)
+  0008-0071: Settings: 4 bytes + 12 bytes (64 bytes)
+  0072-0091: Midi Monitor Settings: 2 + 12 bytes (20 bytes)
+  0092-0299: Channels names: 16 x (12 chars + zero) (208 bytes)
+  0300-0307: Single: 1 byte for selected line (=channel), 1 for first line (8 bytes)
+  0308-0311: Multi header: only number of multis for the moment (4 bytes)
+  0312-0743: Multi x 12 (432 bytes)
               13 bytes (12 + 1) for the name 
                8 bytes (2 x 4) for channel settings
                2 bytes for mode
@@ -178,10 +186,11 @@ namespace EE
 
   static const uint16_t start_of_header = 0;
   static const uint16_t start_of_settings = 8;
-  static const uint16_t start_of_channel_names = 72;
-  static const uint16_t start_of_single = 280;
-  static const uint16_t start_of_multi_header = 288;
-  static const uint16_t start_of_multis = 292;
+  static const uint16_t start_of_midimon_settings = 72;
+  static const uint16_t start_of_channel_names = 92;
+  static const uint16_t start_of_single = 300;
+  static const uint16_t start_of_multi_header = 308;
+  static const uint16_t start_of_multis = 312;
   static const uint16_t multi_size = 36; // currently, we use 36 bytes for a multi
   static const uint8_t  max_multis = 12; // currently, we have a max of 12 multis  TODO number_of_multis
   
@@ -196,7 +205,7 @@ namespace EE
 
   struct EE_Header
   {
-    uint16_t magic_number = 0x2B40;
+    uint16_t magic_number = 0x2B41;
     uint8_t version = 1;
   };
 
@@ -324,6 +333,17 @@ namespace EE
     return data_scratch;
   }
 
+  // ===== M I D I M O N S E T T I N G S =======================================
+
+  void SetMidiMonSettings(const MidiMonSettingsValues& values)
+  {
+    EEPROM_PUT(start_of_midimon_settings, values);
+  }
+
+  void GetMidiMonSettings(MidiMonSettingsValues& values)
+  {
+    EEPROM_GET(start_of_midimon_settings, values);
+  }
 
   // ===== I N I T =============================================================
 
@@ -353,6 +373,13 @@ namespace EE
   {
     GetSettingsDefault(g_settings_values);
     EE::SetSettings();
+  }
+
+  static void InitMidiMonSettings()
+  {
+    MidiMonSettingsValues default_values;
+    GetMidiMonSettingsDefault(default_values);
+    SetMidiMonSettings(default_values);
   }
 
   PSTRING(PSTR_channel_piano,   "Piano");
@@ -385,6 +412,7 @@ namespace EE
       InitMulti();
       InitSettings();
       InitChannels();
+      InitMidiMonSettings();
     }
     // Read the data that is constantly in memory for speedy access
     GetSettings();  
