@@ -17,4 +17,5 @@ private:
   bool ShowChannelMenu();
 private:
   Combiline m_ui_inout;
+  uint8_t m_show_hide;
 };
