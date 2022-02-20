@@ -1,6 +1,6 @@
 #include "Screen.h"
 
-#define ENABLE_DEBUG
+#define ENABLE_DEBUG // saves about 1000 bytes of programn space
 #ifdef ENABLE_DEBUG  // --------------------------------------------------------
 
 #include <stdio.h>
@@ -76,6 +76,7 @@ namespace Debug
   void Print(const char * format, ...) {}
   void Beep() {}  
   void BeepLow() {}  
+  void BeepHigh() {}
 }
 
 #endif // ----------------------------------------------------------------------
