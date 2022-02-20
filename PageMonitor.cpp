@@ -25,6 +25,7 @@ namespace {
     if (!MidiFilter::AllowMessage(page_monitor->m_settings.filter, event))
       return;
 
+    // Push message on buffer
     page_monitor->m_messages.Push({event, 1});
     SetRedrawNext();
   }
@@ -40,6 +41,7 @@ namespace {
     if (!MidiFilter::AllowMessage(page_monitor->m_settings.filter, event))
       return;
 
+    // Push message on buffer
     page_monitor->m_messages.Push({event, 0});
     SetRedrawNext();
   }
@@ -237,7 +239,7 @@ x type of CC: mod/volume/bank select/...
 x all F.. thingies
 - sysex, how to show
 - running status ???
-- implement settings and filters
+x implement settings and filters
 - check MSB/LSB order of pitch bend and song position
 */
 
