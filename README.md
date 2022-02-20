@@ -49,3 +49,10 @@ If you select the same channel twice, only the first channel will be used.
 
 Filters: program change overrides cc filter for CC0
          mod wheel overrides cc filter for CC1
+
+
+
+# Programming stuff:
+
+#define ENABLE_RAW exist in Debug.cpp
+#define ENABLE_DEBUG exists in PageMonitor.cpp
