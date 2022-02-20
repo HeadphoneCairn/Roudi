@@ -1,7 +1,9 @@
 #pragma once
 
+#include "Data.h"
 #include "Page.h"
 #include "Utils.h"
+
 #include <midi_serialization.h> // for midi_event_t
 
 class PageMonitor: public Page
@@ -15,6 +17,7 @@ public: // For the listening interface
   };
   static const uint8_t m_num_messages = 64;
   TCircularBuffer<midi_msg_t, uint8_t, m_num_messages> m_messages;
+  MidiMonSettingsValues m_settings;
 protected:
   virtual const char* GetTitle() override;
   virtual LineResult Line(LineFunction func, uint8_t line, uint8_t field) override;

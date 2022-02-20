@@ -2,6 +2,7 @@
 
 #include "Debug.h"
 #include "Data.h"
+#include "MidiFilter.h"
 #include "MidiProcessing.h"
 #include "Roudi.h"
 
@@ -15,12 +16,26 @@ namespace {
   void ListenIn(const midi_event_t& event, void* data)
   {
     PageMonitor* page_monitor = static_cast<PageMonitor*>(data);
+
+    // Filter the messages
+    if (page_monitor->m_settings.in_out == 2)
+      return;
+    if (!MidiFilter::AllowMessage(page_monitor->m_settings.filter, event))
+      return;
+
     page_monitor->m_messages.Push({event, 1});
     SetRedrawNext();
   }
   void ListenOut(const midi_event_t& event, void* data)
   {
     PageMonitor* page_monitor = static_cast<PageMonitor*>(data);
+
+    // Filter the messages
+    if (page_monitor->m_settings.in_out == 1)
+      return;
+    if (!MidiFilter::AllowMessage(page_monitor->m_settings.filter, event))
+      return;
+
     page_monitor->m_messages.Push({event, 0});
     SetRedrawNext();
   }
@@ -35,6 +50,9 @@ void PageMonitor::OnStart(uint8_t)
 {
   //////memset(&m_messages, 0, sizeof(m_messages));   was needed when the page was kept in memory
   SetNumberOfLines(m_num_messages, m_num_messages - 1);
+
+  // Get the midimon settings
+  EE::GetMidiMonSettings(m_settings);
 
   // Attach listeners
   MidiProcessing::SetMidiInListener({ListenIn, this});  
