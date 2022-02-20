@@ -333,6 +333,44 @@ namespace MidiProcessing
     g_midi_out_listener = midi_listener;
   }
 
+  /* 
+  A word about g_decoder.process(), this function processes a MIDI input stream byte by byte.
+  It returns eather false or true:
+  - false: Not enough bytes have been treated to construct a complete midi_event_t. Please send more bytes.
+  - true: The midi_event_t is ready, please treat the midi_event_t.
+  To do this, it keep state!
+
+  A midi_event_t consists of the following parts:
+  - m_event: the type of message as interpreted by g_decoder.process() from the bytes of the MIDI stream
+	- m_data[3]: the actual bytes of the MIDI stream, depending on the type 1 to 3 bytes are set
+  
+  The function returns the following values for the m_event:
+  - 0x2:     1 byte system common (F1=time code, F3=song select)
+    0x3:     2 byte system common (F2=song position pointer)
+    0x4:     sysex data
+    0x5:     0 byte system common (F4, F6, F6=tune request) 
+             => DAMNED!!! Should have been 0x1 => can't change here, because also used in UsbToMidi::process() 
+    0x5:     end of sysex data, F7 in m_data[0]
+    0x6:     end of sysex data, F7 in m_data[1]
+    0x7:     end of sysex data, F7 in m_data[2]
+    0x8-0xE: the "channel" messages, such as key on/off, identical to midi command byte
+    0xF:     midi real time (F8, FA, FB, FC, FE, FF)
+  Note that the m_event has the possibility to store cables (in case you have many MIDI ports), 
+  but we do not use that. 
+
+  A word about system exclusive. Since these messages don't have fixed length, they are split up
+  into a series of midi_event_t:
+    0x4: F0, ??, ??
+    0x4: ??, ??, ??
+    ...
+    0x4: ??, ??, ??
+  It ends with one of the following
+    0x5: F7, 00, 00
+    0x6: ??, F7, 00
+    0x7: ??, ??, F7
+  Note that the in between these midi_events_t, system real time messages (0xF) may arrive!
+  */
+
   void TreatInput()
   {
     while (g_output_queue.hasSpaceFor(Configuration::m_max_number_of_output_channels /*number of involved output channels*/) && DinMidiboy.dinMidi().available())

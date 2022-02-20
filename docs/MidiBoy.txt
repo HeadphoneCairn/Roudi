@@ -837,5 +837,7 @@ x Allocate pages on heap instead of stack
        5 -> 5, 6: block 6???
        5 -> 6, 7: block 6 and 7???
 - check MSB/LSB order of pitch bend and song position
-
+- Tell Blokas about?
+  g_decoder.process() mapping F4, F6, F6 to 0x5, which is also used for sysex
+  see also UsbToMidi::process()
 
