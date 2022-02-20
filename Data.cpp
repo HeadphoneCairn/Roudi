@@ -150,6 +150,7 @@ void GetSettingsDefault(SettingsValues& values)
 void GetMidiMonSettingsDefault(MidiMonSettingsValues& values)
 {
   memset(&values, 0, sizeof(values)); // sizeof of a reference gives the size of the referenced, so ok!
+  values.all_channels = 1;
   GetFilterSettingsDefault(values.filter);
 }
 

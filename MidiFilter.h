@@ -26,4 +26,6 @@ PSTRINGREF(PSTR_filter_messages);
 namespace MidiFilter
 {
   bool AllowMessage(const FilterSettingsValues& filter, const midi_event_t& event);
+  bool IsActiveInputChannel(const midi_event_t& event);
+  bool IsActiveOutputChannel(const midi_event_t& event);
 }

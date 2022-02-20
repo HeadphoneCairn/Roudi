@@ -110,7 +110,7 @@ void GetSettingsDefault(SettingsValues& values);
 
 struct MidiMonSettingsValues
 {
-  uint8_t all_channels; // 0 = all, 1 = no, only the involved input and output channels
+  uint8_t all_channels; // 0 = no, only the involved input and output channels, 1 = all
   uint8_t in_out;       // 0 = input + output, 1 = input, 2 = output
   FilterSettingsValues filter;
 };

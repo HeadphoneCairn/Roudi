@@ -20,6 +20,8 @@ namespace {
     // Filter the messages
     if (page_monitor->m_settings.in_out == 2)
       return;
+    if (!page_monitor->m_settings.all_channels && !MidiFilter::IsActiveInputChannel(event))
+      return;
     if (!MidiFilter::AllowMessage(page_monitor->m_settings.filter, event))
       return;
 
@@ -32,6 +34,8 @@ namespace {
 
     // Filter the messages
     if (page_monitor->m_settings.in_out == 1)
+      return;
+    if (!page_monitor->m_settings.all_channels && !MidiFilter::IsActiveOutputChannel(event))
       return;
     if (!MidiFilter::AllowMessage(page_monitor->m_settings.filter, event))
       return;

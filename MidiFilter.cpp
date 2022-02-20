@@ -1,6 +1,7 @@
 #include "MidiFilter.h"
 
 #include "Debug.h"
+#include "MidiProcessing.h"
 
 #include <midi_serialization.h>
 
@@ -60,4 +61,30 @@ namespace MidiFilter
     };
   }
  
+  static bool IsChannel(const midi_event_t& event, uint8_t channel)
+  {
+    if (event.m_event >= 0x8 && event.m_event <= 0xe) {
+      const uint8_t event_channel = event.m_data[0] & 0x0f;
+      return (event_channel == channel);
+    } else
+      return true;    
+  }
+
+  bool IsActiveInputChannel(const midi_event_t& event)
+  {
+    return IsChannel(event, MidiProcessing::GetConfiguration().m_input_channel);
+  }
+
+  bool IsActiveOutputChannel(const midi_event_t& event)
+  {
+    const MidiProcessing::Configuration& config = MidiProcessing::GetConfiguration();
+    for (uint8_t i = 0; i < config.m_nbr_output_channels; i++)
+    {
+      if (IsChannel(event, config.m_output_channel[i].m_channel))
+        return true;
+    }
+    return false;
+  }
+
+
 }

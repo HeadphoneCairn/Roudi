@@ -17,8 +17,8 @@ namespace {
   PSTRING(PSTR_midimon_channels,    "Channels to show");
   PSTRING(PSTR_midimon_inout,       "IO to show");
 
-  PSTRING(PSTR_midimon_channels_0, "all");
-  PSTRING(PSTR_midimon_channels_1, "routed");
+  PSTRING(PSTR_midimon_channels_0, "routed");
+  PSTRING(PSTR_midimon_channels_1, "all");
 
   PSTRING(PSTR_monitor_filter_0, "hide");
   PSTRING(PSTR_monitor_filter_1, "show");
