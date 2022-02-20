@@ -9,18 +9,27 @@
 
 PSTRING(PSTR_page_monitor, " MONITOR "); 
 
+//#define SHOW_RAW // uncomment this to add the raw unfiltered input messages to the monitor
 
 namespace {
 
   // Could possibly turn this into one function by using the data pointer 
   void ListenIn(const midi_event_t& event, void* data)
   {
-    // Drop all incoming sysex data, except for the end 0x5/0x6/0x7 
-    if (event.m_event == 0x4)
-      return;
+    PageMonitor* page_monitor = static_cast<PageMonitor*>(data);
+
+#ifdef SHOW_RAW
+  if (!(event.m_event == 0xf && event.m_data[0] == 0xfe)) { // we ignore active sensing, because it is enoying
+    midi_event_t raw_event = event;
+    raw_event.m_event <<= 4; 
+    page_monitor->m_messages.Push({raw_event, 1});
+    SetRedrawNext();
+  }
+#endif
 
     // Filter the messages
-    PageMonitor* page_monitor = static_cast<PageMonitor*>(data);
+    if (event.m_event == 0x4) // Drop all incoming sysex data, except for the end 0x5/0x6/0x7 
+      return;
     if (page_monitor->m_settings.in_out == 2)
       return;
     if (!page_monitor->m_settings.all_channels && !MidiFilter::IsActiveInputChannel(event))
@@ -35,12 +44,11 @@ namespace {
 
   void ListenOut(const midi_event_t& event, void* data)
   {
-    // Drop all incoming sysex data, except for the end 0x5/0x6/0x7 
-    if (event.m_event == 0x4)
-      return;
+    PageMonitor* page_monitor = static_cast<PageMonitor*>(data);
 
     // Filter the messages
-    PageMonitor* page_monitor = static_cast<PageMonitor*>(data);
+    if (event.m_event == 0x4) // Drop all incoming sysex data, except for the end 0x5/0x6/0x7 
+      return;
     if (page_monitor->m_settings.in_out == 1)
       return;
     if (!page_monitor->m_settings.all_channels && !MidiFilter::IsActiveOutputChannel(event))
@@ -237,6 +245,9 @@ namespace {
   PSTRING(PSTR_mm_active_sensing,    "active sensing");        // 0xfe
   PSTRING(PSTR_mm_system_reset,      "reset");                 // 0xff         
 
+#ifdef SHOW_RAW
+  PSTRING(PSTR_mm_raw_mesage,        "raw %x, %02x %02x %02x");           
+#endif
 }
 
 /*
@@ -314,6 +325,10 @@ Page::LineResult PageMonitor::LineDecode(const midi_msg_t& msg)
           snprintf(text, text_buflen, GetPString(PSTR_mm_unknown));
           break;
       }
+#ifdef SHOW_RAW
+    } else if (e.m_event >= 0x10) {
+      snprintf(text, text_buflen, GetPString(PSTR_mm_raw_mesage), e.m_event>>4, e.m_data[0], e.m_data[1], e.m_data[2]);
+#endif
     } else { // 0x1, 0x2, 0x3, 0xf
       switch (e.m_data[0]) {
         //case 0xf0 is sysex start and discarded in the listeners
