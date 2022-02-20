@@ -263,38 +263,38 @@ Page::LineResult PageMonitor::LineDecode(const midi_msg_t& msg)
     } else {
       text += sprintf(text, GetPString(PSTR_mm_no_channel), in_or_out);
     }
-    const uint8_t buflen = sizeof(Screen::buffer) - strlen(Screen::buffer);  // snprintf 'n' includes \0!
     // Add event text for messages that are channel specific
+    const uint8_t text_buflen = sizeof(Screen::buffer) - strlen(Screen::buffer);  // snprintf 'n' includes \0!
     if (e.m_event >= 0x8 && e.m_event <= 0xe) {
       switch (e.m_event)
       { 
         case 0x8:
           strncat(temp, GetNoteName(e.m_data[1]), max_temp_len);
-          snprintf(text, buflen, GetPString(PSTR_mm_note_off), temp, e.m_data[2]);
+          snprintf(text, text_buflen, GetPString(PSTR_mm_note_off), temp, e.m_data[2]);
           break;
         case 0x9:
           strncat(temp, GetNoteName(e.m_data[1]), max_temp_len);
-          snprintf(text, buflen, GetPString(PSTR_mm_note_on), temp, e.m_data[2]);
+          snprintf(text, text_buflen, GetPString(PSTR_mm_note_on), temp, e.m_data[2]);
           break;
         case 0xa:
           strncat(temp, GetNoteName(e.m_data[1]), max_temp_len);
-          snprintf(text, buflen, GetPString(PSTR_mm_key_pressure), temp, e.m_data[2]);
+          snprintf(text, text_buflen, GetPString(PSTR_mm_key_pressure), temp, e.m_data[2]);
           break;
         case 0xb:
           strncat(temp, GetCCName(e.m_data[1]), max_temp_len);
-          snprintf(text, buflen, GetPString(PSTR_mm_cc), e.m_data[1], temp, e.m_data[2]);
+          snprintf(text, text_buflen, GetPString(PSTR_mm_cc), e.m_data[1], temp, e.m_data[2]);
           break;
         case 0xc:
-          snprintf(text, buflen, GetPString(PSTR_mm_program_change), e.m_data[1]);
+          snprintf(text, text_buflen, GetPString(PSTR_mm_program_change), e.m_data[1]);
           break;
         case 0xd:
-          snprintf(text, buflen, GetPString(PSTR_mm_channel_pressure), e.m_data[1]);
+          snprintf(text, text_buflen, GetPString(PSTR_mm_channel_pressure), e.m_data[1]);
           break;
         case 0xe:
-          snprintf(text, buflen, GetPString(PSTR_mm_pitch_bend), static_cast<long>(e.m_data[2]) * 128L + static_cast<long>(e.m_data[1]) - 8192L); // LSB, MSB, centered around 0
+          snprintf(text, text_buflen, GetPString(PSTR_mm_pitch_bend), static_cast<long>(e.m_data[2]) * 128L + static_cast<long>(e.m_data[1]) - 8192L); // LSB, MSB, centered around 0
           break;
         default:
-          snprintf(text, buflen, GetPString(PSTR_mm_unknown));
+          snprintf(text, text_buflen, GetPString(PSTR_mm_unknown));
           break;
       }
     }
@@ -302,49 +302,49 @@ Page::LineResult PageMonitor::LineDecode(const midi_msg_t& msg)
     else if (e.m_event == 0xf) {
       switch (e.m_data[0]) {
         case 0xf0:
-          snprintf(text, buflen, GetPString(PSTR_mm_sysex_start));
+          snprintf(text, text_buflen, GetPString(PSTR_mm_sysex_start));
           break;
         case 0xf1:
-          snprintf(text, buflen, GetPString(PSTR_mm_time_code), e.m_data[1]);
+          snprintf(text, text_buflen, GetPString(PSTR_mm_time_code), e.m_data[1]);
           break;
         case 0xf2:
-          snprintf(text, buflen, GetPString(PSTR_mm_song_position), static_cast<unsigned long>(e.m_data[1]) * 128ul + static_cast<unsigned long>(e.m_data[2]));  // MSB, LSB
+          snprintf(text, text_buflen, GetPString(PSTR_mm_song_position), static_cast<unsigned long>(e.m_data[1]) * 128ul + static_cast<unsigned long>(e.m_data[2]));  // MSB, LSB
           break;
         case 0xf3:
-          snprintf(text, buflen, GetPString(PSTR_mm_song_select), e.m_data[1]);
+          snprintf(text, text_buflen, GetPString(PSTR_mm_song_select), e.m_data[1]);
           break;
         case 0xf6:
-          snprintf(text, buflen, GetPString(PSTR_mm_tune_request));
+          snprintf(text, text_buflen, GetPString(PSTR_mm_tune_request));
           break;
         case 0xf7:
-          snprintf(text, buflen, GetPString(PSTR_mm_sysex_end));
+          snprintf(text, text_buflen, GetPString(PSTR_mm_sysex_end));
           break;
         case 0xf8:
-          snprintf(text, buflen, GetPString(PSTR_mm_timing_clock));
+          snprintf(text, text_buflen, GetPString(PSTR_mm_timing_clock));
           break;
         case 0xfa:
-          snprintf(text, buflen, GetPString(PSTR_mm_start));
+          snprintf(text, text_buflen, GetPString(PSTR_mm_start));
           break;
         case 0xfb:
-          snprintf(text, buflen, GetPString(PSTR_mm_continue));
+          snprintf(text, text_buflen, GetPString(PSTR_mm_continue));
           break;
         case 0xfc:
-          snprintf(text, buflen, GetPString(PSTR_mm_stop));
+          snprintf(text, text_buflen, GetPString(PSTR_mm_stop));
           break;
         case 0xfe:
-          snprintf(text, buflen, GetPString(PSTR_mm_active_sensing));
+          snprintf(text, text_buflen, GetPString(PSTR_mm_active_sensing));
           break;
         case 0xff:
-          snprintf(text, buflen, GetPString(PSTR_mm_system_reset));
+          snprintf(text, text_buflen, GetPString(PSTR_mm_system_reset));
           break;
         default:
-          snprintf(text, buflen, GetPString(PSTR_mm_unknown));
+          snprintf(text, text_buflen, GetPString(PSTR_mm_unknown));
           break;
       }
     }
     // Unknown message
     else {
-      snprintf(text, buflen, GetPString(PSTR_mm_unknown));
+      snprintf(text, text_buflen, GetPString(PSTR_mm_unknown));
     }
   }
 
