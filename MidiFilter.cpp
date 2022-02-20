@@ -28,6 +28,11 @@ namespace MidiFilter
   bool AllowMessage(const FilterSettingsValues& filter, const midi_event_t& event)
   {
     switch (event.m_event) {
+      case 0x4:
+      case 0x5:
+      case 0x6:
+      case 0x7: 
+        return filter.system_exclusive;
       case 0x8: return filter.note_off;
       case 0x9: return filter.note_on;
       case 0xA: return filter.key_pressure;
@@ -35,11 +40,8 @@ namespace MidiFilter
       case 0xC: return filter.program_change;    // might need be combined with bank select CC 00
       case 0xD: return filter.channel_pressure;
       case 0xE: return filter.pitch_bend;
-      case 0xF:
+      default:
         switch(event.m_data[0]) {
-          case 0xF0:
-          case 0xF7:
-            return filter.system_exclusive;
           case 0xF1:
           case 0xF8:
             return filter.time_sync;
@@ -57,7 +59,6 @@ namespace MidiFilter
           default:
             return true;
         }
-      default: return true;
     };
   }
  

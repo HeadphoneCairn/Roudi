@@ -276,9 +276,10 @@ Page::LineResult PageMonitor::LineDecode(const midi_msg_t& msg)
     }
     // Add event text
     const uint8_t text_buflen = sizeof(Screen::buffer) - strlen(Screen::buffer);  // snprintf 'n' includes \0!
-    if (e.m_event >= 0x5 && e.m_event <= 0xe) {
+    if (e.m_event >= 0x4 && e.m_event <= 0xe) {
       switch (e.m_event)
       { 
+        case 0x4: // this one is typically filtered out in the listeners
         case 0x5:
         case 0x6:
         case 0x7:
@@ -313,7 +314,7 @@ Page::LineResult PageMonitor::LineDecode(const midi_msg_t& msg)
           snprintf(text, text_buflen, GetPString(PSTR_mm_unknown));
           break;
       }
-    } else { // 0x1, 0x2, 0x3, 0xf (0x4 is sysex and discared in the listeners)
+    } else { // 0x1, 0x2, 0x3, 0xf
       switch (e.m_data[0]) {
         //case 0xf0 is sysex start and discarded in the listeners
         case 0xf1:
