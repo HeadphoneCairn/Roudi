@@ -828,3 +828,7 @@ x Allocate pages on heap instead of stack
   For simplicity and memory and code savings?
   Hmmm, but what about DoubleCombiline than?
 - MIDI monitor, "IO to show line" must be completely selectable
+- Program storage space:
+  - Debugging functions uses about 1000 bytes
+  - My logo uses about 1000 bytes
+  

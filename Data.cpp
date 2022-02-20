@@ -1,7 +1,6 @@
 #include "Data.h"
 #include "Debug.h"
 
-#include <EEPROM.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -196,28 +195,40 @@ namespace EE
   
 //#define USE_SYSTEM_PUT_AND_GET
 #ifdef USE_SYSTEM_PUT_AND_GET
-  // We make sure to ring a bell when we save to the EEPROM to make
-  // sure that we don't save too much by accident.
-  // Because we can only save 100,000 times to the EEPROM without damaging it.
+  // This requires #include <EEPROM.h>.
+  // It uses > 500 bytes of program storage space than my own routines. And I don't
+  // really understand why.
   #define EEPROM_PUT(position, value) { Debug::Beep(); EEPROM.put(position, value); }
   #define EEPROM_GET(position, value)	{ EEPROM.get(position, value); }
 #else
-  template<typename T>
-  void EEPROM_PUT(int idx, T &t)
+  void EepromGet(int idx, uint8_t* data, int data_size)
+  {
+    uint8_t *p = data;
+    for (int count = 0; count < data_size; count++, p++)
+      *p = eeprom_read_byte((uint8_t*) (idx + count));
+  }
+
+  void EepromPut(int idx, const uint8_t* data, int data_size)
   {
     // We make sure to ring a bell when we save to the EEPROM to make
     // sure that we don't save too much by accident.
+    // Because we can only save 100,000 times to the EEPROM without damaging it.
     Debug::Beep();
-    uint8_t *p = (uint8_t*) &t;
-    for (int count = 0; count < sizeof(T); count++, p++)
+    const uint8_t *p = data;
+    for (int count = 0; count < data_size; count++, p++)
       eeprom_write_byte((uint8_t*) (idx + count), *p);
   }
+
   template<typename T>
   void EEPROM_GET(int idx, T &t)
   {
-    uint8_t *p = (uint8_t*) &t;
-    for (int count = 0; count < sizeof(T); count++, p++)
-      *p = eeprom_read_byte((uint8_t*) (idx + count));
+    EepromGet(idx, (uint8_t*) &t, sizeof(t));
+  }
+
+  template<typename T>
+  void EEPROM_PUT(int idx, const T &t)
+  {
+    EepromPut(idx, (uint8_t*) &t, sizeof(t));
   }
 #endif
 
