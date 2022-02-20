@@ -345,11 +345,11 @@ namespace MidiProcessing
 	- m_data[3]: the actual bytes of the MIDI stream, depending on the type 1 to 3 bytes are set
   
   The function returns the following values for the m_event:
-  - 0x2:     1 byte system common (F1=time code, F3=song select)
-    0x3:     2 byte system common (F2=song position pointer)
+  - 0x2:     2 byte system common (F1=time code, F3=song select)
+    0x3:     3 byte system common (F2=song position pointer)
     0x4:     sysex data
-    0x5:     0 byte system common (F4, F6, F6=tune request) 
-             => DAMNED!!! Should have been 0x1 => can't change here, because also used in UsbToMidi::process() 
+    0x5:     1 byte system common (F4, F6, F6=tune request) 
+             => DAMNED!!! Should have been 0x1 => made local workaround, don't want to touch Blokas libs 
     0x5:     end of sysex data, F7 in m_data[0]
     0x6:     end of sysex data, F7 in m_data[1]
     0x7:     end of sysex data, F7 in m_data[2]
@@ -371,12 +371,25 @@ namespace MidiProcessing
   Note that the in between these midi_events_t, system real time messages (0xF) may arrive!
   */
 
+  // Fix for g_decoder.process() and 1 byte system common
+  bool FIX_g_decoder_process(uint8_t byte, midi_event_t &out)
+  {
+    // 0x5 can be either a 1 byte system common (F4, F6, F6=tune request) message
+    // or the end of system exclusive!
+    // This is confusing. Would be better to use 0x1 for these 1 byte system common
+    // WARNING: Don't know what the impact on latency is of this !!!!!!
+    bool event_is_complete = g_decoder.process(byte, out);
+    if (event_is_complete && out.m_event == 0x5 && out.m_data[0] != 0xF7)
+      out.m_event = 0x1;
+    return event_is_complete;
+  }
+
   void TreatInput()
   {
     while (g_output_queue.hasSpaceFor(Configuration::m_max_number_of_output_channels /*number of involved output channels*/) && DinMidiboy.dinMidi().available())
     {
       midi_event_t event;
-      if (g_decoder.process(DinMidiboy.dinMidi().read(), event)) {
+      if (FIX_g_decoder_process(DinMidiboy.dinMidi().read(), event)) {
         ProcessInputEvent(event, g_output_queue);
         if (g_midi_in_listener.call_back)
           g_midi_in_listener.call_back(event, g_midi_in_listener.data);
@@ -384,13 +397,21 @@ namespace MidiProcessing
     }
   }
   
+  // Fix for UsbToMidi::process() and 1 byte system common
+  unsigned FIX_UsbToMidi_process(midi_event_t in, uint8_t out[3])
+  {
+    if (in.m_event == 0x1)
+      in.m_event = 0x5;
+    return UsbToMidi::process(in, out);
+  }
+
   void WriteToOutput()
   {
     uint8_t msg[3];
     midi_event_t event;
     while (g_output_queue.pop(event))
     {
-      uint8_t n = UsbToMidi::process(event, msg);
+      uint8_t n = FIX_UsbToMidi_process(event, msg);
       for (uint8_t i=0; i<n; ++i)
         DinMidiboy.dinMidi().write(msg[i]);
       if (g_midi_out_listener.call_back)

@@ -15,9 +15,12 @@ namespace {
   // Could possibly turn this into one function by using the data pointer 
   void ListenIn(const midi_event_t& event, void* data)
   {
-    PageMonitor* page_monitor = static_cast<PageMonitor*>(data);
+    // Drop all incoming sysex data, except for the end 0x5/0x6/0x7 
+    if (event.m_event == 0x4)
+      return;
 
     // Filter the messages
+    PageMonitor* page_monitor = static_cast<PageMonitor*>(data);
     if (page_monitor->m_settings.in_out == 2)
       return;
     if (!page_monitor->m_settings.all_channels && !MidiFilter::IsActiveInputChannel(event))
@@ -32,9 +35,12 @@ namespace {
 
   void ListenOut(const midi_event_t& event, void* data)
   {
-    PageMonitor* page_monitor = static_cast<PageMonitor*>(data);
+    // Drop all incoming sysex data, except for the end 0x5/0x6/0x7 
+    if (event.m_event == 0x4)
+      return;
 
     // Filter the messages
+    PageMonitor* page_monitor = static_cast<PageMonitor*>(data);
     if (page_monitor->m_settings.in_out == 1)
       return;
     if (!page_monitor->m_settings.all_channels && !MidiFilter::IsActiveOutputChannel(event))
@@ -218,12 +224,11 @@ namespace {
   PSTRING(PSTR_mm_channel_pressure,  "channel pressure %d");   // 0xd.
   PSTRING(PSTR_mm_pitch_bend,        "pitch bend %ld");        // 0xe.
 
-  PSTRING(PSTR_mm_sysex_start,       "sysex start");           // 0xf0
   PSTRING(PSTR_mm_time_code,         "time code %d");          // 0xf1           
   PSTRING(PSTR_mm_song_position,     "song position %lu");     // 0xf2
   PSTRING(PSTR_mm_song_select,       "song select %d");        // 0xf3
   PSTRING(PSTR_mm_tune_request,      "tune request");          // 0xf6
-  PSTRING(PSTR_mm_sysex_end,         "sysex end");             // 0xf7
+  PSTRING(PSTR_mm_sysex,             "system exclusive");      // 0xf0/f7
 
   PSTRING(PSTR_mm_timing_clock,      "timing clock");          // 0xf8
   PSTRING(PSTR_mm_start,             "start");                 // 0xfa
@@ -257,7 +262,10 @@ Page::LineResult PageMonitor::LineDecode(const midi_msg_t& msg)
   char temp[max_temp_len + 1] = "";
 
   // --- Add the decode message to text (if there is a message) ---
-  if (e.m_event != 0) {
+  if (e.m_event == 0) {
+    // This line does not have an event yet (happens after initialization of this Page)
+    // We show an empty line.
+  } else {  
     // Add (I)nput/(O)utput and channel
     char in_or_out = msg.input ? 'i' : 'o';
     if (e.m_event >= 0x8 && e.m_event <= 0xe) {
@@ -266,11 +274,16 @@ Page::LineResult PageMonitor::LineDecode(const midi_msg_t& msg)
     } else {
       text += sprintf(text, GetPString(PSTR_mm_no_channel), in_or_out);
     }
-    // Add event text for messages that are channel specific
+    // Add event text
     const uint8_t text_buflen = sizeof(Screen::buffer) - strlen(Screen::buffer);  // snprintf 'n' includes \0!
-    if (e.m_event >= 0x8 && e.m_event <= 0xe) {
+    if (e.m_event >= 0x5 && e.m_event <= 0xe) {
       switch (e.m_event)
       { 
+        case 0x5:
+        case 0x6:
+        case 0x7:
+          snprintf(text, text_buflen, GetPString(PSTR_mm_sysex));
+          break;
         case 0x8:
           strncat(temp, GetNoteName(e.m_data[1]), max_temp_len);
           snprintf(text, text_buflen, GetPString(PSTR_mm_note_off), temp, e.m_data[2]);
@@ -300,13 +313,9 @@ Page::LineResult PageMonitor::LineDecode(const midi_msg_t& msg)
           snprintf(text, text_buflen, GetPString(PSTR_mm_unknown));
           break;
       }
-    }
-    // Add event text for messages that are channel independent
-    else if (e.m_event == 0xf) {
+    } else { // 0x1, 0x2, 0x3, 0xf (0x4 is sysex and discared in the listeners)
       switch (e.m_data[0]) {
-        case 0xf0:
-          snprintf(text, text_buflen, GetPString(PSTR_mm_sysex_start));
-          break;
+        //case 0xf0 is sysex start and discarded in the listeners
         case 0xf1:
           snprintf(text, text_buflen, GetPString(PSTR_mm_time_code), e.m_data[1]);
           break;
@@ -316,15 +325,16 @@ Page::LineResult PageMonitor::LineDecode(const midi_msg_t& msg)
         case 0xf3:
           snprintf(text, text_buflen, GetPString(PSTR_mm_song_select), e.m_data[1]);
           break;
+        //case 0xf4 does not exist
+        //case 0xf5 does not exist
         case 0xf6:
           snprintf(text, text_buflen, GetPString(PSTR_mm_tune_request));
           break;
-        case 0xf7:
-          snprintf(text, text_buflen, GetPString(PSTR_mm_sysex_end));
-          break;
+        //case 0xf7 is sysex end and is treated above 
         case 0xf8:
           snprintf(text, text_buflen, GetPString(PSTR_mm_timing_clock));
           break;
+        //case 0xf9 does not eist
         case 0xfa:
           snprintf(text, text_buflen, GetPString(PSTR_mm_start));
           break;
@@ -344,10 +354,6 @@ Page::LineResult PageMonitor::LineDecode(const midi_msg_t& msg)
           snprintf(text, text_buflen, GetPString(PSTR_mm_unknown));
           break;
       }
-    }
-    // Unknown message
-    else {
-      snprintf(text, text_buflen, GetPString(PSTR_mm_unknown));
     }
   }
 
