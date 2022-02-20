@@ -194,12 +194,32 @@ namespace EE
   static const uint16_t multi_size = 36; // currently, we use 36 bytes for a multi
   static const uint8_t  max_multis = 12; // currently, we have a max of 12 multis  TODO number_of_multis
   
+//#define USE_SYSTEM_PUT_AND_GET
+#ifdef USE_SYSTEM_PUT_AND_GET
   // We make sure to ring a bell when we save to the EEPROM to make
   // sure that we don't save too much by accident.
   // Because we can only save 100,000 times to the EEPROM without damaging it.
   #define EEPROM_PUT(position, value) { Debug::Beep(); EEPROM.put(position, value); }
   #define EEPROM_GET(position, value)	{ EEPROM.get(position, value); }
-
+#else
+  template<typename T>
+  void EEPROM_PUT(int idx, T &t)
+  {
+    // We make sure to ring a bell when we save to the EEPROM to make
+    // sure that we don't save too much by accident.
+    Debug::Beep();
+    uint8_t *p = (uint8_t*) &t;
+    for (int count = 0; count < sizeof(T); count++, p++)
+      eeprom_write_byte((uint8_t*) (idx + count), *p);
+  }
+  template<typename T>
+  void EEPROM_GET(int idx, T &t)
+  {
+    uint8_t *p = (uint8_t*) &t;
+    for (int count = 0; count < sizeof(T); count++, p++)
+      *p = eeprom_read_byte((uint8_t*) (idx + count));
+  }
+#endif
 
   // ===== H E A D E R =========================================================
 
