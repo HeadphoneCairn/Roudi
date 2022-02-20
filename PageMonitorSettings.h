@@ -18,4 +18,7 @@ private:
 private:
   Combiline m_ui_inout;
   MidiMonSettingsValues m_settings;
+private:
+  static uint8_t m_selected_line;
+  static uint8_t m_first_line;
 };

@@ -108,14 +108,14 @@ Page::LineResult PageSettings::Line(LineFunction func, uint8_t line, uint8_t fie
              settings.filter.note_on = settings.filter.note_off; // on and off should be filter together
              return result; 
              }
-    case  6: return LineFilter(func, PSTR_filter_key_pressure,      settings.filter.key_pressure     );
-    case  7: return LineFilter(func, PSTR_filter_control_change,    settings.filter.control_change   );
-    case  8: return LineFilter(func, PSTR_filter_program_change,    settings.filter.program_change   );
-    case  9: return LineFilter(func, PSTR_filter_channel_pressure,  settings.filter.channel_pressure );
-    case 10: return LineFilter(func, PSTR_filter_pitch_bend,        settings.filter.pitch_bend       );
-    case 11: return LineFilter(func, PSTR_filter_system_exclusive,  settings.filter.system_exclusive );
-    case 12: return LineFilter(func, PSTR_filter_time_sync,         settings.filter.time_sync        );
-    case 13: return LineFilter(func, PSTR_filter_transport,         settings.filter.transport        ); 
+    case  6: return LineFilter(func, PSTR_filter_pitch_bend,        settings.filter.pitch_bend       );
+    case  7: return LineFilter(func, PSTR_filter_channel_pressure,  settings.filter.channel_pressure );
+    case  8: return LineFilter(func, PSTR_filter_key_pressure,      settings.filter.key_pressure     );
+    case  9: return LineFilter(func, PSTR_filter_program_change,    settings.filter.program_change   );
+    case 10: return LineFilter(func, PSTR_filter_control_change,    settings.filter.control_change   );
+    case 11: return LineFilter(func, PSTR_filter_time_sync,         settings.filter.time_sync        );
+    case 12: return LineFilter(func, PSTR_filter_transport,         settings.filter.transport        ); 
+    case 13: return LineFilter(func, PSTR_filter_system_exclusive,  settings.filter.system_exclusive );
     case 14: return LineFilter(func, PSTR_filter_active_sensing,    settings.filter.active_sensing   );
     case 15: return LineFilter(func, PSTR_filter_other,             settings.filter.other            );
     default: return DefaultLine(func);

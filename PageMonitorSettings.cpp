@@ -37,6 +37,9 @@ namespace {
 
 }
 
+uint8_t PageMonitorSettings::m_selected_line = 0;
+uint8_t PageMonitorSettings::m_first_line = 0;
+
 PageMonitorSettings::PageMonitorSettings(): 
   Page() 
   {}
@@ -45,7 +48,7 @@ void PageMonitorSettings::OnStart(uint8_t)
 {
   EE::GetMidiMonSettings(m_settings);
   m_ui_inout.Init(line_inout, &m_settings.in_out);
-  SetNumberOfLines(15);
+  SetNumberOfLines(15, m_selected_line, 0, m_first_line);
 }
 
 void PageMonitorSettings::OnStop() 
@@ -54,6 +57,8 @@ void PageMonitorSettings::OnStop()
   EE::GetMidiMonSettings(eeprom_settings);
   if (memcmp(&eeprom_settings, &m_settings, sizeof(eeprom_settings)) != 0) 
     EE::SetMidiMonSettings(m_settings);
+  m_selected_line = GetSelectedLine();
+  m_first_line = GetFirstLine();
 }
 
 const char* PageMonitorSettings::GetTitle()
@@ -68,16 +73,16 @@ Page::LineResult PageMonitorSettings::Line(LineFunction func, uint8_t line, uint
     case  0: return BoolLine(func, PSTR_midimon_channels, m_settings.all_channels, PSTR_midimon_channels_0, PSTR_midimon_channels_1);
     case  1: return SingleCombiLine(func, m_ui_inout, Screen::MaxCharsCanvas, 0, true);
     case  2: return LineAllFilters(func, m_settings.filter);
-    case  3: return LineFilter(func, PSTR_filter_note_off,          m_settings.filter.note_off         );
-    case  4: return LineFilter(func, PSTR_filter_note_on,           m_settings.filter.note_on          );
-    case  5: return LineFilter(func, PSTR_filter_key_pressure,      m_settings.filter.key_pressure     );
-    case  6: return LineFilter(func, PSTR_filter_control_change,    m_settings.filter.control_change   );
-    case  7: return LineFilter(func, PSTR_filter_program_change,    m_settings.filter.program_change   );
-    case  8: return LineFilter(func, PSTR_filter_channel_pressure,  m_settings.filter.channel_pressure );
-    case  9: return LineFilter(func, PSTR_filter_pitch_bend,        m_settings.filter.pitch_bend       );
-    case 10: return LineFilter(func, PSTR_filter_system_exclusive,  m_settings.filter.system_exclusive );
-    case 11: return LineFilter(func, PSTR_filter_time_sync,         m_settings.filter.time_sync        );
-    case 12: return LineFilter(func, PSTR_filter_transport,         m_settings.filter.transport        ); 
+    case  3: return LineFilter(func, PSTR_filter_note_on,           m_settings.filter.note_on          );
+    case  4: return LineFilter(func, PSTR_filter_note_off,          m_settings.filter.note_off         );
+    case  5: return LineFilter(func, PSTR_filter_pitch_bend,        m_settings.filter.pitch_bend       );
+    case  6: return LineFilter(func, PSTR_filter_channel_pressure,  m_settings.filter.channel_pressure );
+    case  7: return LineFilter(func, PSTR_filter_key_pressure,      m_settings.filter.key_pressure     );
+    case  8: return LineFilter(func, PSTR_filter_program_change,    m_settings.filter.program_change   );
+    case  9: return LineFilter(func, PSTR_filter_control_change,    m_settings.filter.control_change   );
+    case 10: return LineFilter(func, PSTR_filter_time_sync,         m_settings.filter.time_sync        );
+    case 11: return LineFilter(func, PSTR_filter_transport,         m_settings.filter.transport        ); 
+    case 12: return LineFilter(func, PSTR_filter_system_exclusive,  m_settings.filter.system_exclusive );
     case 13: return LineFilter(func, PSTR_filter_active_sensing,    m_settings.filter.active_sensing   );
     case 14: return LineFilter(func, PSTR_filter_other,             m_settings.filter.other            );
     default: return DefaultLine(func);

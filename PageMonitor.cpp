@@ -252,7 +252,7 @@ Page::LineResult PageMonitor::LineDecode(const midi_msg_t& msg)
   // --- Add the decode message to text (if there is a message) ---
   if (e.m_event != 0) {
     // Add (I)nput/(O)utput and channel
-    char in_or_out = msg.input ? 'I' : 'O';
+    char in_or_out = msg.input ? 'i' : 'o';
     if (e.m_event >= 0x8 && e.m_event <= 0xe) {
       const uint8_t channel = e.m_data[0] & 0x0f;
       text += sprintf(text, GetPString(PSTR_mm_channel), in_or_out, channel + 1);
