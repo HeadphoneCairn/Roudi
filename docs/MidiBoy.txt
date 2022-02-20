@@ -831,9 +831,11 @@ x Allocate pages on heap instead of stack
 - Program storage space:
   - Debugging functions uses about 1000 bytes
   - My logo uses about 1000 bytes
+  - Remove Pages::GetPageUsage
 - Should I block incoming messages on the channels of the output channels
   hmm: 5 -> 5, cannot block 5
        5 -> 5, 6: block 6???
        5 -> 6, 7: block 6 and 7???
+- check MSB/LSB order of pitch bend and song position
 
-       
+

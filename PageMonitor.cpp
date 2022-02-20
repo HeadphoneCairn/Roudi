@@ -233,14 +233,13 @@ PSTRING(PSTR_mm_system_reset,      "reset");                 // 0xff
 
 /*
 TODO 
-- snprintf! to prevent buffer overrun
+x snprintf! to prevent buffer overrun
 x note instead of key number!!!  
 x type of CC: mod/volume/bank select/...
 x all F.. thingies
 - sysex, how to show
 - running status ???
 x implement settings and filters
-- check MSB/LSB order of pitch bend and song position
 */
 
 Page::LineResult PageMonitor::LineDecode(const midi_msg_t& msg)
@@ -251,9 +250,8 @@ Page::LineResult PageMonitor::LineDecode(const midi_msg_t& msg)
   char* text = Screen::buffer;
   text[0] = 0;
   // --- Temporary string storage ---
-  const uint8_t max_temp_len = 10;
-  char temp[max_temp_len + 1];
-  temp[max_temp_len] = 0;
+  const uint8_t max_temp_len = 10; // strncat 'n' does not include \0 !
+  char temp[max_temp_len + 1] = "";
 
   // --- Add the decode message to text (if there is a message) ---
   if (e.m_event != 0) {
@@ -265,38 +263,38 @@ Page::LineResult PageMonitor::LineDecode(const midi_msg_t& msg)
     } else {
       text += sprintf(text, GetPString(PSTR_mm_no_channel), in_or_out);
     }
+    const uint8_t buflen = sizeof(Screen::buffer) - strlen(Screen::buffer);  // snprintf 'n' includes \0!
     // Add event text for messages that are channel specific
     if (e.m_event >= 0x8 && e.m_event <= 0xe) {
       switch (e.m_event)
       { 
         case 0x8:
-          strncpy(temp, GetNoteName(e.m_data[1]), max_temp_len);
-          sprintf(text, GetPString(PSTR_mm_note_off), temp, e.m_data[2]);
+          strncat(temp, GetNoteName(e.m_data[1]), max_temp_len);
+          snprintf(text, buflen, GetPString(PSTR_mm_note_off), temp, e.m_data[2]);
           break;
         case 0x9:
-          strncpy(temp, GetNoteName(e.m_data[1]), max_temp_len);
-          sprintf(text, GetPString(PSTR_mm_note_on), temp, e.m_data[2]);
+          strncat(temp, GetNoteName(e.m_data[1]), max_temp_len);
+          snprintf(text, buflen, GetPString(PSTR_mm_note_on), temp, e.m_data[2]);
           break;
         case 0xa:
-          strncpy(temp, GetNoteName(e.m_data[1]), max_temp_len);
-          sprintf(text, GetPString(PSTR_mm_key_pressure), temp, e.m_data[2]);
+          strncat(temp, GetNoteName(e.m_data[1]), max_temp_len);
+          snprintf(text, buflen, GetPString(PSTR_mm_key_pressure), temp, e.m_data[2]);
           break;
         case 0xb:
-          strncpy(temp, GetCCName(e.m_data[1]), max_temp_len);
-          sprintf(text, GetPString(PSTR_mm_cc), e.m_data[1], temp, e.m_data[2]);
+          strncat(temp, GetCCName(e.m_data[1]), max_temp_len);
+          snprintf(text, buflen, GetPString(PSTR_mm_cc), e.m_data[1], temp, e.m_data[2]);
           break;
         case 0xc:
-          sprintf(text, GetPString(PSTR_mm_program_change), e.m_data[1]);
+          snprintf(text, buflen, GetPString(PSTR_mm_program_change), e.m_data[1]);
           break;
         case 0xd:
-          sprintf(text, GetPString(PSTR_mm_channel_pressure), e.m_data[1]);
+          snprintf(text, buflen, GetPString(PSTR_mm_channel_pressure), e.m_data[1]);
           break;
         case 0xe:
-          //sprintf(text, GetPString(PSTR_mm_pitch_bend), static_cast<long>(e.m_data[2]) * 128ul + static_cast<long>(e.m_data[1])); // LSB, MSB
-          sprintf(text, GetPString(PSTR_mm_pitch_bend), static_cast<long>(e.m_data[2]) * 128L + static_cast<long>(e.m_data[1]) - 8192L); // LSB, MSB, centered around 0
+          snprintf(text, buflen, GetPString(PSTR_mm_pitch_bend), static_cast<long>(e.m_data[2]) * 128L + static_cast<long>(e.m_data[1]) - 8192L); // LSB, MSB, centered around 0
           break;
         default:
-          strcpy(text, GetPString(PSTR_mm_unknown));
+          snprintf(text, buflen, GetPString(PSTR_mm_unknown));
           break;
       }
     }
@@ -304,49 +302,49 @@ Page::LineResult PageMonitor::LineDecode(const midi_msg_t& msg)
     else if (e.m_event == 0xf) {
       switch (e.m_data[0]) {
         case 0xf0:
-          sprintf(text, GetPString(PSTR_mm_sysex_start));
+          snprintf(text, buflen, GetPString(PSTR_mm_sysex_start));
           break;
         case 0xf1:
-          sprintf(text, GetPString(PSTR_mm_time_code), e.m_data[1]);
+          snprintf(text, buflen, GetPString(PSTR_mm_time_code), e.m_data[1]);
           break;
         case 0xf2:
-          sprintf(text, GetPString(PSTR_mm_song_position), static_cast<unsigned long>(e.m_data[1]) * 128ul + static_cast<unsigned long>(e.m_data[2]));  // MSB, LSB
+          snprintf(text, buflen, GetPString(PSTR_mm_song_position), static_cast<unsigned long>(e.m_data[1]) * 128ul + static_cast<unsigned long>(e.m_data[2]));  // MSB, LSB
           break;
         case 0xf3:
-          sprintf(text, GetPString(PSTR_mm_song_select), e.m_data[1]);
+          snprintf(text, buflen, GetPString(PSTR_mm_song_select), e.m_data[1]);
           break;
         case 0xf6:
-          sprintf(text, GetPString(PSTR_mm_tune_request));
+          snprintf(text, buflen, GetPString(PSTR_mm_tune_request));
           break;
         case 0xf7:
-          sprintf(text, GetPString(PSTR_mm_sysex_end));
+          snprintf(text, buflen, GetPString(PSTR_mm_sysex_end));
           break;
         case 0xf8:
-          sprintf(text, GetPString(PSTR_mm_timing_clock));
+          snprintf(text, buflen, GetPString(PSTR_mm_timing_clock));
           break;
         case 0xfa:
-          sprintf(text, GetPString(PSTR_mm_start));
+          snprintf(text, buflen, GetPString(PSTR_mm_start));
           break;
         case 0xfb:
-          sprintf(text, GetPString(PSTR_mm_continue));
+          snprintf(text, buflen, GetPString(PSTR_mm_continue));
           break;
         case 0xfc:
-          sprintf(text, GetPString(PSTR_mm_stop));
+          snprintf(text, buflen, GetPString(PSTR_mm_stop));
           break;
         case 0xfe:
-          sprintf(text, GetPString(PSTR_mm_active_sensing));
+          snprintf(text, buflen, GetPString(PSTR_mm_active_sensing));
           break;
         case 0xff:
-          sprintf(text, GetPString(PSTR_mm_system_reset));
+          snprintf(text, buflen, GetPString(PSTR_mm_system_reset));
           break;
         default:
-          strcpy(text, GetPString(PSTR_mm_unknown));
+          snprintf(text, buflen, GetPString(PSTR_mm_unknown));
           break;
       }
     }
     // Unknown message
     else {
-      strcpy(text, GetPString(PSTR_mm_unknown));
+      snprintf(text, buflen, GetPString(PSTR_mm_unknown));
     }
   }
 
