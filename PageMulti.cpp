@@ -112,7 +112,7 @@ void PageMulti::OnStart(uint8_t which_multi)
   m_ui_mode.Init(g_par_mode, &m_values.mode);
   m_ui_split_note.Init(g_par_split_note, &m_values.split_note);
 
-  SetNumberOfLines(11, m_values.selected_line, m_values.selected_field, m_values.first_line);
+  SetNumberOfLines(12, m_values.selected_line, m_values.selected_field, m_values.first_line);
 
   SetMidiConfiguration();
 }
@@ -143,24 +143,137 @@ Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
   return result;
 }
 
+
+// Returns the string representation of i_value, + the number of values possible in o_max_value.
+typedef const char* (*ValueFunction)(uint8_t i_value, uint8_t& o_number_of_values);
+
+PSTRING(PSTR_test_on, "off");
+PSTRING(PSTR_test_off, "on");
+PSTRING(PSTR_test_maybe, "maybe");
+const char* TestValueFunction(uint8_t i_value, uint8_t& o_number_of_values)
+{
+  o_number_of_values = 3;
+  switch (i_value) {
+    case 0: return GetPString(PSTR_test_on);
+    case 1: return GetPString(PSTR_test_off);
+    case 2: return GetPString(PSTR_test_maybe);
+    default: return GetPStringEmpty();
+  } 
+}
+
+const char* ChannelValueFunction(uint8_t i_value, uint8_t& o_number_of_values)
+{
+  o_number_of_values = 5;
+  switch (i_value) {
+    case 0: return "kanaal 0";
+    case 1: return "kanaal 1";
+    case 2: return "kanaal 2";
+    case 3: return "kanaal 3";
+    case 4: return "kanaal 4";
+    default: return GetPStringEmpty();
+  }
+
+}
+
+
+static Page::LineResult DoubleLine(
+  Page::LineFunction func,
+  uint8_t field, 
+  const char* name,
+  uint8_t name_pos, 
+  uint8_t& left_value, 
+  ValueFunction left_function,
+  uint8_t& right_value, 
+  ValueFunction right_function
+)
+{
+  Screen::Inversion inversion = Screen::inversion_none;
+  bool redraw = false;
+  char* text = Screen::buffer;
+  text[0] = 0;
+
+  // Set up arrays for easy access to parameters
+  uint8_t* pvalues[] = {&left_value, &right_value};
+  ValueFunction pfunctions[] = {left_function, right_function};
+
+  if (func == Page::GET_TEXT) {
+    // Prepare buffer
+    PadRight(text, Screen::buffer_len);   
+
+    // Add name
+    if (name_pos == 0xFF)
+      name_pos = (Screen::buffer_len - strlen(name)) >> 1;
+    strncpy(text + name_pos, GetPString(name), strlen(name));
+    
+    // Add values
+    for (uint8_t i=0; i<2; i++) {
+      uint8_t dummy;
+      const char* value = pfunctions[i](*pvalues[i], dummy);
+      if (i==0) {
+        strncpy(text, value, strlen(value));
+        if (field == 0)
+          inversion = { Screen::InvertGiven, 0, static_cast<uint8_t>(strlen(value) -  1)};  // TODO could be negative
+      } else { 
+        strncpy(text + Screen::buffer_len - strlen(value), value, strlen(value));
+        if (field == 1)
+          inversion = { Screen::InvertGiven, static_cast<uint8_t>(Screen::buffer_len - strlen(value)), Screen::buffer_len - 1}; // TODO could be 26
+      }
+    }
+
+  } else if (func == Page::DO_LEFT) {
+    if (*pvalues[field] > 0) {
+      *pvalues[field] -= 1;
+      redraw = true;
+    }
+  } else if (func == Page::DO_RIGHT) {
+    uint8_t number_of_values = 0;
+    pfunctions[field](*pvalues[field], number_of_values); // Get number of values
+    if (*pvalues[field] + 1 < number_of_values) {
+      *pvalues[field] += 1;
+      redraw = true;
+    }
+  }
+
+  return Page::LineResult{2, text, inversion, redraw};
+}
+
+static uint8_t ff = 0;
+static uint8_t ss = 1;
+PSTRING(PSTR_ss, "Just string");
+
+static Page::LineResult DoDoubleLine(Page::LineFunction func, uint8_t field)
+{
+  return DoubleLine(
+    func,
+    field, 
+    PSTR_ss,
+    5, //0xFF, 
+    ff, TestValueFunction,
+    ss, ChannelValueFunction
+  );
+
+}
+
+
 Page::LineResult PageMulti::ActualLine(LineFunction func, uint8_t line, uint8_t field)
 {
   switch (line)
   {
-    case 0: return DoubleCombiline(func, field, m_ui_channel_1, 16, 1, false, m_ui_octave_1, 7, 0, false);
-    case 1: return DoubleCombiline(func, field, m_ui_pitchbend_1, 14, 3, false, m_ui_velocity_1, 8, 0, false);
-    case 2: return DoubleCombiline(func, field, m_ui_channel_2, 16, 1, false, m_ui_octave_2, 7, 0, false);
-    case 3: return DoubleCombiline(func, field, m_ui_pitchbend_2, 14, 3, false, m_ui_velocity_2, 8, 0, false);
-    case 4: return DoubleCombiline(func, field, m_ui_mode, 12, 3, false, m_ui_split_note, 10, 0, false);
-    case 5: return DefaultLine(func);
-    case 6: // Save As ... 
+    case 0: return DoDoubleLine(func, field);
+    case 1: return DoubleCombiline(func, field, m_ui_channel_1, 16, 1, false, m_ui_octave_1, 7, 0, false);
+    case 2: return DoubleCombiline(func, field, m_ui_pitchbend_1, 14, 3, false, m_ui_velocity_1, 8, 0, false);
+    case 3: return DoubleCombiline(func, field, m_ui_channel_2, 16, 1, false, m_ui_octave_2, 7, 0, false);
+    case 4: return DoubleCombiline(func, field, m_ui_pitchbend_2, 14, 3, false, m_ui_velocity_2, 8, 0, false);
+    case 5: return DoubleCombiline(func, field, m_ui_mode, 12, 3, false, m_ui_split_note, 10, 0, false);
+    case 6: return DefaultLine(func);
+    case 7: // Save As ... 
       if (func == DO_LEFT || func == DO_RIGHT)
         SaveAs();
       return TextLine(func, PSTR_save_as);
-    case 7: return TextLine(func, PSTR_remove);
-    case 8: return TextLine(func, PSTR_move_left);
-    case 9: return TextLine(func, PSTR_move_right);
-    case 10: // New ...
+    case 8: return TextLine(func, PSTR_remove);
+    case 9: return TextLine(func, PSTR_move_left);
+    case 10: return TextLine(func, PSTR_move_right);
+    case 11: // New ...
       if (func == DO_LEFT || func == DO_RIGHT)
         New();
       return TextLine(func, PSTR_new);

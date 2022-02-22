@@ -843,5 +843,7 @@ x Allocate pages on heap instead of stack
   see also UsbToMidi::process()
 - Combiline: more simple pass name, + two functions/ptabs + values,
   name is centered, values are left and right aligned
-  
+- About scherm: Panic
+  Single scherm: > None: blokkeer input channel, route al de rest
+                 > Block: blokkeer alles
 
