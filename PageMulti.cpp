@@ -244,6 +244,28 @@ static Page::LineResult DoubleLine(
   return Page::LineResult{2, text, inversion, redraw};
 }
 
+
+const char* GetMode(uint8_t i_value, uint8_t& o_number_of_values)
+{
+  o_number_of_values = PTAB_mode_size;
+  if (i_value < o_number_of_values)
+    return GetPStringFromPTable(PTAB_mode, i_value);
+  else
+    return GetPStringEmpty();
+}  // TODO make function that we pass the PTAB info
+
+
+const char* GetSplit(uint8_t i_value, uint8_t& o_number_of_values)
+{
+  o_number_of_values = 128;
+  if (i_value < o_number_of_values)
+    return GetNoteName(i_value);
+  else
+    return GetPStringEmpty();
+}
+
+
+
 static uint8_t ff = 0;
 static uint8_t ss = 1;
 PSTRING(PSTR_ss, "Just string");
@@ -268,14 +290,14 @@ Page::LineResult PageMulti::ActualLine(LineFunction func, uint8_t line, uint8_t 
 {
   switch (line)
   {
-    case 0: return DoDoubleLine(func, field);
+    case 0: return DoubleLine(func, field, PSTR_split_note, 15, m_values.mode, GetMode, m_values.split_note, GetSplit);
     case 1: return DoubleLine(func, field, PSTR_ss_25, 0xFF, ff, ChannelValueFunction, ss, ChannelValueFunction);
     case 2: return DoubleLine(func, field, PSTR_ss_25, 0, ff, ChannelValueFunction, ss, ChannelValueFunction);
     case 3: return DoubleLine(func, field, PSTR_ss_25, 5, ff, ChannelValueFunction, ss, ChannelValueFunction);
     case 4: return DoubleLine(func, field, PSTR_ss_25, 10, ff, ChannelValueFunction, ss, ChannelValueFunction);
 
 //    case 1: return DoubleCombiline(func, field, m_ui_channel_1, 16, 1, false, m_ui_octave_1, 7, 0, false);
-//    case 2: return DoubleCombiline(func, field, m_ui_pitchbend_1, 14, 3, false, m_ui_velocity_1, 8, 0, false);
+//    case 2: return DoubleCombiline(func, field, m_ui_itchbend_1, 14, 3, false, m_ui_velocity_1, 8, 0, false);
 //    case 3: return DoubleCombiline(func, field, m_ui_channel_2, 16, 1, false, m_ui_octave_2, 7, 0, false);
 //    case 4: return DoubleCombiline(func, field, m_ui_pitchbend_2, 14, 3, false, m_ui_velocity_2, 8, 0, false);
     case 5: return DoubleCombiline(func, field, m_ui_mode, 12, 3, false, m_ui_split_note, 10, 0, false);
