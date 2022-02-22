@@ -245,15 +245,22 @@ static Page::LineResult DoubleLine(
 }
 
 
-const char* GetMode(uint8_t i_value, uint8_t& o_number_of_values)
+const char* GetPTable(uint8_t i_value, uint8_t& o_number_of_values, const char *const * ptable, uint8_t ptable_size)
 {
-  o_number_of_values = PTAB_mode_size;
+  o_number_of_values = ptable_size;
   if (i_value < o_number_of_values)
-    return GetPStringFromPTable(PTAB_mode, i_value);
+    return GetPStringFromPTable(ptable, i_value);
   else
     return GetPStringEmpty();
-}  // TODO make function that we pass the PTAB info
+}
 
+const char* GetMode(uint8_t i_value, uint8_t& o_number_of_values)
+{
+  GetPTable(i_value, o_number_of_values, PTAB_mode, PTAB_mode_size);
+}
+
+// TODO check if PTAB with two values uses less code storage than hardcoded 
+// TODO return somthing else than Empty()!
 
 const char* GetSplit(uint8_t i_value, uint8_t& o_number_of_values)
 {
