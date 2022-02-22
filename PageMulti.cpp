@@ -214,19 +214,19 @@ static Page::LineResult DoubleLine(
     for (uint8_t i=0; i<2; i++) {
       uint8_t dummy;
       const char* value = pfunctions[i](*pvalues[i], dummy);
+      uint8_t value_len = strlen(value);
+      value_len = min(value_len, Screen::buffer_len);
       if (i==0) {
-        strncpy(text, value, strlen(value));
+        strncpy(text, value, value_len);
         if (field == 0)
-          inversion = { Screen::InvertGiven, 0, static_cast<uint8_t>(strlen(value) -  1)};  // TODO could be negative
+          inversion = { Screen::InvertGiven, 0, static_cast<uint8_t>(value_len -  1)};  // TODO could be negative
       } else { 
-        strncpy(text + Screen::buffer_len - strlen(value), value, strlen(value));
+        strncpy(text + Screen::buffer_len - value_len, value, value_len);
         if (field == 1)
-          inversion = { Screen::InvertGiven, static_cast<uint8_t>(Screen::buffer_len - strlen(value)), Screen::buffer_len - 1}; // TODO could be 26
+          inversion = { Screen::InvertGiven, static_cast<uint8_t>(Screen::buffer_len - value_len), Screen::buffer_len - 1};
       }
     }
-
-
-
+    
   } else if (func == Page::DO_LEFT) {
     if (*pvalues[field] > 0) {
       *pvalues[field] -= 1;
