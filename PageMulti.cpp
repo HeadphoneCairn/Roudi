@@ -165,10 +165,10 @@ const char* ChannelValueFunction(uint8_t i_value, uint8_t& o_number_of_values)
 {
   o_number_of_values = 5;
   switch (i_value) {
-    case 0: return "kanaal 0";
-    case 1: return "kanaal 1";
-    case 2: return "kanaal 2";
-    case 3: return "kanaal 3";
+    case 0: return "ka0";
+    case 1: return "k1";
+    case 2: return "2";
+    case 3: return "";
     case 4: return "kanaal 4";
     default: return GetPStringEmpty();
   }
@@ -210,8 +210,8 @@ static Page::LineResult DoubleLine(
     name_len = min(name_len, Screen::buffer_len - name_pos); 
     strncpy(text + name_pos, name_val, name_len);
 
-    // Add values
-    for (uint8_t i=0; i<2; i++) {
+    // Add values: first value is left aligned, second is right aligned
+    for (uint8_t i = 0; i < 2; i++) {
       uint8_t dummy;
       const char* value = pfunctions[i](*pvalues[i], dummy);
       uint8_t value_len = strlen(value);
@@ -219,14 +219,14 @@ static Page::LineResult DoubleLine(
       if (i==0) {
         strncpy(text, value, value_len);
         if (field == 0)
-          inversion = { Screen::InvertGiven, 0, static_cast<uint8_t>(value_len -  1)};  // TODO could be negative
+          inversion = { Screen::InvertGiven, 0, static_cast<uint8_t>(value_len -  1)};  // If the value is "" the whole line will be selected
       } else { 
         strncpy(text + Screen::buffer_len - value_len, value, value_len);
         if (field == 1)
           inversion = { Screen::InvertGiven, static_cast<uint8_t>(Screen::buffer_len - value_len), Screen::buffer_len - 1};
       }
     }
-    
+
   } else if (func == Page::DO_LEFT) {
     if (*pvalues[field] > 0) {
       *pvalues[field] -= 1;
@@ -269,10 +269,10 @@ Page::LineResult PageMulti::ActualLine(LineFunction func, uint8_t line, uint8_t 
   switch (line)
   {
     case 0: return DoDoubleLine(func, field);
-    case 1: return DoubleLine(func, field, PSTR_ss_25, 0xFF, ff, TestValueFunction, ss, ChannelValueFunction);
-    case 2: return DoubleLine(func, field, PSTR_ss_25, 0, ff, TestValueFunction, ss, ChannelValueFunction);
-    case 3: return DoubleLine(func, field, PSTR_ss_25, 5, ff, TestValueFunction, ss, ChannelValueFunction);
-    case 4: return DoubleLine(func, field, PSTR_ss_25, 10, ff, TestValueFunction, ss, ChannelValueFunction);
+    case 1: return DoubleLine(func, field, PSTR_ss_25, 0xFF, ff, ChannelValueFunction, ss, ChannelValueFunction);
+    case 2: return DoubleLine(func, field, PSTR_ss_25, 0, ff, ChannelValueFunction, ss, ChannelValueFunction);
+    case 3: return DoubleLine(func, field, PSTR_ss_25, 5, ff, ChannelValueFunction, ss, ChannelValueFunction);
+    case 4: return DoubleLine(func, field, PSTR_ss_25, 10, ff, ChannelValueFunction, ss, ChannelValueFunction);
 
 //    case 1: return DoubleCombiline(func, field, m_ui_channel_1, 16, 1, false, m_ui_octave_1, 7, 0, false);
 //    case 2: return DoubleCombiline(func, field, m_ui_pitchbend_1, 14, 3, false, m_ui_velocity_1, 8, 0, false);
