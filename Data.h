@@ -35,6 +35,7 @@ extern char data_scratch[Screen::MaxCharsCanvas + 1];
 // --- Globally defined strings ---
 const char* GetPStringEmpty();
 const char* GetPStringNone();
+const char* GetPStringUnknownValue();
 
 // --- Octaves ---
 // Encapsulated the number of octaves to transpose
@@ -47,7 +48,7 @@ uint8_t OctaveDeltaToOctaveValue(int8_t octave_delta);
 const char* GetNoteName(uint8_t midi_note_number);
 
 // --- Some (generic) value functions ---
-const char* GetOnOff(uint8_t on);
+const char* BadGetOnOff(uint8_t on);
 const char* GetNumberPlusOne(uint8_t value);
 
 //==============================================================================

@@ -1,3 +1,4 @@
+#if 0
 #pragma once
 
 #include "Screen.h"
@@ -32,3 +33,4 @@ private:
   CombilineParameters m_par_function;
   uint8_t* m_selected_value;
 };
+#endif

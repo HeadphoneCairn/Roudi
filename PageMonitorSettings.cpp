@@ -27,13 +27,12 @@ namespace {
   PSTRING(PSTR_midimon_inout_1, "input");
   PSTRING(PSTR_midimon_inout_2, "output");
   PTABLE(PTAB_midimon_inout, PSTR_midimon_inout_0, PSTR_midimon_inout_1, PSTR_midimon_inout_2);
-  static void line_inout(ParsPars& pars)
+
+  const char* GetInOut(uint8_t i_value, uint8_t& o_number_of_values)
   {
-    pars.types = TypePString|TypePTable;
-    pars.name = (void*) PSTR_midimon_inout;
-    pars.number_of_values = PTAB_midimon_inout_size;
-    pars.values = (void*) PTAB_midimon_inout;
+    return GetPTable(i_value, o_number_of_values, PTAB_midimon_inout, PTAB_midimon_inout_size);
   }
+
 
 }
 
@@ -47,7 +46,6 @@ PageMonitorSettings::PageMonitorSettings():
 void PageMonitorSettings::OnStart(uint8_t)
 {
   EE::GetMidiMonSettings(m_settings);
-  m_ui_inout.Init(line_inout, &m_settings.in_out);
   SetNumberOfLines(15, m_selected_line, 0, m_first_line);
 }
 
@@ -71,7 +69,7 @@ Page::LineResult PageMonitorSettings::Line(LineFunction func, uint8_t line, uint
   switch (line)
   {
     case  0: return BoolLine(func, PSTR_midimon_channels, m_settings.all_channels, PSTR_midimon_channels_0, PSTR_midimon_channels_1);
-    case  1: return SingleCombiLine(func, m_ui_inout, Screen::MaxCharsCanvas, 0, true);
+    case  1: return SingleLine(func, PSTR_midimon_inout, m_settings.in_out, GetInOut);
     case  2: return LineAllFilters(func, m_settings.filter);
     case  3: return LineFilter(func, PSTR_filter_note_on,           m_settings.filter.note_on          );
     case  4: return LineFilter(func, PSTR_filter_note_off,          m_settings.filter.note_off         );

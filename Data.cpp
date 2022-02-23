@@ -38,9 +38,11 @@ const char* GetPStringFromPTable(const char *const ptable[], uint8_t which)
 // --- Globally defined strings ---
 PSTRING(PSTR_empty, "");
 PSTRING(PSTR_none, "> None");
+PSTRING(PSTR_unknown_value, "?");
 
 const char* GetPStringEmpty()  { return GetPString(PSTR_empty); }
 const char* GetPStringNone()   { return GetPString(PSTR_none); }
+const char* GetPStringUnknownValue()   { return GetPString(PSTR_unknown_value); }
 
 
 // --- Octaves ---
@@ -101,7 +103,7 @@ const char* GetNoteName(uint8_t midi_note_number)
 // --- Some (generic) value functions ---
 PSTRING(PSTR_on_off_off, "off");
 PSTRING(PSTR_on_off_on, "on");
-const char* GetOnOff(uint8_t on)
+const char* BadGetOnOff(uint8_t on)
 {
   return GetPString(on ? PSTR_on_off_on : PSTR_on_off_off);
 }

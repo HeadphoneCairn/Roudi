@@ -1,3 +1,4 @@
+#if 0
 #include "Combiline.h"
 
 #include "Data.h"
@@ -131,3 +132,4 @@ void Combiline::UnitTest()
 {
   // TODO: check all possibilities
 }
+#endif

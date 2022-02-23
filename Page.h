@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Screen.h"
-#include "Combiline.h"
 
 // --- Page ---
 
@@ -58,6 +57,7 @@ private:
 // --- Line help functions ---
 Page::LineResult DefaultLine(Page::LineFunction func);
 Page::LineResult TextLine(Page::LineFunction func, const char* pstring);
+#if 0
 Page::LineResult SingleCombiLine(
   Page::LineFunction func, 
   Combiline& combiline, uint8_t len, uint8_t extra_padding, bool right_align
@@ -67,4 +67,32 @@ Page::LineResult DoubleCombiline(
   Combiline& combiline_1, uint8_t len_1, uint8_t extra_padding_1, bool right_align_1, 
   Combiline& combiline_2, uint8_t len_2, uint8_t extra_padding_2, bool right_align_2 
 );
+#endif
 Page::LineResult BoolLine(Page::LineFunction func, const char* name, uint8_t& value, const char* false_value, const char* true_value, bool invert_all = true);
+
+
+
+
+// Returns the string representation of i_value, + the number of values possible in o_max_value.
+typedef const char* (*ValueFunction)(uint8_t i_value, uint8_t& o_number_of_values);
+
+const char* GetPTable(uint8_t i_value, uint8_t& o_number_of_values, const char *const * ptable, uint8_t ptable_size);
+
+Page::LineResult DoubleLine(
+  Page::LineFunction func,
+  uint8_t field, 
+  const char* name,
+  uint8_t name_pos, 
+  uint8_t& left_value, 
+  ValueFunction left_function,
+  uint8_t& right_value, 
+  ValueFunction right_function
+);
+
+Page::LineResult SingleLine(
+  Page::LineFunction func,
+  const char* name,
+  uint8_t& value, 
+  ValueFunction functie
+);
+

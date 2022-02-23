@@ -28,37 +28,25 @@ namespace {
   PSTRING(PSTR_velocity_1, "medium");
   PSTRING(PSTR_velocity_2, "hard");
   PTABLE(PTAB_velocity, PSTR_velocity_0, PSTR_velocity_1, PSTR_velocity_2);
-
-
-
-  // 3 bytes per line is reached by using function to store parameters
-  // instead of storing them in memory. Looks horrible, but uses less
-  // memory.
-  // Can't do pars = { ... } because it will use more memory again!
-
-  void line_input_channel(ParsPars& pars)
+  const char* GetVelocityCurve(uint8_t i_value, uint8_t& o_number_of_values)
   {
-    pars.types = TypePString|TypeFunction;
-    pars.name = (void*) PSTR_input_channel;
-    pars.number_of_values = 16;
-    pars.values = (void*) GetNumberPlusOne;
+    return GetPTable(i_value, o_number_of_values, PTAB_velocity, PTAB_velocity_size);
   }
 
-  void line_velocity_curve(ParsPars& pars)
+
+
+  const char* GetBrightness(uint8_t i_value, uint8_t& o_number_of_values)
   {
-    pars.types = TypePString|TypePTable;
-    pars.name = (void*) PSTR_velocity_curve;
-    pars.number_of_values = PTAB_velocity_size;
-    pars.values = (void*) PTAB_velocity;
+    o_number_of_values = 10;
+    return GetNumberPlusOne(i_value);
   }
 
-  void line_brightness(ParsPars& pars)
+  const char* GetInputChannel(uint8_t i_value, uint8_t& o_number_of_values)
   {
-    pars.types = TypePString|TypeFunction;
-    pars.name = (void*) PSTR_brightness;
-    pars.number_of_values = 10;
-    pars.values = (void*) GetNumberPlusOne;
+    o_number_of_values = NumberOfChannels;
+    return GetNumberPlusOne(i_value);
   }
+
 
   PSTRING(PSTR_monitor_fltr_0, "block");
   PSTRING(PSTR_monitor_fltr_1, "pass");
@@ -75,9 +63,6 @@ PageSettings::PageSettings():
 void PageSettings::OnStart(uint8_t)
 {
   SettingsValues& values = EE::SettingsRW();
-  m_ui_input_channel.Init(line_input_channel, &values.input_channel);
-  m_ui_velocity_curve.Init(line_velocity_curve, &values.velocity_curve);
-  m_ui_brightness.Init(line_brightness, &values.brightness);
   SetNumberOfLines(16, m_selected_line, 0, m_first_line);
 }
 
@@ -100,8 +85,8 @@ Page::LineResult PageSettings::Line(LineFunction func, uint8_t line, uint8_t fie
   {
     case  0: return LineInputChannel(func);
     case  1: return BoolLine(func, PSTR_block_other, settings.block_other, PSTR_block_other_0, PSTR_block_other_1);
-    case  2: return SingleCombiLine(func, m_ui_velocity_curve,  Screen::MaxCharsCanvas, 0, true);
-    case  3: return SingleCombiLine(func, m_ui_brightness,     Screen::MaxCharsCanvas, 0, true);
+    case  2: return SingleLine(func, PSTR_velocity_curve, settings.velocity_curve, GetVelocityCurve);
+    case  3: return SingleLine(func, PSTR_brightness, settings.brightness, GetBrightness);
     case  4: return TextLine(func, PSTR_filter_messages);
     case  5: {
              Page::LineResult result = LineFilter(func, PSTR_filter_note_on_off, settings.filter.note_off);
@@ -124,11 +109,12 @@ Page::LineResult PageSettings::Line(LineFunction func, uint8_t line, uint8_t fie
 
 Page::LineResult PageSettings::LineInputChannel(LineFunction func)
 {
-  LineResult result = SingleCombiLine(func, m_ui_input_channel, Screen::MaxCharsCanvas, 0, true);
+  SettingsValues& settings = EE::SettingsRW();
+  LineResult result = SingleLine(func, PSTR_input_channel, settings.input_channel, GetInputChannel);
   if (result.redraw) { // input channel has changed
     Debug::BeepHigh();
     MidiProcessing::Configuration next_config = MidiProcessing::GetConfiguration();
-    next_config.m_input_channel = m_ui_input_channel.GetSelectedValue();
+    next_config.m_input_channel = settings.input_channel;
     MidiProcessing::SetNextConfiguration(next_config);
   }
   return result; 

@@ -846,4 +846,5 @@ x Allocate pages on heap instead of stack
 - About scherm: Panic
   Single scherm: > None: blokkeer input channel, route al de rest
                  > Block: blokkeer alles
-
+- Combine SingleLine and BoolLine
+  + Major Cleanup
