@@ -27,12 +27,7 @@ namespace {
   PSTRING(PSTR_midimon_inout_1, "input");
   PSTRING(PSTR_midimon_inout_2, "output");
   PTABLE(PTAB_midimon_inout, PSTR_midimon_inout_0, PSTR_midimon_inout_1, PSTR_midimon_inout_2);
-
-  const char* GetInOut(uint8_t i_value, uint8_t& o_number_of_values)
-  {
-    return GetPTable(i_value, o_number_of_values, PTAB_midimon_inout, PTAB_midimon_inout_size);
-  }
-
+  PTABLE_GETTER(GetInOut, PTAB_midimon_inout);
 
 }
 

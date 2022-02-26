@@ -28,11 +28,7 @@ namespace {
   PSTRING(PSTR_velocity_1, "medium");
   PSTRING(PSTR_velocity_2, "hard");
   PTABLE(PTAB_velocity, PSTR_velocity_0, PSTR_velocity_1, PSTR_velocity_2);
-  const char* GetVelocityCurve(uint8_t i_value, uint8_t& o_number_of_values)
-  {
-    return GetPTable(i_value, o_number_of_values, PTAB_velocity, PTAB_velocity_size);
-  }
-
+  PTABLE_GETTER(GetVelocityCurve, PTAB_velocity);
 
 
   const char* GetBrightness(uint8_t i_value, uint8_t& o_number_of_values)

@@ -16,7 +16,7 @@ namespace {
   PSTRING(PSTR_mode_layer, "LAYER mode");
   PSTRING(PSTR_single_layer, "SINGLE mode");
   PTABLE(PTAB_mode, PSTR_mode_split, PSTR_mode_layer, PSTR_single_layer);
-
+  PTABLE_GETTER(GetMode, PTAB_mode);
 
   PSTRING(PSTR_save_as, "> Save As ...");
   PSTRING(PSTR_remove, "> Remove ...");
@@ -70,10 +70,7 @@ Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
 }
 
 
-const char* GetMode(uint8_t i_value, uint8_t& o_number_of_values)
-{
-  return GetPTable(i_value, o_number_of_values, PTAB_mode, PTAB_mode_size);
-}
+
 
 // TODO check if PTAB with two values uses less code storage than hardcoded 
 // TODO return somthing else than Empty()!

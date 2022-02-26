@@ -78,6 +78,11 @@ typedef const char* (*ValueFunction)(uint8_t i_value, uint8_t& o_number_of_value
 
 const char* GetPTable(uint8_t i_value, uint8_t& o_number_of_values, const char *const * ptable, uint8_t ptable_size);
 
+#define PTABLE_GETTER(function_name, ptab_name)                                     \
+  const char* function_name(uint8_t i_value, uint8_t& o_number_of_values) {         \                                                   
+    return GetPTable(i_value, o_number_of_values, ptab_name, ptab_name##_size);     \
+  }
+
 Page::LineResult DoubleLine(
   Page::LineFunction func,
   uint8_t field, 
