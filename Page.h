@@ -67,9 +67,8 @@ Page::LineResult DoubleCombiline(
   Combiline& combiline_1, uint8_t len_1, uint8_t extra_padding_1, bool right_align_1, 
   Combiline& combiline_2, uint8_t len_2, uint8_t extra_padding_2, bool right_align_2 
 );
-#endif
 Page::LineResult BoolLine(Page::LineFunction func, const char* name, uint8_t& value, const char* false_value, const char* true_value, bool invert_all = true);
-
+#endif
 
 
 

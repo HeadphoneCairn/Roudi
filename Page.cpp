@@ -247,8 +247,6 @@ Page::LineResult DoubleCombiline(
 
   return {2, nullptr, Screen::inversion_none, false};  
 }
-#endif
-
 Page::LineResult BoolLine(Page::LineFunction func, const char* name, uint8_t& value, const char* false_value, const char* true_value, bool invert_all)
 {
   char* text = Screen::buffer;
@@ -272,6 +270,7 @@ Page::LineResult BoolLine(Page::LineFunction func, const char* name, uint8_t& va
   }
   return { 1, text, inversion, redraw };
 }
+#endif
 
 
 const char* GetPTable(uint8_t i_value, uint8_t& o_number_of_values, const char *const * ptable, uint8_t ptable_size)

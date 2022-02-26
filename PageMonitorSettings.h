@@ -13,7 +13,6 @@ protected:
   virtual void OnStart(uint8_t dummy = 0xFF) override;
   virtual void OnStop() override;
 private:
-  LineResult LineFilter(LineFunction func, const char* name, uint8_t& value);
   LineResult LineAllFilters(LineFunction func, FilterSettingsValues& filters);
 private:
   MidiMonSettingsValues m_settings;

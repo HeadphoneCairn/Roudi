@@ -23,6 +23,8 @@ namespace {
 
   PSTRING(PSTR_block_other_0, "no");
   PSTRING(PSTR_block_other_1, "yes");
+  PTABLE(PTAB_block_other, PSTR_block_other_0, PSTR_block_other_1);
+  PTABLE_GETTER(GetBlockOther, PTAB_block_other);
 
   PSTRING(PSTR_velocity_0, "soft");
   PSTRING(PSTR_velocity_1, "medium");
@@ -43,9 +45,10 @@ namespace {
     return GetNumberPlusOne(i_value);
   }
 
-
   PSTRING(PSTR_monitor_fltr_0, "block");
   PSTRING(PSTR_monitor_fltr_1, "pass");
+  PTABLE(PSTR_monitor_fltr, PSTR_monitor_fltr_0, PSTR_monitor_fltr_1);
+  PTABLE_GETTER(GetMonitorFltr, PSTR_monitor_fltr);
 
 }
 
@@ -80,25 +83,25 @@ Page::LineResult PageSettings::Line(LineFunction func, uint8_t line, uint8_t fie
   switch (line)
   {
     case  0: return LineInputChannel(func);
-    case  1: return BoolLine(func, PSTR_block_other, settings.block_other, PSTR_block_other_0, PSTR_block_other_1);
+    case  1: return SingleLine(func, PSTR_block_other, settings.block_other, GetBlockOther);
     case  2: return SingleLine(func, PSTR_velocity_curve, settings.velocity_curve, GetVelocityCurve);
     case  3: return SingleLine(func, PSTR_brightness, settings.brightness, GetBrightness);
     case  4: return TextLine(func, PSTR_filter_messages);
     case  5: {
-             Page::LineResult result = LineFilter(func, PSTR_filter_note_on_off, settings.filter.note_off);
+             Page::LineResult result = SingleLine(func, PSTR_filter_note_on_off, settings.filter.note_off, GetMonitorFltr);
              settings.filter.note_on = settings.filter.note_off; // on and off should be filter together
              return result; 
              }
-    case  6: return LineFilter(func, PSTR_filter_pitch_bend,        settings.filter.pitch_bend       );
-    case  7: return LineFilter(func, PSTR_filter_channel_pressure,  settings.filter.channel_pressure );
-    case  8: return LineFilter(func, PSTR_filter_key_pressure,      settings.filter.key_pressure     );
-    case  9: return LineFilter(func, PSTR_filter_program_change,    settings.filter.program_change   );
-    case 10: return LineFilter(func, PSTR_filter_control_change,    settings.filter.control_change   );
-    case 11: return LineFilter(func, PSTR_filter_time_sync,         settings.filter.time_sync        );
-    case 12: return LineFilter(func, PSTR_filter_transport,         settings.filter.transport        ); 
-    case 13: return LineFilter(func, PSTR_filter_system_exclusive,  settings.filter.system_exclusive );
-    case 14: return LineFilter(func, PSTR_filter_active_sensing,    settings.filter.active_sensing   );
-    case 15: return LineFilter(func, PSTR_filter_other,             settings.filter.other            );
+    case  6: return SingleLine(func, PSTR_filter_pitch_bend,        settings.filter.pitch_bend       , GetMonitorFltr);
+    case  7: return SingleLine(func, PSTR_filter_channel_pressure,  settings.filter.channel_pressure , GetMonitorFltr);
+    case  8: return SingleLine(func, PSTR_filter_key_pressure,      settings.filter.key_pressure     , GetMonitorFltr);
+    case  9: return SingleLine(func, PSTR_filter_program_change,    settings.filter.program_change   , GetMonitorFltr);
+    case 10: return SingleLine(func, PSTR_filter_control_change,    settings.filter.control_change   , GetMonitorFltr);
+    case 11: return SingleLine(func, PSTR_filter_time_sync,         settings.filter.time_sync        , GetMonitorFltr);
+    case 12: return SingleLine(func, PSTR_filter_transport,         settings.filter.transport        , GetMonitorFltr); 
+    case 13: return SingleLine(func, PSTR_filter_system_exclusive,  settings.filter.system_exclusive , GetMonitorFltr);
+    case 14: return SingleLine(func, PSTR_filter_active_sensing,    settings.filter.active_sensing   , GetMonitorFltr);
+    case 15: return SingleLine(func, PSTR_filter_other,             settings.filter.other            , GetMonitorFltr);
     default: return DefaultLine(func);
   }
 }
@@ -114,9 +117,4 @@ Page::LineResult PageSettings::LineInputChannel(LineFunction func)
     MidiProcessing::SetNextConfiguration(next_config);
   }
   return result; 
-}
-
-Page::LineResult PageSettings::LineFilter(Page::LineFunction func, const char* name, uint8_t& value)
-{
-  return BoolLine(func, name, value, PSTR_monitor_fltr_0, PSTR_monitor_fltr_1);
 }

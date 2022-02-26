@@ -14,7 +14,6 @@ protected:
   virtual void OnStop() override;
 private:
   LineResult LineInputChannel(LineFunction func);
-  LineResult LineFilter(LineFunction func, const char* name, uint8_t& value);
   LineResult LineMessageFilter(LineFunction func);
 private:
   static uint8_t m_selected_line;
