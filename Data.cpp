@@ -101,13 +101,6 @@ const char* GetNoteName(uint8_t midi_note_number)
 
 
 // --- Some (generic) value functions ---
-PSTRING(PSTR_on_off_off, "off");
-PSTRING(PSTR_on_off_on, "on");
-const char* BadGetOnOff(uint8_t on)
-{
-  return GetPString(on ? PSTR_on_off_on : PSTR_on_off_off);
-}
-
 PSTRING(PSTR_numformat, "%d");
 const char* GetNumberPlusOne(uint8_t value)
 {

@@ -48,7 +48,6 @@ uint8_t OctaveDeltaToOctaveValue(int8_t octave_delta);
 const char* GetNoteName(uint8_t midi_note_number);
 
 // --- Some (generic) value functions ---
-const char* BadGetOnOff(uint8_t on);
 const char* GetNumberPlusOne(uint8_t value);
 
 //==============================================================================

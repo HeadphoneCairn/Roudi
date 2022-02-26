@@ -190,6 +190,16 @@ void Page::Draw(uint8_t from, uint8_t to) // from..to are the lines to draw
 //
 //==============================================================================
 
+const char* GetPTable(uint8_t i_value, uint8_t& o_number_of_values, const char *const * ptable, uint8_t ptable_size)
+{
+  o_number_of_values = ptable_size;
+  if (i_value < o_number_of_values)
+    return GetPStringFromPTable(ptable, i_value);
+  else
+    return GetPStringUnknownValue();
+}
+
+
 Page::LineResult DefaultLine(Page::LineFunction func)
 {
   return Page::LineResult{1, GetPStringEmpty(), Screen::inversion_none, false};
@@ -200,88 +210,50 @@ Page::LineResult TextLine(Page::LineFunction func, const char* pstring)
   return Page::LineResult{1, GetPString(pstring), Screen::inversion_all, false};
 }
 
-
-#if 0
-Page::LineResult SingleCombiLine(
-  Page::LineFunction func, 
-  Combiline& combiline, uint8_t len, uint8_t extra_padding, bool right_align
+Page::LineResult SingleLine(
+  Page::LineFunction func,
+  const char* name,
+  uint8_t& value, 
+  ValueFunction value_function
 )
 {
-  if (func == Page::GET_NUMBER_OF_FIELDS)
-    return {1, nullptr, Screen::inversion_none, false};
-  if (func == Page::GET_TEXT) {
-    char* text = Screen::buffer;
-    const uint8_t text_len = Screen::buffer_len;
-    Screen::Inversion inversion;
-    combiline.GetText(text, text_len, inversion, 0, len, extra_padding, right_align);
-    return {1, text, inversion, false};
-  }
-  if (func == Page::DO_LEFT)
-    return {1, nullptr, Screen::inversion_none, combiline.OnLeft()};
-  if (func == Page::DO_RIGHT)
-    return {1, nullptr, Screen::inversion_none, combiline.OnRight()};
-
-  return {1, nullptr, Screen::inversion_none, false};
-}
-
-Page::LineResult DoubleCombiline(
-  Page::LineFunction func, uint8_t field, 
-  Combiline& combiline_1, uint8_t len_1, uint8_t extra_padding_1, bool right_align_1, 
-  Combiline& combiline_2, uint8_t len_2, uint8_t extra_padding_2, bool right_align_2 
-)
-{
-  if (func == Page::GET_NUMBER_OF_FIELDS)
-    return {2, nullptr, Screen::inversion_none, false};
-  if (func == Page::GET_TEXT) {
-    char* text = Screen::buffer;
-    const uint8_t text_len = Screen::buffer_len;
-    Screen::Inversion inversion_1, inversion_2;
-    combiline_1.GetText(text, text_len, inversion_1, 0, len_1, extra_padding_1, right_align_1);
-    combiline_2.GetText(text, text_len, inversion_2, strlen(text), len_2, extra_padding_2, right_align_2);
-    return {2, text, field==0 ? inversion_1 : inversion_2, false};
-  }
-  if (func == Page::DO_LEFT)
-    return {2, nullptr, Screen::inversion_none, field==0 ? combiline_1.OnLeft() : combiline_2.OnLeft()};
-  if (func == Page::DO_RIGHT)
-    return {2, nullptr, Screen::inversion_none, field==0 ? combiline_1.OnRight() : combiline_2.OnRight()};
-
-  return {2, nullptr, Screen::inversion_none, false};  
-}
-Page::LineResult BoolLine(Page::LineFunction func, const char* name, uint8_t& value, const char* false_value, const char* true_value, bool invert_all)
-{
+  Screen::Inversion inversion = Screen::inversion_all;
+  bool redraw = false;
   char* text = Screen::buffer;
   text[0] = 0;
-  bool redraw = false;
-  Screen::Inversion inversion = Screen::inversion_all;
+
   if (func == Page::GET_TEXT) {
-    strncat(text, GetPString(name), Screen::buffer_len); // always terminates with a zero!, unlike strncpy
-    const uint8_t name_len = strlen(text);
-    const char* tf_value = GetPString(value ? true_value : false_value);
-    const uint8_t tf_value_len = strlen(tf_value);
-    if (name_len + tf_value_len <= Screen::buffer_len) { // safety precaution
-      PadRight(text, Screen::buffer_len - (name_len + tf_value_len));
-      strcat(text, tf_value);
-      if (!invert_all)
-        inversion = { Screen::InvertGiven, static_cast<uint8_t>(Screen::buffer_len - tf_value_len), Screen::buffer_len };
+    // Prepare buffer
+    PadRight(text, Screen::buffer_len);   
+    
+    // Add name (left aligned)
+    const char* name_val = GetPString(name);
+    const uint8_t name_len = min(strlen(name_val), Screen::buffer_len); 
+    strncpy(text, name_val, name_len);
+
+    // Add value (right aligned)
+    uint8_t dummy;
+    const char* value_val = value_function(value, dummy);
+    const uint8_t value_len = min(strlen(value_val), Screen::buffer_len); 
+    strncpy(text + Screen::buffer_len - value_len, value_val, value_len);
+
+  } else if (func == Page::DO_LEFT) {
+    if (value > 0) {
+      value -= 1;
+      redraw = true;
     }
-  } else if (func == Page::DO_LEFT || func == Page::DO_RIGHT) {
-    value = !value;
-    redraw = true;
+    // TODO creat function for this!!! this can be combined with DoubleLIne
+  } else if (func == Page::DO_RIGHT) {
+    uint8_t number_of_values = 0;
+    value_function(0, number_of_values); // Get number of values
+    if (value + 1 < number_of_values) {
+      value += 1;
+      redraw = true;
+    }
   }
-  return { 1, text, inversion, redraw };
+
+  return Page::LineResult{1, text, inversion, redraw};
 }
-#endif
-
-
-const char* GetPTable(uint8_t i_value, uint8_t& o_number_of_values, const char *const * ptable, uint8_t ptable_size)
-{
-  o_number_of_values = ptable_size;
-  if (i_value < o_number_of_values)
-    return GetPStringFromPTable(ptable, i_value);
-  else
-    return GetPStringUnknownValue();
-}
-
 
 Page::LineResult DoubleLine(
   Page::LineFunction func,
@@ -351,38 +323,3 @@ Page::LineResult DoubleLine(
   return Page::LineResult{2, text, inversion, redraw};
 }
 
-
-Page::LineResult SingleLine(
-  Page::LineFunction func,
-  const char* name,
-  uint8_t& value, 
-  ValueFunction functie
-)
-{
-  Screen::Inversion inversion = Screen::inversion_all;
-  bool redraw = false;
-  char* text = Screen::buffer;
-  text[0] = 0;
-
-  if (func == Page::GET_TEXT) {
-    uint8_t dummy;
-    strcpy(text, GetPString(name));
-    strcat(text, " ");
-    strcat(text, functie(value, dummy));
-  } else if (func == Page::DO_LEFT) {
-    if (value > 0) {
-      value -= 1;
-      redraw = true;
-    }
-    // TODO creat function for this!!! this can be combined with DoubleLIne
-  } else if (func == Page::DO_RIGHT) {
-    uint8_t number_of_values = 0;
-    functie(0, number_of_values); // Get number of values
-    if (value + 1 < number_of_values) {
-      value += 1;
-      redraw = true;
-    }
-  }
-
-  return Page::LineResult{1, text, inversion, redraw};
-}
