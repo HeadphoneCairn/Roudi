@@ -27,12 +27,6 @@ namespace {
   PTABLE(PSTR_on_off, PSTR_on_off_off, PSTR_on_off_on);
   PTABLE_GETTER(GetOnOff, PSTR_on_off);
 
-
-  // TODO check if PTAB with two values uses less code storage than hardcoded YES IT IS, SAVES 40 BYTES!
-  // TODO return somthing else than Empty()!
-  // TODO replace values in BoolLine by a function and call it SingleLine of zoiets
-  // TODO could have function that takes the max + function ptr (uint8_t): less memory?
-
   const char* GetSplit(uint8_t i_value, uint8_t& o_number_of_values)
   {
     o_number_of_values = 128;
@@ -42,11 +36,19 @@ namespace {
       return GetPStringUnknownValue();
   }
 
-  const char* GetChannel(uint8_t i_value, uint8_t& o_number_of_values)
+  PSTRING(PSTR_channel_number, "ch%02d");
+  const char* GetChannelNumber(uint8_t i_value, uint8_t& o_number_of_values)
+  {
+    o_number_of_values = NumberOfChannels;
+    sprintf(data_scratch, GetPString(PSTR_channel_number), i_value + 1);
+    return data_scratch;
+  }
+
+  const char* GetChannelName(uint8_t i_value, uint8_t& o_number_of_values)
   {
     o_number_of_values = NumberOfChannels;
     if (i_value < o_number_of_values)
-      return EE::GetChannelNameFormatted(i_value);
+      return EE::GetChannelName(i_value);
     else
       return GetPStringUnknownValue();
   }
@@ -73,6 +75,8 @@ namespace {
   PSTRING(PSTR_move_left, "> Move left");
   PSTRING(PSTR_move_right, "> Move right");
   PSTRING(PSTR_new, "> New");
+
+  PSTRING(PSTR_empty, "|");
 }
 
 
@@ -88,7 +92,7 @@ void PageMulti::OnStart(uint8_t which_multi)
 {
   m_which = which_multi;
   EE::GetMulti(m_which, m_values);
-  SetNumberOfLines(11, m_values.selected_line, m_values.selected_field, m_values.first_line);
+  SetNumberOfLines(12, m_values.selected_line, m_values.selected_field, m_values.first_line);
   SetMidiConfiguration();
 }
 
@@ -123,20 +127,21 @@ Page::LineResult PageMulti::ActualLine(LineFunction func, uint8_t line, uint8_t 
 {
   switch (line)
   {
-    case 0: return DoubleLine(func, field, PSTR_multi_split, 13, m_values.mode, GetMode, m_values.split_note, GetSplit);
-    case 1: return DoubleLine(func, field, PSTR_multi_channel, 0xFF, m_values.channel[0], GetChannel, m_values.channel[1], GetChannel);
+    case 0: return DoubleLine(func, field, PSTR_multi_channel, 0xFF, m_values.channel[0], GetChannelNumber, m_values.channel[1], GetChannelNumber);
+    case 1: return DoubleLine(func, field, PSTR_empty, 0xFF, m_values.channel[0], GetChannelName, m_values.channel[1], GetChannelName);
     case 2: return DoubleLine(func, field, PSTR_multi_octave, 0xFF, m_values.octave[0], GetOctave, m_values.octave[1], GetOctave);
     case 3: return DoubleLine(func, field, PSTR_multi_pbcc, 0xFF, m_values.pbcc[0], GetOnOff, m_values.pbcc[1], GetOnOff);
     case 4: return DoubleLine(func, field, PSTR_multi_velocity, 0xFF, m_values.velocity[0], GetVelocity, m_values.velocity[1], GetVelocity);
-    case 5: return DefaultLine(func);
-    case 6: // Save As ... 
+    case 5: return DoubleLine(func, field, PSTR_multi_split, 13, m_values.mode, GetMode, m_values.split_note, GetSplit);
+    case 6: return DefaultLine(func);
+    case 7: // Save As ... 
       if (func == DO_LEFT || func == DO_RIGHT)
         SaveAs();
       return TextLine(func, PSTR_save_as);
-    case 7: return TextLine(func, PSTR_remove);
-    case 8: return TextLine(func, PSTR_move_left);
-    case 9: return TextLine(func, PSTR_move_right);
-    case 10: // New ...
+    case 8: return TextLine(func, PSTR_remove);
+    case 9: return TextLine(func, PSTR_move_left);
+    case 10: return TextLine(func, PSTR_move_right);
+    case 11: // New ...
       if (func == DO_LEFT || func == DO_RIGHT)
         New();
       return TextLine(func, PSTR_new);

@@ -310,11 +310,11 @@ Page::LineResult DoubleLine(
       if (i==0) {
         strncpy(text, value, value_len);
         if (field == 0)
-          inversion = { Screen::InvertGiven, 0, static_cast<uint8_t>(value_len -  1)};  // If the value is "" the whole line will be selected
+          inversion = { Screen::InvertGiven, 0, static_cast<uint8_t>(max(value_len -  1, 0))};  // If the value is "" a single character will be selected
       } else { 
         strncpy(text + Screen::buffer_len - value_len, value, value_len);
         if (field == 1)
-          inversion = { Screen::InvertGiven, static_cast<uint8_t>(Screen::buffer_len - value_len), Screen::buffer_len - 1};
+          inversion = { Screen::InvertGiven, static_cast<uint8_t>(min(Screen::buffer_len - value_len, Screen::buffer_len - 1)), Screen::buffer_len - 1}; // If the value is "" a single character will be selected
       }
     }
 

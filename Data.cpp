@@ -52,7 +52,7 @@ uint8_t GetNumberOfOctaves()
   return MAX_OCTAVES * 2 + 1;
 }
 PSTRING(PSTR_octave_0, "0");
-PSTRING(PSTR_octave,   "%+d octave");
+PSTRING(PSTR_octave,   "%+d");
 const char* GetOctaveName(uint8_t octave_value)
 {
   const int8_t octave_delta = OctaveValueToOctaveDelta(octave_value);
@@ -350,7 +350,7 @@ namespace EE
     return data_scratch;
   }
 
-  PSTRING(PSTR_channel_formatted, "%02d. %s");
+  PSTRING(PSTR_channel_formatted, "ch%02d. %s");
   const char* GetChannelNameFormatted(uint8_t channel_value)
   // Returns the name of the channel with a prefixed number 
   {
