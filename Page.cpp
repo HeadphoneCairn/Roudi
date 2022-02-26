@@ -190,7 +190,7 @@ void Page::Draw(uint8_t from, uint8_t to) // from..to are the lines to draw
 //
 //==============================================================================
 
-const char* GetPTable(uint8_t i_value, uint8_t& o_number_of_values, const char *const * ptable, uint8_t ptable_size)
+const char*  GetPTable(uint8_t i_value, uint8_t& o_number_of_values, const char *const * ptable, uint8_t ptable_size)
 {
   o_number_of_values = ptable_size;
   if (i_value < o_number_of_values)
@@ -208,6 +208,27 @@ Page::LineResult DefaultLine(Page::LineFunction func)
 Page::LineResult TextLine(Page::LineFunction func, const char* pstring)
 {
   return Page::LineResult{1, GetPString(pstring), Screen::inversion_all, false};
+}
+
+
+static bool __attribute__ ((noinline)) DoLeft(uint8_t& value)  // __attribute__ ((noinline)) saves some bytes
+{
+  if (value > 0) {
+    value -= 1;
+    return true;
+  } else 
+    return false;
+}
+
+static bool __attribute__ ((noinline)) DoRight(uint8_t& value, ValueFunction value_function)
+{
+  uint8_t number_of_values = 0;
+  value_function(0, number_of_values); // Get number of values
+  if (value + 1 < number_of_values) {
+    value += 1;
+    return true;
+  } else 
+    return false;
 }
 
 Page::LineResult SingleLine(
@@ -238,18 +259,9 @@ Page::LineResult SingleLine(
     strncpy(text + Screen::buffer_len - value_len, value_val, value_len);
 
   } else if (func == Page::DO_LEFT) {
-    if (value > 0) {
-      value -= 1;
-      redraw = true;
-    }
-    // TODO creat function for this!!! this can be combined with DoubleLIne
+    redraw = DoLeft(value);
   } else if (func == Page::DO_RIGHT) {
-    uint8_t number_of_values = 0;
-    value_function(0, number_of_values); // Get number of values
-    if (value + 1 < number_of_values) {
-      value += 1;
-      redraw = true;
-    }
+    redraw = DoRight(value, value_function);
   }
 
   return Page::LineResult{1, text, inversion, redraw};
@@ -307,17 +319,9 @@ Page::LineResult DoubleLine(
     }
 
   } else if (func == Page::DO_LEFT) {
-    if (*pvalues[field] > 0) {
-      *pvalues[field] -= 1;
-      redraw = true;
-    }
+    redraw = DoLeft(*pvalues[field]);
   } else if (func == Page::DO_RIGHT) {
-    uint8_t number_of_values = 0;
-    pfunctions[field](*pvalues[field], number_of_values); // Get number of values
-    if (*pvalues[field] + 1 < number_of_values) {
-      *pvalues[field] += 1;
-      redraw = true;
-    }
+    redraw = DoRight(*pvalues[field], pfunctions[field]);
   }
 
   return Page::LineResult{2, text, inversion, redraw};
