@@ -817,17 +817,17 @@ x New multi menu???
 - Do change if MIDI config only when all notes have been released.
   Or force note release before doing switch.
   But SysEx and stuff. And running status...
-- Can monitor cope with running state?
+x Can monitor cope with running state? Yes
 - Add Manufacturor to Midi Monitor SysEx
 - Add Panic to MIDI Monitor or Single/Multi????
-- Consider moving the name of a combiline to the combiline itself instead of putting it in the function.
+x Consider moving the name of a combiline to the combiline itself instead of putting it in the function.
   Nice but uses 2 bytes extra, per combiline.
 x Allocate pages on heap instead of stack
 - Replace dangerous strncpy with strncat or snprintf ? 
-- Can I replace Combiline by just a function like BoolLine ??
+x Can I replace Combiline by just a function like BoolLine ??
   For simplicity and memory and code savings?
   Hmmm, but what about DoubleCombiline than?
-- MIDI monitor, "IO to show line" must be completely selectable
+x MIDI monitor, "IO to show line" must be completely selectable
 - Program storage space:
   - Debugging functions uses about 1000 bytes
   - My logo uses about 1000 bytes
@@ -846,5 +846,5 @@ x Allocate pages on heap instead of stack
 - About scherm: Panic
   Single scherm: > None: blokkeer input channel, route al de rest
                  > Block: blokkeer alles
-- Combine SingleLine and BoolLine
+x Combine SingleLine and BoolLine
   + Major Cleanup

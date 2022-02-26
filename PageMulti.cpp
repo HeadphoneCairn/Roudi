@@ -6,7 +6,8 @@
 #include "Pages.h"
 #include "Utils.h"
 
-namespace {
+namespace 
+{
   PSTRING(PSTR_multi_split,     "split at ");
   PSTRING(PSTR_multi_channel,   "channel");
   PSTRING(PSTR_multi_octave,    "octave");
@@ -84,8 +85,6 @@ PageMulti::PageMulti():
   GetMultiDefault(m_values);
 }
 
-
-
 void PageMulti::OnStart(uint8_t which_multi)
 {
   m_which = which_multi;
@@ -111,7 +110,6 @@ const char* PageMulti::GetTitle()
   return Screen::buffer;
 }
 
-
 Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
 {
   LineResult result = ActualLine(func, line, field);
@@ -119,7 +117,6 @@ Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
     SetMidiConfiguration();
   return result;
 }
-
 
 Page::LineResult PageMulti::ActualLine(LineFunction func, uint8_t line, uint8_t field)
 {
@@ -146,7 +143,6 @@ Page::LineResult PageMulti::ActualLine(LineFunction func, uint8_t line, uint8_t 
     default: return DefaultLine(func);
   }
 }
-
 
 void PageMulti::SaveIfModified()
 {

@@ -10,29 +10,27 @@
 #include <stdlib.h>
 
 
-namespace {
-
+namespace
+{
   PSTRING(PSTR_page_monitor_settings,   " MONITOR SETTINGS ");
 
-  PSTRING(PSTR_midimon_channels,    "Channels to show");
-  PSTRING(PSTR_midimon_inout,       "IO to show");
-
+  PSTRING(PSTR_midimon_channels, "Channels to show");
   PSTRING(PSTR_midimon_channel_0, "routed");
   PSTRING(PSTR_midimon_channel_1, "all");
   PTABLE(PSTR_midimon_channel, PSTR_midimon_channel_0, PSTR_midimon_channel_1);
   PTABLE_GETTER(GetChannel, PSTR_midimon_channel);
 
-  PSTRING(PSTR_monitor_filter_0, "hide");
-  PSTRING(PSTR_monitor_filter_1, "show");
-  PTABLE(PSTR_monitor_filter, PSTR_monitor_filter_0, PSTR_monitor_filter_1);
-  PTABLE_GETTER(GetMonitorFilter, PSTR_monitor_filter);
-
+  PSTRING(PSTR_midimon_inout, "IO to show");
   PSTRING(PSTR_midimon_inout_0, "in and out");
   PSTRING(PSTR_midimon_inout_1, "input");
   PSTRING(PSTR_midimon_inout_2, "output");
   PTABLE(PTAB_midimon_inout, PSTR_midimon_inout_0, PSTR_midimon_inout_1, PSTR_midimon_inout_2);
   PTABLE_GETTER(GetInOut, PTAB_midimon_inout);
 
+  PSTRING(PSTR_monitor_filter_0, "hide");
+  PSTRING(PSTR_monitor_filter_1, "show");
+  PTABLE(PSTR_monitor_filter, PSTR_monitor_filter_0, PSTR_monitor_filter_1);
+  PTABLE_GETTER(GetMonitorFilter, PSTR_monitor_filter);
 }
 
 uint8_t PageMonitorSettings::m_selected_line = 0;

@@ -1,7 +1,6 @@
 #include "Pages.h"
 
 #include "PageAbout.h"
-#include "PageChannels.h"
 #include "PageMonitor.h"
 #include "PageMonitorSettings.h"
 #include "PageMulti.h"

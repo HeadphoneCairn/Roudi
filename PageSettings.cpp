@@ -9,39 +9,34 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-namespace {
+namespace 
+{
+  PSTRING(PSTR_page_settings, " SETTINGS ");
 
-  PSTRING(PSTR_page_settings,   " SETTINGS ");
-
-  PSTRING(PSTR_input_channel,   "Input channel");
-  PSTRING(PSTR_block_other,     "Block other channels");
-  PSTRING(PSTR_velocity_curve,  "Velocity curve");
-  PSTRING(PSTR_brightness,      "Screen brightness");
-
-  PSTRING(PSTR_ellipsis_0,        "...");
-  PTABLE(PTAB_ellipsis, PSTR_ellipsis_0);
-
+  PSTRING(PSTR_input_channel, "Input channel");
+  const char* GetInputChannel(uint8_t i_value, uint8_t& o_number_of_values)
+  {
+    o_number_of_values = NumberOfChannels;
+    return GetNumberPlusOne(i_value);
+  }
+ 
+  PSTRING(PSTR_block_other, "Block other channels");
   PSTRING(PSTR_block_other_0, "no");
   PSTRING(PSTR_block_other_1, "yes");
   PTABLE(PTAB_block_other, PSTR_block_other_0, PSTR_block_other_1);
   PTABLE_GETTER(GetBlockOther, PTAB_block_other);
 
+  PSTRING(PSTR_velocity_curve, "Velocity curve");
   PSTRING(PSTR_velocity_0, "soft");
   PSTRING(PSTR_velocity_1, "medium");
   PSTRING(PSTR_velocity_2, "hard");
   PTABLE(PTAB_velocity, PSTR_velocity_0, PSTR_velocity_1, PSTR_velocity_2);
   PTABLE_GETTER(GetVelocityCurve, PTAB_velocity);
 
-
+  PSTRING(PSTR_brightness, "Screen brightness");
   const char* GetBrightness(uint8_t i_value, uint8_t& o_number_of_values)
   {
     o_number_of_values = 10;
-    return GetNumberPlusOne(i_value);
-  }
-
-  const char* GetInputChannel(uint8_t i_value, uint8_t& o_number_of_values)
-  {
-    o_number_of_values = NumberOfChannels;
     return GetNumberPlusOne(i_value);
   }
 
@@ -49,7 +44,6 @@ namespace {
   PSTRING(PSTR_monitor_fltr_1, "pass");
   PTABLE(PSTR_monitor_fltr, PSTR_monitor_fltr_0, PSTR_monitor_fltr_1);
   PTABLE_GETTER(GetMonitorFltr, PSTR_monitor_fltr);
-
 }
 
 uint8_t PageSettings::m_selected_line = 0;
