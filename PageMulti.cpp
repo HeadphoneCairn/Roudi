@@ -24,59 +24,11 @@ namespace {
   PSTRING(PSTR_move_right, "> Move right");
   PSTRING(PSTR_new, "> New");
 
-}
-
-
-PageMulti::PageMulti(): 
-  Page(), m_which(0xFF)
-{ 
-  GetMultiDefault(m_values);
-}
-
-
-
-void PageMulti::OnStart(uint8_t which_multi)
-{
-  m_which = which_multi;
-  EE::GetMulti(m_which, m_values);
-  SetNumberOfLines(11, m_values.selected_line, m_values.selected_field, m_values.first_line);
-  SetMidiConfiguration();
-}
-
-void PageMulti::OnStop()
-{
-  SaveIfModified();  
-}
-
-void PageMulti::OnTimeout()
-{
-  SaveIfModified();
-}
-
-const char* PageMulti::GetTitle()
-{
-  //sprintf(Screen::buffer, " %02d/%02d. %s ", m_which + 1, EE::GetNumberOfMultis(), m_values.name);
-  sprintf(Screen::buffer, " %02d. %s ", m_which + 1, m_values.name);
-  return Screen::buffer;
-}
-
-
-Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
-{
-  LineResult result = ActualLine(func, line, field);
-  if (result.redraw) // A setting has changed, so we update the midi configuration
-    SetMidiConfiguration();
-  return result;
-}
-
-
-
 
 // TODO check if PTAB with two values uses less code storage than hardcoded 
 // TODO return somthing else than Empty()!
 // TODO replace values in BoolLine by a function and call it SingleLine of zoiets
 // TODO could have function that takes the max + function ptr (uint8_t): less memory?
-
 
 const char* GetSplit(uint8_t i_value, uint8_t& o_number_of_values)
 {
@@ -129,6 +81,52 @@ PSTRING(PSTR_multi_channel,   "channel");
 PSTRING(PSTR_multi_octave,    "octave");
 PSTRING(PSTR_multi_pbcc,      "pb/cc");
 PSTRING(PSTR_multi_velocity,  "velocity");
+
+}
+
+
+PageMulti::PageMulti(): 
+  Page(), m_which(0xFF)
+{ 
+  GetMultiDefault(m_values);
+}
+
+
+
+void PageMulti::OnStart(uint8_t which_multi)
+{
+  m_which = which_multi;
+  EE::GetMulti(m_which, m_values);
+  SetNumberOfLines(11, m_values.selected_line, m_values.selected_field, m_values.first_line);
+  SetMidiConfiguration();
+}
+
+void PageMulti::OnStop()
+{
+  SaveIfModified();  
+}
+
+void PageMulti::OnTimeout()
+{
+  SaveIfModified();
+}
+
+const char* PageMulti::GetTitle()
+{
+  //sprintf(Screen::buffer, " %02d/%02d. %s ", m_which + 1, EE::GetNumberOfMultis(), m_values.name);
+  sprintf(Screen::buffer, " %02d. %s ", m_which + 1, m_values.name);
+  return Screen::buffer;
+}
+
+
+Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
+{
+  LineResult result = ActualLine(func, line, field);
+  if (result.redraw) // A setting has changed, so we update the midi configuration
+    SetMidiConfiguration();
+  return result;
+}
+
 
 Page::LineResult PageMulti::ActualLine(LineFunction func, uint8_t line, uint8_t field)
 {
