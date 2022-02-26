@@ -7,7 +7,11 @@
 #include "Utils.h"
 
 namespace {
-
+  PSTRING(PSTR_multi_split,     "split at ");
+  PSTRING(PSTR_multi_channel,   "channel");
+  PSTRING(PSTR_multi_octave,    "octave");
+  PSTRING(PSTR_multi_pbcc,      "pb/cc");
+  PSTRING(PSTR_multi_velocity,  "velocity");
 
   #define SPLIT_MODE 0
   #define LAYER_MODE 1
@@ -18,70 +22,57 @@ namespace {
   PTABLE(PTAB_mode, PSTR_mode_split, PSTR_mode_layer, PSTR_single_layer);
   PTABLE_GETTER(GetMode, PTAB_mode);
 
+  PSTRING(PSTR_on_off_off, "off");
+  PSTRING(PSTR_on_off_on, "on");
+  PTABLE(PSTR_on_off, PSTR_on_off_off, PSTR_on_off_on);
+  PTABLE_GETTER(GetOnOff, PSTR_on_off);
+
+
+  // TODO check if PTAB with two values uses less code storage than hardcoded YES IT IS, SAVES 40 BYTES!
+  // TODO return somthing else than Empty()!
+  // TODO replace values in BoolLine by a function and call it SingleLine of zoiets
+  // TODO could have function that takes the max + function ptr (uint8_t): less memory?
+
+  const char* GetSplit(uint8_t i_value, uint8_t& o_number_of_values)
+  {
+    o_number_of_values = 128;
+    if (i_value < o_number_of_values)
+      return GetNoteName(i_value);
+    else
+      return GetPStringUnknownValue();
+  }
+
+  const char* GetChannel(uint8_t i_value, uint8_t& o_number_of_values)
+  {
+    o_number_of_values = NumberOfChannels;
+    if (i_value < o_number_of_values)
+      return EE::GetChannelNameFormatted(i_value);
+    else
+      return GetPStringUnknownValue();
+  }
+
+  const char* GetOctave(uint8_t i_value, uint8_t& o_number_of_values)
+  {
+    o_number_of_values = GetNumberOfOctaves(); 
+    if (i_value < o_number_of_values)
+      return GetOctaveName(i_value);
+    else
+      return GetPStringUnknownValue();
+  }
+
+  PSTRING(PSTR_percentage_format, "%d%%");
+  const char* GetVelocity(uint8_t i_value, uint8_t& o_number_of_values)
+  {
+    o_number_of_values = 10;
+    sprintf(data_scratch, GetPString(PSTR_percentage_format), i_value*10);
+    return data_scratch;
+  }
+
   PSTRING(PSTR_save_as, "> Save As ...");
   PSTRING(PSTR_remove, "> Remove ...");
   PSTRING(PSTR_move_left, "> Move left");
   PSTRING(PSTR_move_right, "> Move right");
   PSTRING(PSTR_new, "> New");
-
-
-// TODO check if PTAB with two values uses less code storage than hardcoded 
-// TODO return somthing else than Empty()!
-// TODO replace values in BoolLine by a function and call it SingleLine of zoiets
-// TODO could have function that takes the max + function ptr (uint8_t): less memory?
-
-const char* GetSplit(uint8_t i_value, uint8_t& o_number_of_values)
-{
-  o_number_of_values = 128;
-  if (i_value < o_number_of_values)
-    return GetNoteName(i_value);
-  else
-    return GetPStringUnknownValue();
-}
-
-const char* GetChannel(uint8_t i_value, uint8_t& o_number_of_values)
-{
-  o_number_of_values = NumberOfChannels;
-  if (i_value < o_number_of_values)
-    return EE::GetChannelNameFormatted(i_value);
-  else
-    return GetPStringUnknownValue();
-}
-
-const char* GetOctave(uint8_t i_value, uint8_t& o_number_of_values)
-{
-  o_number_of_values = GetNumberOfOctaves(); 
-  if (i_value < o_number_of_values)
-    return GetOctaveName(i_value);
-  else
-    return GetPStringUnknownValue();
-}
-
-// TODO check if the PTAB version is more efficient
-PSTRING(PSTR_on_off_off, "off");
-PSTRING(PSTR_on_off_on, "on");
-const char* GetOnOff(uint8_t i_value, uint8_t& o_number_of_values)
-{
-  o_number_of_values = 2;
-  return GetPString(i_value ? PSTR_on_off_on : PSTR_on_off_off);
-}
-
-
-PSTRING(PSTR_percentage_format, "%d%%");
-const char* GetVelocity(uint8_t i_value, uint8_t& o_number_of_values)
-{
-  o_number_of_values = 10;
-  sprintf(data_scratch, GetPString(PSTR_percentage_format), i_value*10);
-  return data_scratch;
-}
-
-
-PSTRING(PSTR_multi_split,     "split at ");
-PSTRING(PSTR_multi_channel,   "channel");
-PSTRING(PSTR_multi_octave,    "octave");
-PSTRING(PSTR_multi_pbcc,      "pb/cc");
-PSTRING(PSTR_multi_velocity,  "velocity");
-
 }
 
 
