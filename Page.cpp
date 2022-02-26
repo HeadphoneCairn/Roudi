@@ -196,13 +196,14 @@ const char*  GetPTable(uint8_t i_value, uint8_t& o_number_of_values, const char 
   if (i_value < o_number_of_values)
     return GetPStringFromPTable(ptable, i_value);
   else
-    return GetPStringUnknownValue();
+    return GetPString(PSTR_unknown_value);
 }
 
+PSTRING(PSTR_unknown_value, "?");
 
 Page::LineResult DefaultLine(Page::LineFunction func)
 {
-  return Page::LineResult{1, GetPStringEmpty(), Screen::inversion_none, false};
+  return Page::LineResult{1, GetPString(PSTR_empty), Screen::inversion_none, false};
 }
 
 Page::LineResult TextLine(Page::LineFunction func, const char* pstring)

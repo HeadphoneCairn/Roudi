@@ -81,7 +81,7 @@ Page::LineResult PageName::Line(LineFunction func, uint8_t line, uint8_t field)
     } else if (line == 6) {
       text = GetPString(PSTR_name_help_3);
     } else {
-      text = GetPStringEmpty();
+      text = GetPString(PSTR_empty);
     }
   } else if (func == DO_LEFT && m_position > 0) {
     m_position--;

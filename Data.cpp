@@ -37,13 +37,6 @@ const char* GetPStringFromPTable(const char *const ptable[], uint8_t which)
 
 // --- Globally defined strings ---
 PSTRING(PSTR_empty, "");
-PSTRING(PSTR_none, "> None");
-PSTRING(PSTR_unknown_value, "?");
-
-const char* GetPStringEmpty()  { return GetPString(PSTR_empty); }
-const char* GetPStringNone()   { return GetPString(PSTR_none); }
-const char* GetPStringUnknownValue()   { return GetPString(PSTR_unknown_value); }
-
 
 // --- Octaves ---
 #define MAX_OCTAVES 6
@@ -418,7 +411,7 @@ namespace EE
   static void InitChannels()
   {
     for (uint8_t i = 0; i < NumberOfChannels; i++)
-      EE::SetChannelName(i, GetPStringEmpty());
+      EE::SetChannelName(i, GetPString(PSTR_empty));
     // TODO: Temporary values that should be removed on release!
     EE::SetChannelName(0, GetPString(PSTR_channel_piano));
     EE::SetChannelName(4, GetPString(PSTR_channel_erebus));

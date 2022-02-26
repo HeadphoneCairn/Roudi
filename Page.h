@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Data.h"
 #include "Screen.h"
 
 // --- Page ---
@@ -65,6 +66,8 @@ const char* GetPTable(uint8_t i_value, uint8_t& o_number_of_values, const char *
     return GetPTable(i_value, o_number_of_values, ptab_name, ptab_name##_size);     \
   }
 
+// This string can be used if the value function needs to return a string for an unknown value:
+PSTRINGREF(PSTR_unknown_value);
 
 Page::LineResult DefaultLine(Page::LineFunction func);
 Page::LineResult TextLine(Page::LineFunction func, const char* pstring);

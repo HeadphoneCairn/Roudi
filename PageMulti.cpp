@@ -33,7 +33,7 @@ namespace {
     if (i_value < o_number_of_values)
       return GetNoteName(i_value);
     else
-      return GetPStringUnknownValue();
+      return GetPString(PSTR_unknown_value);
   }
 
   PSTRING(PSTR_channel_number, "ch%02d");
@@ -50,7 +50,7 @@ namespace {
     if (i_value < o_number_of_values)
       return EE::GetChannelName(i_value);
     else
-      return GetPStringUnknownValue();
+      return GetPString(PSTR_unknown_value);
   }
 
   const char* GetOctave(uint8_t i_value, uint8_t& o_number_of_values)
@@ -59,7 +59,7 @@ namespace {
     if (i_value < o_number_of_values)
       return GetOctaveName(i_value);
     else
-      return GetPStringUnknownValue();
+      return GetPString(PSTR_unknown_value);
   }
 
   PSTRING(PSTR_percentage_format, "%d%%");
@@ -75,8 +75,6 @@ namespace {
   PSTRING(PSTR_move_left, "> Move left");
   PSTRING(PSTR_move_right, "> Move right");
   PSTRING(PSTR_new, "> New");
-
-  PSTRING(PSTR_empty, "|");
 }
 
 
@@ -127,8 +125,8 @@ Page::LineResult PageMulti::ActualLine(LineFunction func, uint8_t line, uint8_t 
 {
   switch (line)
   {
-    case 0: return DoubleLine(func, field, PSTR_multi_channel, 0xFF, m_values.channel[0], GetChannelNumber, m_values.channel[1], GetChannelNumber);
-    case 1: return DoubleLine(func, field, PSTR_empty, 0xFF, m_values.channel[0], GetChannelName, m_values.channel[1], GetChannelName);
+    case 0: return DoubleLine(func, field, PSTR_empty, 0xFF, m_values.channel[0], GetChannelName, m_values.channel[1], GetChannelName);
+    case 1: return DoubleLine(func, field, PSTR_multi_channel, 0xFF, m_values.channel[0], GetChannelNumber, m_values.channel[1], GetChannelNumber);
     case 2: return DoubleLine(func, field, PSTR_multi_octave, 0xFF, m_values.octave[0], GetOctave, m_values.octave[1], GetOctave);
     case 3: return DoubleLine(func, field, PSTR_multi_pbcc, 0xFF, m_values.pbcc[0], GetOnOff, m_values.pbcc[1], GetOnOff);
     case 4: return DoubleLine(func, field, PSTR_multi_velocity, 0xFF, m_values.velocity[0], GetVelocity, m_values.velocity[1], GetVelocity);
