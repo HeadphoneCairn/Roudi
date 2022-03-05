@@ -131,13 +131,15 @@ void GetMultiDefault(MultiValues& values)
 {
   memset(&values, 0, sizeof(values)); // sizeof of a reference gives the size of the referenced, so ok!
   strcpy(values.name, GetPString(PSTR_default_multi_name));
-  values.channel[1] = 1;
-  values.octave[0] = values.octave[1] = OctaveDeltaToOctaveValue(0);
-  values.max_velocity[0] = values.max_velocity[1] = VelocityMidiToVelocityValue(127);
-  values.pitch_bend[0] = values.pitch_bend[1] = 1;
-  values.mod_wheel[0] = values.mod_wheel[1] = 1;
-  values.control_change[0] = values.control_change[1] = 1; 
   values.split_note = 60; // C4
+  values.channel[1].channel = 1;
+  for (uint8_t i = 0; i < 2; i++) {
+    values.channel[i].octave         = OctaveDeltaToOctaveValue(0);
+    values.channel[i].max_velocity   = VelocityMidiToVelocityValue(127);
+    values.channel[i].pitch_bend     = 1;
+    values.channel[i].mod_wheel      = 1;
+    values.channel[i].control_change = 1; 
+  }
 }
 
 void GetFilterSettingsDefault(FilterSettingsValues& values)
@@ -241,7 +243,7 @@ namespace EE
 
   struct EE_Header
   {
-    uint16_t magic_number = 0x2B43;
+    uint16_t magic_number = 0x2B44;
     uint8_t version = 1;
   };
 

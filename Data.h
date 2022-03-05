@@ -68,22 +68,28 @@ struct SingleValues
 };
 void GetSingleDefault(SingleValues& values);
 
+struct ChannelValues
+{
+  uint8_t channel;          // saved to EEPROM as channel (0-15)
+  uint8_t octave;
+  uint8_t min_velocity;     // stored as 0 - 21, shown as 0 - 127, interpreted as i*6
+  uint8_t max_velocity;     // stored as 0 - 21, shown as 0 - 127, interpreted as i*6
+  uint8_t pitch_bend;       // 0: off, 1: on
+  uint8_t mod_wheel;        // 0: off, 1: on
+  uint8_t control_change;   // 0: off, 1: on
+};
+
 struct MultiValues
 {
-  uint8_t selected_line;   // used to recall original position of "cursor"
-  uint8_t selected_field;  // used to recall original position of "cursor"
-  uint8_t first_line;      // used to recall original position of "cursor"
+  uint8_t selected_line;    // used to recall original position of "cursor"
+  uint8_t selected_field;   // used to recall original position of "cursor"
+  uint8_t first_line;       // used to recall original position of "cursor"
   char name[MaxNameLength + 1]; // We also store the /0
-  uint8_t channel[2];      // saved to EEPROM as channel (0-15)
-  uint8_t octave[2];
-  uint8_t min_velocity[2]; // stored as 0 - 21, shown as 0 - 127, interpreted as i*6
-  uint8_t max_velocity[2]; // stored as 0 - 21, shown as 0 - 127, interpreted as i*6
-  uint8_t pitch_bend[2];   // 0: off, 1: on
-  uint8_t mod_wheel[2];    // 0: off, 1: on
-  uint8_t control_change[2];   // 0: off, 1: on
-  uint8_t mode;            // 0: SPLIT, 1: LAYER, 2: SINGLE
+  uint8_t mode;             // 0: SPLIT, 1: LAYER, 2: LEFT, 3: RIGHT
   uint8_t split_note;
+  ChannelValues channel[2]; // The values for each set channel
 };
+
 void GetMultiDefault(MultiValues& values);
 
 struct FilterSettingsValues {

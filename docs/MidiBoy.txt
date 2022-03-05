@@ -850,4 +850,4 @@ x Combine SingleLine and BoolLine
   + Major Cleanup
 - Implement filter of pitch bend / mod wheel / cc's for multi
   and how it can be combined with setting filter.
-- Multivalue: channel specific stuff should be in a struct!
+x Multivalue: channel specific stuff should be in a struct!
