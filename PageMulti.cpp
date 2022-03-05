@@ -185,26 +185,25 @@ void PageMulti::New()
 
 void PageMulti::SetMidiConfiguration()
 {
-  uint8_t active_mode = m_values.mode;
-  if ((m_values.channel[0] == m_values.channel[1]) && (m_values.mode == LAYER_MODE || m_values.mode == SPLIT_MODE))
-    active_mode = LEFT_MODE;  // If channel 0 and 1 are the same, just program one channel!
-  uint8_t first_active_channel = (active_mode == RIGHT_MODE) ? 1 : 0;
-  uint8_t last_active_channel = (active_mode == LEFT_MODE) ? 0 : 1;
+  // If channel 0 and 1 are the same, just program one channel!
+  const uint8_t active_mode = ((m_values.channel[0] == m_values.channel[1]) && (m_values.mode == LAYER_MODE || m_values.mode == SPLIT_MODE)) ? LEFT_MODE : m_values.mode;
+  const uint8_t num_active_channels = (active_mode == LEFT_MODE || active_mode == RIGHT_MODE) ? 1 : 2;
+  const uint8_t first_active_channel = (active_mode == RIGHT_MODE) ? 1 : 0;
 
   // Set the configuration
   MidiProcessing::Configuration next_config;
   next_config.m_input_channel = EE::Settings().input_channel;
-  next_config.m_nbr_output_channels = last_active_channel - first_active_channel + 1;  
-  for (int num = first_active_channel; num < last_active_channel + 1; num++) {  
-    next_config.m_output_channel[num-first_active_channel].m_channel = m_values.channel[num];
-    next_config.m_output_channel[num-first_active_channel].m_minimum_note = 0; 
-    next_config.m_output_channel[num-first_active_channel].m_maximum_note = 127;
-    next_config.m_output_channel[num-first_active_channel].m_minimum_velocity = VelocityValueToVelocityMidi(m_values.min_velocity[num]);
-    next_config.m_output_channel[num-first_active_channel].m_maximum_velocity = VelocityValueToVelocityMidi(m_values.max_velocity[num]);    
-    next_config.m_output_channel[num-first_active_channel].m_allow_pitch_bend = m_values.pitch_bend[num];
-    next_config.m_output_channel[num-first_active_channel].m_allow_modulation = m_values.mod_wheel[num];
-    next_config.m_output_channel[num-first_active_channel].m_allow_control_change = m_values.control_change[num];
-    next_config.m_output_channel[num-first_active_channel].m_transpose = OctaveValueToOctaveDelta(m_values.octave[num]) * 12;
+  next_config.m_nbr_output_channels = num_active_channels;  
+  for (int num = 0; num < num_active_channels; num++) {  
+    next_config.m_output_channel[num].m_channel = m_values.channel[num+first_active_channel];
+    next_config.m_output_channel[num].m_minimum_note = 0; 
+    next_config.m_output_channel[num].m_maximum_note = 127;
+    next_config.m_output_channel[num].m_minimum_velocity = VelocityValueToVelocityMidi(m_values.min_velocity[num+first_active_channel]);
+    next_config.m_output_channel[num].m_maximum_velocity = VelocityValueToVelocityMidi(m_values.max_velocity[num+first_active_channel]);    
+    next_config.m_output_channel[num].m_allow_pitch_bend = m_values.pitch_bend[num+first_active_channel];
+    next_config.m_output_channel[num].m_allow_modulation = m_values.mod_wheel[num+first_active_channel];
+    next_config.m_output_channel[num].m_allow_control_change = m_values.control_change[num+first_active_channel];
+    next_config.m_output_channel[num].m_transpose = OctaveValueToOctaveDelta(m_values.octave[num+first_active_channel]) * 12;
   }
   if (active_mode == SPLIT_MODE) {
     // In SPLIT_MODE, the top channel will be at the right side of the keyboard [split_note, 127]
