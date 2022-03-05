@@ -8,20 +8,25 @@
 
 namespace 
 {
-  PSTRING(PSTR_multi_split,     "split at ");
-  PSTRING(PSTR_multi_channel,   "channel");
-  PSTRING(PSTR_multi_octave,    "octave");
-  PSTRING(PSTR_multi_pbcc,      "pb/cc");
+  PSTRING(PSTR_multi_split,         "split at ");
+  PSTRING(PSTR_multi_channel_short, "|");
+  PSTRING(PSTR_multi_channel_long,  "channel");
+  PSTRING(PSTR_multi_octave,        "octave");
   PSTRING(PSTR_multi_min_velocity,  "min velocity");
   PSTRING(PSTR_multi_max_velocity,  "max velocity");
+  PSTRING(PSTR_multi_pitch_bend,    "pitch bend");
+  PSTRING(PSTR_multi_mod_wheel,     "mod wheel");
+  PSTRING(PSTR_multi_cc,            "control change");
 
   #define SPLIT_MODE 0
   #define LAYER_MODE 1
-  #define SINGLE_MODE 2
+  #define LEFT_MODE  2
+  #define RIGHT_MODE 3
   PSTRING(PSTR_mode_split, "SPLIT mode");
   PSTRING(PSTR_mode_layer, "LAYER mode");
-  PSTRING(PSTR_single_layer, "SINGLE mode");
-  PTABLE(PTAB_mode, PSTR_mode_split, PSTR_mode_layer, PSTR_single_layer);
+  PSTRING(PSTR_mode_left,  "LEFT mode");
+  PSTRING(PSTR_mode_right, "RIGHT mode");
+  PTABLE(PTAB_mode, PSTR_mode_split, PSTR_mode_layer, PSTR_mode_left, PSTR_mode_right);
   PTABLE_GETTER(GetMode, PTAB_mode);
 
   PSTRING(PSTR_on_off_off, "off");
@@ -38,7 +43,7 @@ namespace
       return GetPString(PSTR_unknown_value);
   }
 
-  PSTRING(PSTR_channel_number, "ch%02d");
+  PSTRING(PSTR_channel_number, "%02d.");
   const char* GetChannelNumber(uint8_t i_value, uint8_t& o_number_of_values)
   {
     o_number_of_values = NumberOfChannels;
@@ -89,7 +94,7 @@ void PageMulti::OnStart(uint8_t which_multi)
 {
   m_which = which_multi;
   EE::GetMulti(m_which, m_values);
-  SetNumberOfLines(13, m_values.selected_line, m_values.selected_field, m_values.first_line);
+  SetNumberOfLines(15, m_values.selected_line, m_values.selected_field, m_values.first_line);
   SetMidiConfiguration();
 }
 
@@ -122,22 +127,24 @@ Page::LineResult PageMulti::ActualLine(LineFunction func, uint8_t line, uint8_t 
 {
   switch (line)
   {
-    case 0: return DoubleLine(func, field, PSTR_empty, 0xFF, m_values.channel[0], GetChannelName, m_values.channel[1], GetChannelName);
-    case 1: return DoubleLine(func, field, PSTR_multi_channel, 0xFF, m_values.channel[0], GetChannelNumber, m_values.channel[1], GetChannelNumber);
-    case 2: return DoubleLine(func, field, PSTR_multi_octave, 0xFF, m_values.octave[0], GetOctave, m_values.octave[1], GetOctave);
-    case 3: return DoubleLine(func, field, PSTR_multi_pbcc, 0xFF, m_values.pbcc[0], GetOnOff, m_values.pbcc[1], GetOnOff);
-    case 4: return DoubleLine(func, field, PSTR_multi_min_velocity, 0xFF, m_values.min_velocity[0], GetVelocity, m_values.min_velocity[1], GetVelocity);
-    case 5: return DoubleLine(func, field, PSTR_multi_max_velocity, 0xFF, m_values.max_velocity[0], GetVelocity, m_values.max_velocity[1], GetVelocity);
-    case 6: return DoubleLine(func, field, PSTR_multi_split, 13, m_values.mode, GetMode, m_values.split_note, GetSplit);
-    case 7: return DefaultLine(func);
-    case 8: // Save As ... 
+    case 0: return DoubleLine(func, field, PSTR_multi_split, 13, m_values.mode, GetMode, m_values.split_note, GetSplit);
+    case 1: return DoubleLine(func, field, PSTR_multi_channel_long, 0xFF, m_values.channel[0], GetChannelNumber, m_values.channel[1], GetChannelNumber);
+    case 2: return DoubleLine(func, field, PSTR_multi_channel_short, 0xFF, m_values.channel[0], GetChannelName, m_values.channel[1], GetChannelName);
+    case 3: return DoubleLine(func, field, PSTR_multi_octave, 0xFF, m_values.octave[0], GetOctave, m_values.octave[1], GetOctave);
+    case 4: return DoubleLine(func, field, PSTR_multi_pitch_bend, 0xFF, m_values.pitch_bend[0], GetOnOff, m_values.pitch_bend[1], GetOnOff);
+    case 5: return DoubleLine(func, field, PSTR_multi_mod_wheel, 0xFF, m_values.mod_wheel[0], GetOnOff, m_values.mod_wheel[1], GetOnOff);
+    case 6: return DoubleLine(func, field, PSTR_multi_cc, 0xFF, m_values.control_change[0], GetOnOff, m_values.control_change[1], GetOnOff);
+    case 7: return DoubleLine(func, field, PSTR_multi_min_velocity, 0xFF, m_values.min_velocity[0], GetVelocity, m_values.min_velocity[1], GetVelocity);
+    case 8: return DoubleLine(func, field, PSTR_multi_max_velocity, 0xFF, m_values.max_velocity[0], GetVelocity, m_values.max_velocity[1], GetVelocity);
+    case 9: return DefaultLine(func);
+    case 10: // Save As ... 
       if (func == DO_LEFT || func == DO_RIGHT)
         SaveAs();
       return TextLine(func, PSTR_save_as);
-    case 9: return TextLine(func, PSTR_remove);
-    case 10: return TextLine(func, PSTR_move_left);
-    case 11: return TextLine(func, PSTR_move_right);
-    case 12: // New ...
+    case 11: return TextLine(func, PSTR_remove);
+    case 12: return TextLine(func, PSTR_move_left);
+    case 13: return TextLine(func, PSTR_move_right);
+    case 14: // New ...
       if (func == DO_LEFT || func == DO_RIGHT)
         New();
       return TextLine(func, PSTR_new);
@@ -179,20 +186,23 @@ void PageMulti::New()
 void PageMulti::SetMidiConfiguration()
 {
   // If channel 0 and 1 are the same, just program one channel!
-  uint8_t active_mode = (m_values.channel[0] == m_values.channel[1]) ? SINGLE_MODE : m_values.mode;
-  uint8_t num_active_channels = (active_mode == SINGLE_MODE) ? 1 : 2;
+  uint8_t active_mode = (m_values.channel[0] == m_values.channel[1]) ? LEFT_MODE : m_values.mode;
+  uint8_t first_active_channel = (active_mode == RIGHT_MODE) ? 1 : 0;
+  uint8_t last_active_channel = (active_mode == LEFT_MODE) ? 0 : 1;
 
   // Set the configuration
   MidiProcessing::Configuration next_config;
   next_config.m_input_channel = EE::Settings().input_channel;
-  next_config.m_nbr_output_channels = num_active_channels;  
-  for (int num=0; num < num_active_channels; num++) {  
+  next_config.m_nbr_output_channels = last_active_channel - first_active_channel + 1;  
+  for (int num = first_active_channel; num < last_active_channel + 1; num++) {  
     next_config.m_output_channel[num].m_channel = m_values.channel[num];
     next_config.m_output_channel[num].m_minimum_note = 0; 
     next_config.m_output_channel[num].m_maximum_note = 127;
     next_config.m_output_channel[num].m_minimum_velocity = VelocityValueToVelocityMidi(m_values.min_velocity[num]);
     next_config.m_output_channel[num].m_maximum_velocity = VelocityValueToVelocityMidi(m_values.max_velocity[num]);    
-    next_config.m_output_channel[num].m_allow_pitch_modulation = m_values.pbcc[num] != 0;
+    next_config.m_output_channel[num].m_allow_pitch_bend = m_values.pitch_bend[num];
+    next_config.m_output_channel[num].m_allow_modulation = m_values.mod_wheel[num];
+    next_config.m_output_channel[num].m_allow_control_change = m_values.control_change[num];
     next_config.m_output_channel[num].m_transpose = OctaveValueToOctaveDelta(m_values.octave[num]) * 12;
   }
   if (active_mode == SPLIT_MODE) {

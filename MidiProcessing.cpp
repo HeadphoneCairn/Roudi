@@ -257,7 +257,10 @@ namespace MidiProcessing
     m_minimum_note = 0;
     m_maximum_note = 127;
     m_minimum_velocity = 0;
-    m_allow_pitch_modulation = true;
+    m_maximum_velocity = 127;
+    m_allow_pitch_bend = true;
+    m_allow_modulation = true;
+    m_allow_control_change = true;
     m_transpose = 0;
   }
 

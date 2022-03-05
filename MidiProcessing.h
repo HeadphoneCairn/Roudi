@@ -22,7 +22,9 @@ namespace MidiProcessing
     uint8_t m_minimum_note, m_maximum_note; // transmit notes in [m_minimum_note, m_maximum_note] range
     uint8_t m_minimum_velocity;             // only transmit notes with velocity >= m_minimum_velocity
     uint8_t m_maximum_velocity;             // only transmit notes with velocity <= m_maximum_velocity
-    bool m_allow_pitch_modulation;          // whether to transmit pitch bend and modulation 
+    bool m_allow_pitch_bend;                // whether to transmit pitch bend 
+    bool m_allow_modulation;                // whether to transmit mod wheel
+    bool m_allow_control_change;            // whether to transmit control change (CC's)
     int8_t m_transpose;                     // [-128, 127], transpose notes before transmitting
   };
 

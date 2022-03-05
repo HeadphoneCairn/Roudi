@@ -848,3 +848,5 @@ x MIDI monitor, "IO to show line" must be completely selectable
                  > Block: blokkeer alles
 x Combine SingleLine and BoolLine
   + Major Cleanup
+- Implement filter of pitch bend / mod wheel / cc's for multi
+  and how it can be combined with setting filter.
