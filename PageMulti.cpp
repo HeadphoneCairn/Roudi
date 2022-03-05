@@ -8,7 +8,6 @@
 
 namespace 
 {
-  PSTRING(PSTR_multi_split,         "split at ");
   PSTRING(PSTR_multi_channel_short, "|");
   PSTRING(PSTR_multi_channel_long,  "channel");
   PSTRING(PSTR_multi_octave,        "octave");
@@ -34,12 +33,17 @@ namespace
   PTABLE(PSTR_on_off, PSTR_on_off_off, PSTR_on_off_on);
   PTABLE_GETTER(GetOnOff, PSTR_on_off);
 
+  PSTRING(PSTR_multi_split, "split at ");
   const char* GetSplit(uint8_t i_value, uint8_t& o_number_of_values)
   {
     o_number_of_values = 128;
-    if (i_value < o_number_of_values)
-      return GetNoteName(i_value);
-    else
+    if (i_value < o_number_of_values) {
+      char note[10]; // Should be more than long enough
+      strcpy(note, GetNoteName(i_value));
+      strcpy(data_scratch, GetPString(PSTR_multi_split));
+      strcat(data_scratch, note);
+      return data_scratch;
+    } else
       return GetPString(PSTR_unknown_value);
   }
 
@@ -127,7 +131,7 @@ Page::LineResult PageMulti::ActualLine(LineFunction func, uint8_t line, uint8_t 
 {
   switch (line)
   {
-    case 0: return DoubleLine(func, field, PSTR_multi_split, 13, m_values.mode, GetMode, m_values.split_note, GetSplit);
+    case 0: return DoubleLine(func, field, PSTR_empty, 0xFF, m_values.mode, GetMode, m_values.split_note, GetSplit);
     case 1: return DoubleLine(func, field, PSTR_multi_channel_long, 0xFF, m_values.channel[0], GetChannelNumber, m_values.channel[1], GetChannelNumber);
     case 2: return DoubleLine(func, field, PSTR_multi_channel_short, 0xFF, m_values.channel[0], GetChannelName, m_values.channel[1], GetChannelName);
     case 3: return DoubleLine(func, field, PSTR_multi_octave, 0xFF, m_values.octave[0], GetOctave, m_values.octave[1], GetOctave);
