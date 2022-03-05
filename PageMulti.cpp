@@ -12,7 +12,8 @@ namespace
   PSTRING(PSTR_multi_channel,   "channel");
   PSTRING(PSTR_multi_octave,    "octave");
   PSTRING(PSTR_multi_pbcc,      "pb/cc");
-  PSTRING(PSTR_multi_velocity,  "velocity");
+  PSTRING(PSTR_multi_min_velocity,  "min velocity");
+  PSTRING(PSTR_multi_max_velocity,  "max velocity");
 
   #define SPLIT_MODE 0
   #define LAYER_MODE 1
@@ -66,9 +67,8 @@ namespace
   PSTRING(PSTR_percentage_format, "%d%%");
   const char* GetVelocity(uint8_t i_value, uint8_t& o_number_of_values)
   {
-    o_number_of_values = 10;
-    sprintf(data_scratch, GetPString(PSTR_percentage_format), i_value*10);
-    return data_scratch;
+    o_number_of_values = VelocityMidiToVelocityValue(127) + 1;
+    return GetNumber(VelocityValueToVelocityMidi(i_value));
   }
 
   PSTRING(PSTR_save_as, "> Save As ...");
@@ -89,7 +89,7 @@ void PageMulti::OnStart(uint8_t which_multi)
 {
   m_which = which_multi;
   EE::GetMulti(m_which, m_values);
-  SetNumberOfLines(12, m_values.selected_line, m_values.selected_field, m_values.first_line);
+  SetNumberOfLines(13, m_values.selected_line, m_values.selected_field, m_values.first_line);
   SetMidiConfiguration();
 }
 
@@ -126,17 +126,18 @@ Page::LineResult PageMulti::ActualLine(LineFunction func, uint8_t line, uint8_t 
     case 1: return DoubleLine(func, field, PSTR_multi_channel, 0xFF, m_values.channel[0], GetChannelNumber, m_values.channel[1], GetChannelNumber);
     case 2: return DoubleLine(func, field, PSTR_multi_octave, 0xFF, m_values.octave[0], GetOctave, m_values.octave[1], GetOctave);
     case 3: return DoubleLine(func, field, PSTR_multi_pbcc, 0xFF, m_values.pbcc[0], GetOnOff, m_values.pbcc[1], GetOnOff);
-    case 4: return DoubleLine(func, field, PSTR_multi_velocity, 0xFF, m_values.velocity[0], GetVelocity, m_values.velocity[1], GetVelocity);
-    case 5: return DoubleLine(func, field, PSTR_multi_split, 13, m_values.mode, GetMode, m_values.split_note, GetSplit);
-    case 6: return DefaultLine(func);
-    case 7: // Save As ... 
+    case 4: return DoubleLine(func, field, PSTR_multi_min_velocity, 0xFF, m_values.min_velocity[0], GetVelocity, m_values.min_velocity[1], GetVelocity);
+    case 5: return DoubleLine(func, field, PSTR_multi_max_velocity, 0xFF, m_values.max_velocity[0], GetVelocity, m_values.max_velocity[1], GetVelocity);
+    case 6: return DoubleLine(func, field, PSTR_multi_split, 13, m_values.mode, GetMode, m_values.split_note, GetSplit);
+    case 7: return DefaultLine(func);
+    case 8: // Save As ... 
       if (func == DO_LEFT || func == DO_RIGHT)
         SaveAs();
       return TextLine(func, PSTR_save_as);
-    case 8: return TextLine(func, PSTR_remove);
-    case 9: return TextLine(func, PSTR_move_left);
-    case 10: return TextLine(func, PSTR_move_right);
-    case 11: // New ...
+    case 9: return TextLine(func, PSTR_remove);
+    case 10: return TextLine(func, PSTR_move_left);
+    case 11: return TextLine(func, PSTR_move_right);
+    case 12: // New ...
       if (func == DO_LEFT || func == DO_RIGHT)
         New();
       return TextLine(func, PSTR_new);
@@ -187,12 +188,12 @@ void PageMulti::SetMidiConfiguration()
   next_config.m_nbr_output_channels = num_active_channels;  
   for (int num=0; num < num_active_channels; num++) {  
     next_config.m_output_channel[num].m_channel = m_values.channel[num];
-    next_config.m_output_channel[num].m_minimum_velocity = m_values.velocity[num] * 13;
-    next_config.m_output_channel[num].m_allow_pitch_modulation = m_values.pbcc[num] != 0;
-    next_config.m_output_channel[num].m_transpose = OctaveValueToOctaveDelta(m_values.octave[num]) * 12;
     next_config.m_output_channel[num].m_minimum_note = 0; 
     next_config.m_output_channel[num].m_maximum_note = 127;
-    next_config.m_output_channel[num].m_minimum_velocity = m_values.velocity[num] * 13;
+    next_config.m_output_channel[num].m_minimum_velocity = VelocityValueToVelocityMidi(m_values.min_velocity[num]);
+    next_config.m_output_channel[num].m_maximum_velocity = VelocityValueToVelocityMidi(m_values.max_velocity[num]);    
+    next_config.m_output_channel[num].m_allow_pitch_modulation = m_values.pbcc[num] != 0;
+    next_config.m_output_channel[num].m_transpose = OctaveValueToOctaveDelta(m_values.octave[num]) * 12;
   }
   if (active_mode == SPLIT_MODE) {
     // In SPLIT_MODE, the top channel will be at the right side of the keyboard [split_note, 127]

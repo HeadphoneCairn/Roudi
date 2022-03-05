@@ -42,11 +42,15 @@ const char* GetOctaveName(uint8_t octave_value);
 int8_t OctaveValueToOctaveDelta(uint8_t octave_value);
 uint8_t OctaveDeltaToOctaveValue(int8_t octave_delta);
 
+// --- Velocity ---
+uint8_t VelocityValueToVelocityMidi(uint8_t velocity_value);
+uint8_t VelocityMidiToVelocityValue(uint8_t velocity_value);
+
 // --- MIDI Note names ---
 const char* GetNoteName(uint8_t midi_note_number);
 
 // --- Some (generic) value functions ---
-const char* GetNumberPlusOne(uint8_t value);
+const char* GetNumber(uint8_t value);
 
 //==============================================================================
 // 
@@ -73,7 +77,8 @@ struct MultiValues
   uint8_t channel[2];  // saved to EEPROM as channel (0-15)
   uint8_t octave[2];
   uint8_t pbcc[2];
-  uint8_t velocity[2]; // stored as 0 - 9, shown as 0% - 90%, interpreted as i*13 in range [0..127]
+  uint8_t min_velocity[2]; // stored as 0 - 21, shown as 0 - 127, interpreted as i*6
+  uint8_t max_velocity[2]; // stored as 0 - 21, shown as 0 - 127, interpreted as i*6
   uint8_t mode;        // 0: SPLIT, 1: LAYER, 2: SINGLE
   uint8_t split_note;
 };

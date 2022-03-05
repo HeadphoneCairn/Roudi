@@ -64,6 +64,19 @@ uint8_t OctaveDeltaToOctaveValue(int8_t octave_delta)
   return static_cast<uint8_t>(octave_delta + MAX_OCTAVES);
 }
 
+// --- Velocity ---
+uint8_t VelocityValueToVelocityMidi(uint8_t velocity_value)
+{
+  // input range is 0..21, output 0..127
+  return velocity_value == 21 ? 127 : velocity_value * 6;
+}
+
+uint8_t VelocityMidiToVelocityValue(uint8_t velocity_value)
+{
+  return velocity_value / 6;
+}
+
+
 // --- MIDI Note names ---
 PSTRING(PSTR_note_name_00, "C%d");
 PSTRING(PSTR_note_name_01, "C#%d");
@@ -92,12 +105,11 @@ const char* GetNoteName(uint8_t midi_note_number)
   return data_scratch;
 }
 
-
 // --- Some (generic) value functions ---
 PSTRING(PSTR_numformat, "%d");
-const char* GetNumberPlusOne(uint8_t value)
+const char* GetNumber(uint8_t value)
 {
-  sprintf(data_scratch, GetPString(PSTR_numformat), value + 1);
+  sprintf(data_scratch, GetPString(PSTR_numformat), value);
   return data_scratch;
 }
 
@@ -121,6 +133,7 @@ void GetMultiDefault(MultiValues& values)
   strcpy(values.name, GetPString(PSTR_default_multi_name));
   values.channel[1] = 1;
   values.octave[0] = values.octave[1] = OctaveDeltaToOctaveValue(0);
+  values.max_velocity[0] = values.max_velocity[1] = VelocityMidiToVelocityValue(127); 
   values.split_note = 60; // C4
 }
 
@@ -162,11 +175,11 @@ namespace EE
   0300-0307: Single: 1 byte for selected line (=channel), 1 for first line (8 bytes)
   0308-0311: Multi header: only number of multis for the moment (4 bytes)
   0312-0743: Multi x 12 (432 bytes)
-              13 bytes (12 + 1) for the name 
-               8 bytes (2 x 4) for channel settings
-               2 bytes for mode
                3 bytes for selected line, selected field, first line
-              = 26 bytes, but leave space for future use => 36 bytes 
+              13 bytes (12 + 1) for the name 
+              10 bytes (2 x 5) for channel settings
+               2 bytes for mode
+            = 28 bytes, but leave space for future use => 36 bytes 
   ... unused memory ...
 
   NOTE: EEPROM has 100,000 write/erase cycles
@@ -225,7 +238,7 @@ namespace EE
 
   struct EE_Header
   {
-    uint16_t magic_number = 0x2B41;
+    uint16_t magic_number = 0x2B42;
     uint8_t version = 1;
   };
 

@@ -759,7 +759,7 @@ x Save first_line and selected line and field
   x multi
   x single
   - settings
-- Make fake Midi Monitor
+x Make fake Midi Monitor
 x Use 12 characters for channels anyway????
 - Order of OnStart OnStop Line in Page ... in subclasses
 x Allow for single mode, next to split and layer!
@@ -802,7 +802,7 @@ x New multi menu???
            modwheel
   on         cc          on
   velocity toch in 0 tot 120????
-- rotate values if beyond end ?
+x rotate values if beyond end ? No, prefer no rotation.
 - Coding style:
   - Add const to member functions if necessary. And to their parameters.
   - Consider i_, o_, m_

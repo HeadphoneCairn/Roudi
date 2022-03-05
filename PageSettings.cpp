@@ -17,7 +17,7 @@ namespace
   const char* GetInputChannel(uint8_t i_value, uint8_t& o_number_of_values)
   {
     o_number_of_values = NumberOfChannels;
-    return GetNumberPlusOne(i_value);
+    return GetNumber(i_value + 1);
   }
  
   PSTRING(PSTR_block_other, "Block other channels");
@@ -37,7 +37,7 @@ namespace
   const char* GetBrightness(uint8_t i_value, uint8_t& o_number_of_values)
   {
     o_number_of_values = 10;
-    return GetNumberPlusOne(i_value);
+    return GetNumber(i_value + 1);
   }
 
   PSTRING(PSTR_monitor_fltr_0, "block");

@@ -180,6 +180,8 @@ namespace
         const uint8_t velocity = event.m_data[2];
         if (velocity < output_channel.m_minimum_velocity)
           return;
+        if (velocity > output_channel.m_maximum_velocity)
+          return;
         output_channel_note_is_on.Set(transposed_note, true); // Mark the (transposed) note as ON
       } else { // Note Off
         if (!output_channel_note_is_on.Get(transposed_note))
