@@ -84,9 +84,9 @@ Filters: program change overrides cc filter for CC0
 
 # Credits and License
 
-- Roudi written by Headphone Cairn Software
+- Roudi written by Headphone Cairn Software.
 
   ![Headphone Cairn Logo](README.png)
 
 - MIDI libraries and more by [Blokas](https://blokas.io/).
-- An stl for a case for the midiboy is available on [Thingiverse](https://www.thingiverse.com/thing:4878526)
+- An stl for a case for the midiboy is available on [Thingiverse](https://www.thingiverse.com/thing:4878526).
