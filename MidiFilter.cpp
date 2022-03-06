@@ -21,8 +21,6 @@ PSTRING(PSTR_filter_transport,          "- Transport");
 PSTRING(PSTR_filter_active_sensing,     "- Active sensing");
 PSTRING(PSTR_filter_other,              "- Other");
 
-PSTRING(PSTR_filter_messages, "Messages:");
-
 namespace MidiFilter
 {
   bool AllowMessage(const FilterSettingsValues& filter, const midi_event_t& event)

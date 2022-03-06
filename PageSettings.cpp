@@ -40,10 +40,11 @@ namespace
     return GetNumber(i_value + 1);
   }
 
-  PSTRING(PSTR_monitor_fltr_0, "block");
-  PSTRING(PSTR_monitor_fltr_1, "pass");
-  PTABLE(PSTR_monitor_fltr, PSTR_monitor_fltr_0, PSTR_monitor_fltr_1);
-  PTABLE_GETTER(GetMonitorFltr, PSTR_monitor_fltr);
+  PSTRING(PSTR_filter_title, "Input channel filter:");
+  PSTRING(PSTR_filter_0, "block");
+  PSTRING(PSTR_filter_1, "pass");
+  PTABLE(PSTR_filter, PSTR_filter_0, PSTR_filter_1);
+  PTABLE_GETTER(GetMonitorFltr, PSTR_filter);
 }
 
 uint8_t PageSettings::m_selected_line = 0;
@@ -80,7 +81,7 @@ Page::LineResult PageSettings::Line(LineFunction func, uint8_t line, uint8_t fie
     case  1: return SingleLine(func, PSTR_block_other, settings.block_other, GetBlockOther);
     case  2: return SingleLine(func, PSTR_velocity_curve, settings.velocity_curve, GetVelocityCurve);
     case  3: return SingleLine(func, PSTR_brightness, settings.brightness, GetBrightness);
-    case  4: return TextLine(func, PSTR_filter_messages);
+    case  4: return TextLine(func, PSTR_filter_title);
     case  5: {
              Page::LineResult result = SingleLine(func, PSTR_filter_note_on_off, settings.filter.note_off, GetMonitorFltr);
              settings.filter.note_on = settings.filter.note_off; // on and off should be filter together

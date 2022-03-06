@@ -27,10 +27,11 @@ namespace
   PTABLE(PTAB_midimon_inout, PSTR_midimon_inout_0, PSTR_midimon_inout_1, PSTR_midimon_inout_2);
   PTABLE_GETTER(GetInOut, PTAB_midimon_inout);
 
-  PSTRING(PSTR_monitor_filter_0, "hide");
-  PSTRING(PSTR_monitor_filter_1, "show");
-  PTABLE(PSTR_monitor_filter, PSTR_monitor_filter_0, PSTR_monitor_filter_1);
-  PTABLE_GETTER(GetMonitorFilter, PSTR_monitor_filter);
+  PSTRING(PSTR_midimon_messages, "Messages:   all hide/show");
+  PSTRING(PSTR_midimon_filter_0, "hide");
+  PSTRING(PSTR_midimon_filter_1, "show");
+  PTABLE(PSTR_midimon_filter, PSTR_midimon_filter_0, PSTR_midimon_filter_1);
+  PTABLE_GETTER(GetMonitorFilter, PSTR_midimon_filter);
 }
 
 uint8_t PageMonitorSettings::m_selected_line = 0;
@@ -86,9 +87,9 @@ Page::LineResult PageMonitorSettings::Line(LineFunction func, uint8_t line, uint
 
 Page::LineResult PageMonitorSettings::LineAllFilters(Page::LineFunction func, FilterSettingsValues& filters)
 {
-  static uint8_t show = 0;
+  static uint8_t show = 1;
 
-  Page::LineResult result = TextLine(func, PSTR_filter_messages);
+  Page::LineResult result = TextLine(func, PSTR_midimon_messages);
   if (func == Page::DO_LEFT || func == Page::DO_RIGHT) {
     show = 1 - show;
     memset(&filters, show, sizeof(filters));
