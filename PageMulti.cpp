@@ -194,7 +194,8 @@ void PageMulti::SetMidiConfiguration()
   // Set the configuration
   MidiProcessing::Configuration next_config;
   next_config.m_input_channel = EE::Settings().input_channel;
-  next_config.m_nbr_output_channels = num_active_channels;  
+  next_config.m_nbr_output_channels = num_active_channels;
+  next_config.m_override_default_filter = true;
   for (int num = 0; num < num_active_channels; num++) {
     ChannelValues& channel_values = m_values.channel[num + first_active_channel];
     next_config.m_output_channel[num].m_channel = channel_values.channel;

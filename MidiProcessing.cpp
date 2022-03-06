@@ -159,6 +159,16 @@ namespace
     const OutputConfiguration& output_channel = configuration.m_output_channel[channel];    
     Bitfield& output_channel_note_is_on = g_state.m_note_is_on[channel];
 
+    // --- Filter message ---
+    FilterSettingsValues filter = configuration.m_default_filter;
+    if (configuration.m_override_default_filter) {
+      filter.pitch_bend = output_channel.m_allow_pitch_bend;
+      filter.cc_mod_wheel = output_channel.m_allow_modulation;
+      filter.cc_other = output_channel.m_allow_control_change;
+    }
+    if (!MidiFilter::AllowMessage(filter, event))
+      return;
+
     // --- Update channel ---
     event.m_data[0] = (event.m_data[0] & 0xf0) | (output_channel.m_channel & 0xf); 
     
@@ -198,12 +208,6 @@ namespace
 
   void ProcessInputEvent(midi_event_t& event, fifo_t& output_queue)
   {
-    /*
-    FilterSettingsValues filter = EE::Settings().filter;
-    filter.cc_mod_wheel = 
-    if (!MidiFilter::AllowMessage(filter, event)) return false;
-    */
-
     if (event.m_event >= 0x8 && event.m_event <= 0xe) {
       // --- Event for a specific channel ---
       const uint8_t channel = event.m_data[0] & 0x0f;
@@ -216,6 +220,8 @@ namespace
       }
     } else {
       // --- Event for all channels ---
+      if (!MidiFilter::AllowMessage(configuration.m_default_filter, event))
+        return;
       output_queue.push(event); // just pass for the moment, later possible filtering
     }
   }
@@ -283,6 +289,7 @@ namespace MidiProcessing
     m_input_channel = 0;
     m_nbr_output_channels = 0;
     m_default_filter = EE::Settings().filter;
+    m_override_default_filter = false;
     for (uint8_t i = 0; i < m_max_number_of_output_channels; ++i)
       m_output_channel[i].SetDefaults();
   }

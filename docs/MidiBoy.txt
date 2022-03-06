@@ -791,17 +791,17 @@ x De SaveOnlyIfModified moet eigenlijk gewoon in de data.cpp komen. Dat hoort ni
   This thought could have made life much easier when creating the UI. :-(
   (PS: could be very useful for the midi monitor which takes up quite some data for the
   message buffer.)
-- New setting:
+x New setting:
   Other input channels block/pass
-- New page
+x New page
   Midi monitor settings:
   filter x,
   filter Y,
   ...
-- Play when velocity is smaller than x%? Useful?
+x Play when velocity is smaller than x%? Useful?
   Implemented as -70%, -80%, -90%, 0%, 10%, 20%, ...  
   Or as <70, <80, <90, >0, >10, >20 ...
-- Settings should change MIDI configuration on the fly!
+x Settings should change MIDI configuration on the fly!
 x Make scrollbar canvas 25 chars wide
 x New multi menu???
   ======== 1. MULTI =======
@@ -822,7 +822,7 @@ x rotate values if beyond end ? No, prefer no rotation.
   - velocity curve
   - filters: program change
   - screen brightness
-- Need thorough test of MIDI monitor with all kinds of messages, including sysex
+x Need thorough test of MIDI monitor with all kinds of messages, including sysex
 - None in Single wilt zeggen: blokkeer alles komende van input Channel
   Maar in about moet gewoon alles doorgestuurd worden op alle kanalen, een beetje een MIDI Thru dus.
 - Should I do something with NRPN or RPN in MIDI monitor?
@@ -830,7 +830,7 @@ x rotate values if beyond end ? No, prefer no rotation.
   Or force note release before doing switch.
   But SysEx and stuff. And running status...
 x Can monitor cope with running state? Yes
-- Add Manufacturor to Midi Monitor SysEx
+x Add Manufacturor to Midi Monitor SysEx => No, don't have space.
 - Add Panic to MIDI Monitor or Single/Multi????
 x Consider moving the name of a combiline to the combiline itself instead of putting it in the function.
   Nice but uses 2 bytes extra, per combiline.
@@ -853,13 +853,13 @@ x MIDI monitor, "IO to show line" must be completely selectable
 - Tell Blokas about?
   g_decoder.process() mapping F4, F6, F6 to 0x5, which is also used for sysex
   see also UsbToMidi::process()
-- Combiline: more simple pass name, + two functions/ptabs + values,
+x Combiline: more simple pass name, + two functions/ptabs + values,
   name is centered, values are left and right aligned
 - About scherm: Panic
   Single scherm: > None: blokkeer input channel, route al de rest
                  > Block: blokkeer alles
 x Combine SingleLine and BoolLine
   + Major Cleanup
-- Implement filter of pitch bend / mod wheel / cc's for multi
+x Implement filter of pitch bend / mod wheel / cc's for multi
   and how it can be combined with setting filter.
 x Multivalue: channel specific stuff should be in a struct!

@@ -93,6 +93,7 @@ struct MultiValues
 void GetMultiDefault(MultiValues& values);
 
 struct FilterSettingsValues {
+  // 0 = block, 1 = allow
   uint8_t note_off;
   uint8_t note_on;
   uint8_t key_pressure;

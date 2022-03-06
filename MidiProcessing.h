@@ -24,9 +24,9 @@ namespace MidiProcessing
     uint8_t m_minimum_note, m_maximum_note; // transmit notes in [m_minimum_note, m_maximum_note] range
     uint8_t m_minimum_velocity;             // only transmit notes with velocity >= m_minimum_velocity
     uint8_t m_maximum_velocity;             // only transmit notes with velocity <= m_maximum_velocity
-    bool m_allow_pitch_bend;                // whether to transmit pitch bend 
-    bool m_allow_modulation;                // whether to transmit mod wheel
-    bool m_allow_control_change;            // whether to transmit control change (CC's)
+    bool m_allow_pitch_bend;                // if m_override_default_filter=true, whether to transmit pitch bend 
+    bool m_allow_modulation;                // if m_override_default_filter=true, whether to transmit mod wheel
+    bool m_allow_control_change;            // if m_override_default_filter=true, whether to transmit control change (CC's)
     int8_t m_transpose;                     // [-128, 127], transpose notes before transmitting
   };
 
@@ -39,6 +39,7 @@ namespace MidiProcessing
     uint8_t m_input_channel;
     uint8_t m_nbr_output_channels;
     FilterSettingsValues m_default_filter;
+    bool m_override_default_filter;
     enum { m_max_number_of_output_channels = 2};
     OutputConfiguration m_output_channel[m_max_number_of_output_channels];
   };
