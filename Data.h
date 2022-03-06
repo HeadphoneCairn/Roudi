@@ -96,7 +96,8 @@ struct FilterSettingsValues {
   uint8_t note_off;
   uint8_t note_on;
   uint8_t key_pressure;
-  uint8_t control_change;
+  uint8_t cc_mod_wheel;     // control change - CC#1 and CC#33 
+  uint8_t cc_other;         // control change - all other
   uint8_t program_change;
   uint8_t channel_pressure;
   uint8_t pitch_bend;

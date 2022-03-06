@@ -49,6 +49,7 @@ void PageMonitorSettings::OnStart(uint8_t)
 
 void PageMonitorSettings::OnStop() 
 {
+  m_settings.filter.cc_mod_wheel = m_settings.filter.cc_other;
   EE::SetMidiMonSettings(m_settings);
   
   m_selected_line = GetSelectedLine();
@@ -73,7 +74,7 @@ Page::LineResult PageMonitorSettings::Line(LineFunction func, uint8_t line, uint
     case  6: return SingleLine(func, PSTR_filter_channel_pressure,  m_settings.filter.channel_pressure , GetMonitorFilter);
     case  7: return SingleLine(func, PSTR_filter_key_pressure,      m_settings.filter.key_pressure     , GetMonitorFilter);
     case  8: return SingleLine(func, PSTR_filter_program_change,    m_settings.filter.program_change   , GetMonitorFilter);
-    case  9: return SingleLine(func, PSTR_filter_control_change,    m_settings.filter.control_change   , GetMonitorFilter);
+    case  9: return SingleLine(func, PSTR_filter_cc_all,            m_settings.filter.cc_other         , GetMonitorFilter);
     case 10: return SingleLine(func, PSTR_filter_time_sync,         m_settings.filter.time_sync        , GetMonitorFilter);
     case 11: return SingleLine(func, PSTR_filter_transport,         m_settings.filter.transport        , GetMonitorFilter); 
     case 12: return SingleLine(func, PSTR_filter_system_exclusive,  m_settings.filter.system_exclusive , GetMonitorFilter);

@@ -57,7 +57,7 @@ PageSettings::PageSettings():
 void PageSettings::OnStart(uint8_t)
 {
   SettingsValues& values = EE::SettingsRW();
-  SetNumberOfLines(16, m_selected_line, 0, m_first_line);
+  SetNumberOfLines(17, m_selected_line, 0, m_first_line);
 }
 
 void PageSettings::OnStop() 
@@ -92,12 +92,13 @@ Page::LineResult PageSettings::Line(LineFunction func, uint8_t line, uint8_t fie
     case  7: return SingleLine(func, PSTR_filter_channel_pressure,  settings.filter.channel_pressure , GetMonitorFltr);
     case  8: return SingleLine(func, PSTR_filter_key_pressure,      settings.filter.key_pressure     , GetMonitorFltr);
     case  9: return SingleLine(func, PSTR_filter_program_change,    settings.filter.program_change   , GetMonitorFltr);
-    case 10: return SingleLine(func, PSTR_filter_control_change,    settings.filter.control_change   , GetMonitorFltr);
-    case 11: return SingleLine(func, PSTR_filter_time_sync,         settings.filter.time_sync        , GetMonitorFltr);
-    case 12: return SingleLine(func, PSTR_filter_transport,         settings.filter.transport        , GetMonitorFltr); 
-    case 13: return SingleLine(func, PSTR_filter_system_exclusive,  settings.filter.system_exclusive , GetMonitorFltr);
-    case 14: return SingleLine(func, PSTR_filter_active_sensing,    settings.filter.active_sensing   , GetMonitorFltr);
-    case 15: return SingleLine(func, PSTR_filter_other,             settings.filter.other            , GetMonitorFltr);
+    case 10: return SingleLine(func, PSTR_filter_cc_1_mod_wheel,    settings.filter.cc_mod_wheel     , GetMonitorFltr);    
+    case 11: return SingleLine(func, PSTR_filter_cc_other,          settings.filter.cc_other         , GetMonitorFltr);
+    case 12: return SingleLine(func, PSTR_filter_time_sync,         settings.filter.time_sync        , GetMonitorFltr);
+    case 13: return SingleLine(func, PSTR_filter_transport,         settings.filter.transport        , GetMonitorFltr); 
+    case 14: return SingleLine(func, PSTR_filter_system_exclusive,  settings.filter.system_exclusive , GetMonitorFltr);
+    case 15: return SingleLine(func, PSTR_filter_active_sensing,    settings.filter.active_sensing   , GetMonitorFltr);
+    case 16: return SingleLine(func, PSTR_filter_other,             settings.filter.other            , GetMonitorFltr);
     default: return DefaultLine(func);
   }
 }

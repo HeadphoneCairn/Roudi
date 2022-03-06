@@ -40,6 +40,7 @@ Press and release A+B to switch to the level two pages.
 ### MULTI page
 
 - If you select the same channel twice in LAYER of SPLIT mode, only the left channel will be used.
+- The pitch bend, mod wheel, ... on/off overrides the same filters in the SETTINGS.
 
 ## Level Two Pages
 

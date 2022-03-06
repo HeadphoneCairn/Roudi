@@ -7,11 +7,13 @@
 
 
 // --- Strings to be used in the pages ---
-PSTRING(PSTR_filter_note_off,           "- Note off");      // Used in Monitor Settings
-PSTRING(PSTR_filter_note_on,            "- Note on" );      // Used in Monitor Settings
-PSTRING(PSTR_filter_note_on_off,        "- Note on/off");   // used as combination of on and off in Settings
+PSTRING(PSTR_filter_note_off,           "- Note off");              // Used in Monitor Settings
+PSTRING(PSTR_filter_note_on,            "- Note on" );              // Used in Monitor Settings
+PSTRING(PSTR_filter_note_on_off,        "- Note on/off");           // Used as combination of On and Off in Settings
 PSTRING(PSTR_filter_key_pressure,       "- Key pressure");
-PSTRING(PSTR_filter_control_change,     "- Control change");
+PSTRING(PSTR_filter_cc_all,             "- Control change");        // Used as combination of Mod Wheel and Other in Monitor Settings
+PSTRING(PSTR_filter_cc_1_mod_wheel,     "- Mod wheel (CC#1)");      // Used in Settings
+PSTRING(PSTR_filter_cc_other,           "- All other CC");          // Used in Settings
 PSTRING(PSTR_filter_program_change,     "- Program change");
 PSTRING(PSTR_filter_channel_pressure,   "- Channel pressure");
 PSTRING(PSTR_filter_pitch_bend,         "- Pitch bend");
@@ -34,7 +36,7 @@ namespace MidiFilter
       case 0x8: return filter.note_off;
       case 0x9: return filter.note_on;
       case 0xA: return filter.key_pressure;
-      case 0xB: return filter.control_change;
+      case 0xB: return (event.m_data[1] == 1 || event.m_data[1] == 1+32) ? filter.cc_mod_wheel : filter.cc_other;
       case 0xC: return filter.program_change;    // might need be combined with bank select CC 00
       case 0xD: return filter.channel_pressure;
       case 0xE: return filter.pitch_bend;

@@ -2,6 +2,7 @@
 
 #include "Data.h"
 #include "Debug.h"
+#include "MidiFilter.h"
 #include "Utils.h"
 
 #include "DinMidiboy.h"
@@ -197,6 +198,12 @@ namespace
 
   void ProcessInputEvent(midi_event_t& event, fifo_t& output_queue)
   {
+    /*
+    FilterSettingsValues filter = EE::Settings().filter;
+    filter.cc_mod_wheel = 
+    if (!MidiFilter::AllowMessage(filter, event)) return false;
+    */
+
     if (event.m_event >= 0x8 && event.m_event <= 0xe) {
       // --- Event for a specific channel ---
       const uint8_t channel = event.m_data[0] & 0x0f;

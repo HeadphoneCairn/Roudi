@@ -174,8 +174,8 @@ namespace EE
   EEPROM has 1024 bytes:
 
   0000-0007: Header (8 bytes)
-  0008-0071: Settings: 4 bytes + 12 bytes (64 bytes)
-  0072-0091: Midi Monitor Settings: 2 + 12 bytes (20 bytes)
+  0008-0071: Settings: 4 bytes + 13 bytes (64 bytes)
+  0072-0091: Midi Monitor Settings: 2 + 13 bytes (20 bytes)
   0092-0299: Channels names: 16 x (12 chars + zero) (208 bytes)
   0300-0307: Single: 1 byte for selected line (=channel), 1 for first line (8 bytes)
   0308-0311: Multi header: only number of multis for the moment (4 bytes)
@@ -247,7 +247,7 @@ namespace EE
 
   struct EE_Header
   {
-    uint16_t magic_number = 0x2B45;
+    uint16_t magic_number = 0x2B46;
     uint8_t version = 1;
   };
 
