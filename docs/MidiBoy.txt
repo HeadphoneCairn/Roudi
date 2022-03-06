@@ -766,7 +766,7 @@ x Allow for single mode, next to split and layer!
 - Uitroepteken in namen
 - Multi namen beperken tot hoofdletters + nummers + leestekens
 - Save the selected page upon timeout: Maybe too much EEPROM access?
-- De SaveOnlyIfModified moet eigenlijk gewoon in de data.cpp komen. Dat hoort niet in de pages!
+x De SaveOnlyIfModified moet eigenlijk gewoon in de data.cpp komen. Dat hoort niet in de pages!
 - In de toekomst kijken of de settings-in-memory wel hoeven. Als er niet on-the-fly veel
   settings woren geraadpleegd, dan is gewoon lezen van de EEPROM ook goed. Zoals ik doe 
   voor Single en Multi's.

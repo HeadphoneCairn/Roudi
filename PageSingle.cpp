@@ -55,11 +55,11 @@ Page::LineResult PageSingle::Line(LineFunction func, uint8_t line, uint8_t field
 
 void PageSingle::SaveIfModified()
 {
+  // Update "cursor"
   SingleValues values = {GetFirstLine(), GetSelectedLine()};
-  SingleValues stored_values;
-  EE::GetSingle(stored_values);
-  if (memcmp(&stored_values, &values, sizeof(values)) != 0)
-    EE::SetSingle(values);
+  
+  // Save values
+  EE::SetSingle(values);
 }
 
 void PageSingle::SetMidiConfiguration(uint8_t selected_line)

@@ -235,7 +235,11 @@ namespace EE
   template<typename T>
   void EEPROM_PUT(int idx, const T &t)
   {
-    EepromPut(idx, (uint8_t*) &t, sizeof(t));
+    // We only write if the data has been changed
+    T t_read;
+    EepromGet(idx, (uint8_t*) &t_read, sizeof(t));
+    if (memcmp(&t, &t_read, sizeof(t)) != 0)
+      EepromPut(idx, (uint8_t*) &t, sizeof(t));
   }
 #endif
 
@@ -243,7 +247,7 @@ namespace EE
 
   struct EE_Header
   {
-    uint16_t magic_number = 0x2B44;
+    uint16_t magic_number = 0x2B45;
     uint8_t version = 1;
   };
 
@@ -324,10 +328,7 @@ namespace EE
 
   void SetSettings() 
   {
-    SettingsValues eeprom_values; 
-    EEPROM_GET(start_of_settings, eeprom_values);
-    if (memcmp(&eeprom_values, &g_settings_values, sizeof(eeprom_values)) != 0) 
-      EEPROM_PUT(start_of_settings, g_settings_values);    
+    EEPROM_PUT(start_of_settings, g_settings_values);    
   }
 
   void GetSettings()

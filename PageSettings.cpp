@@ -63,6 +63,7 @@ void PageSettings::OnStart(uint8_t)
 void PageSettings::OnStop() 
 {  
   EE::SetSettings();
+  
   m_selected_line = GetSelectedLine();
   m_first_line = GetFirstLine();
 }

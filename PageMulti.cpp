@@ -163,11 +163,8 @@ void PageMulti::SaveIfModified()
   m_values.selected_field = GetSelectedField();
   m_values.first_line = GetFirstLine();
 
-  // Save if values are different
-  MultiValues stored_values;
-  EE::GetMulti(m_which, stored_values);
-  if (memcmp(&stored_values, &m_values, sizeof(stored_values)) != 0)
-    EE::SetMulti(m_which, m_values);
+  // Save values
+  EE::SetMulti(m_which, m_values);
 }
 
 void PageMulti::SaveAs()

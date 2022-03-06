@@ -49,10 +49,8 @@ void PageMonitorSettings::OnStart(uint8_t)
 
 void PageMonitorSettings::OnStop() 
 {
-  MidiMonSettingsValues eeprom_settings;
-  EE::GetMidiMonSettings(eeprom_settings);
-  if (memcmp(&eeprom_settings, &m_settings, sizeof(eeprom_settings)) != 0) 
-    EE::SetMidiMonSettings(m_settings);
+  EE::SetMidiMonSettings(m_settings);
+  
   m_selected_line = GetSelectedLine();
   m_first_line = GetFirstLine();
 }
