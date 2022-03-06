@@ -1,5 +1,6 @@
 #include "MidiProcessing.h"
 
+#include "Data.h"
 #include "Debug.h"
 #include "Utils.h"
 
@@ -203,7 +204,8 @@ namespace
         for (uint8_t i = 0; i < configuration.m_nbr_output_channels; i++)
           ProcessChannel(i, event, output_queue);
       } else { // other channel
-        output_queue.push(event); // just pass for the moment, later possible filtering
+        if (!EE::Settings().block_other)
+          output_queue.push(event); // pass if not blocked in settings
       }
     } else {
       // --- Event for all channels ---
