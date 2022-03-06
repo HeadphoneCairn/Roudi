@@ -211,7 +211,7 @@ namespace
         for (uint8_t i = 0; i < configuration.m_nbr_output_channels; i++)
           ProcessChannel(i, event, output_queue);
       } else { // other channel
-        if (!EE::Settings().block_other)
+        if (!EE::Settings().block_other) // Should really also be in the Configuration
           output_queue.push(event); // pass if not blocked in settings
       }
     } else {
@@ -282,6 +282,7 @@ namespace MidiProcessing
   {
     m_input_channel = 0;
     m_nbr_output_channels = 0;
+    m_default_filter = EE::Settings().filter;
     for (uint8_t i = 0; i < m_max_number_of_output_channels; ++i)
       m_output_channel[i].SetDefaults();
   }

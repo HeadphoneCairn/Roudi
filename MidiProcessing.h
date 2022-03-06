@@ -2,6 +2,8 @@
 
 #include <Arduino.h> // for uint8_t
 
+#include "Data.h"
+
 struct midi_event_t;
 
 namespace MidiProcessing
@@ -36,6 +38,7 @@ namespace MidiProcessing
   public:
     uint8_t m_input_channel;
     uint8_t m_nbr_output_channels;
+    FilterSettingsValues m_default_filter;
     enum { m_max_number_of_output_channels = 2};
     OutputConfiguration m_output_channel[m_max_number_of_output_channels];
   };

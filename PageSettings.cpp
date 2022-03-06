@@ -75,10 +75,18 @@ const char* PageSettings::GetTitle()
 
 Page::LineResult PageSettings::Line(LineFunction func, uint8_t line, uint8_t field)
 {
+  LineResult result = ActualLine(func, line, field);
+  if (result.redraw) // A setting has changed, so we update the midi configuration
+    SetMidiConfiguration();
+  return result;
+}
+
+Page::LineResult PageSettings::ActualLine(LineFunction func, uint8_t line, uint8_t field)
+{
   SettingsValues& settings = EE::SettingsRW();
   switch (line)
   {
-    case  0: return LineInputChannel(func);
+    case  0: return SingleLine(func, PSTR_input_channel, settings.input_channel, GetInputChannel);;
     case  1: return SingleLine(func, PSTR_block_other, settings.block_other, GetBlockOther);
     case  2: return SingleLine(func, PSTR_velocity_curve, settings.velocity_curve, GetVelocityCurve);
     case  3: return SingleLine(func, PSTR_brightness, settings.brightness, GetBrightness);
@@ -103,15 +111,11 @@ Page::LineResult PageSettings::Line(LineFunction func, uint8_t line, uint8_t fie
   }
 }
 
-Page::LineResult PageSettings::LineInputChannel(LineFunction func)
+void PageSettings::SetMidiConfiguration()
 {
-  SettingsValues& settings = EE::SettingsRW();
-  LineResult result = SingleLine(func, PSTR_input_channel, settings.input_channel, GetInputChannel);
-  if (result.redraw) { // input channel has changed
-    Debug::BeepHigh();
-    MidiProcessing::Configuration next_config = MidiProcessing::GetConfiguration();
-    next_config.m_input_channel = settings.input_channel;
-    MidiProcessing::SetNextConfiguration(next_config);
-  }
-  return result; 
+  Debug::BeepHigh();
+  MidiProcessing::Configuration next_config = MidiProcessing::GetConfiguration();
+  next_config.m_input_channel = EE::SettingsRW().input_channel;
+  next_config.m_default_filter = EE::SettingsRW().filter;
+  MidiProcessing::SetNextConfiguration(next_config);
 }

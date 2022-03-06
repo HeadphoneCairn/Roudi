@@ -13,7 +13,9 @@ protected:
   virtual void OnStart(uint8_t dummy = 0xFF) override;
   virtual void OnStop() override;
 private:
-  LineResult LineInputChannel(LineFunction func);
+  LineResult ActualLine(LineFunction func, uint8_t line, uint8_t field);
+private:
+  void SetMidiConfiguration();
 private:
   static uint8_t m_selected_line;
   static uint8_t m_first_line;
