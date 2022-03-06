@@ -1,5 +1,13 @@
 # Roudi
 
+Roudi is a ROUter for miDI messages.
+
+Created by Headphone Cairn for the [Blokas midiboy](https://blokas.io/midiboy/). Parts of the code is by Blokas a.o.
+
+![Headphone Cairn Logo](README.png)
+
+
+
 Second version of MIDI Router for Blokas Midiboy
 
 Roudi = ROUter for miDIboy
@@ -56,3 +64,6 @@ Filters: program change overrides cc filter for CC0
 
 #define ENABLE_RAW exist in Debug.cpp
 #define ENABLE_DEBUG exists in PageMonitor.cpp
+
+
+halo

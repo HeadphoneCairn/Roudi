@@ -1,3 +1,15 @@
+Logo met dunne lijnen in Unicode
+
+     ┐|||┌
+    █ o o █
+     └┐^┌┘
+
+Logo met dikke lijnen:
+
+     ┓┃┃┃┏
+    █ o o █
+     ┗┓^┏┛
+
 
 
 ==========================
