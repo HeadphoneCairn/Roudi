@@ -1,59 +1,76 @@
 # Roudi
 
-Roudi is a ROUter for miDI messages.
+Roudi is a **ROU**ter for mi**DI** messages.
 
-Created by Headphone Cairn for the [Blokas midiboy](https://blokas.io/midiboy/). Parts of the code is by Blokas a.o.
+Created by Headphone Cairn for the [Blokas midiboy](https://blokas.io/midiboy/).
 
-![Headphone Cairn Logo](README.png)
+Roudi was created to make it easy to use a MIDI master keyboard with basic functionality, such as a digital piano, to control several MIDI instruments. It has the following functionality:
+- SINGLE: Easy selection of output channel.
+- MULTI: Layering and splitting with additional options such as velocity, pitch bend, ... filtering. Several MULTIs can be saved and maintained. 
+- MONITOR: A MIDI monitor.
+- SETTINGS: Allows for simple message filtering.
 
+Disclaimer: Due to the limitations of the midiboy, Roudi is also somewhat limited in functionality and ease of use. Furthermore, most of the program storage space is used, as is the RAM memory, so not many improvements are still possible.
 
+# Usage
 
-Second version of MIDI Router for Blokas Midiboy
+## Keys
 
-Roudi = ROUter for miDIboy
+- **left**, **right**: Modify values.
+- **up**, **down**: Switch between fields and/or scroll up and down.
+- **A**: Go to previous page.
+- **B**: Go to next page.
+- combined **A + B** press: Switch to second level pages and back. Roudi is based on two levels of pages, the first level is for normal activity (playing music, SINGLE, MULTI, ...), while the second level is for monitoring and setting up roudi (MONITOR, SETTINGS)
 
-## Menus
+## First Use
 
-- All menus:
-  The selected line is remembered when switching between menus, but never saved to storage.
-- Single / Split / Layer
-  Values are remembered when switching to other menus.
-  Saves values to EEPROM automatically when the values haven't changed for 5 minutes
-- Presets
-  Does no keep values when switching to other menus.
-  Values must be saved to EEPROM manually, using "Save" or "Save As".
-- Settings
-  Keeps values when switching to other menus.
-  Values are saved to EEPROM on every change.
-  
-## Limitations
+Roudi listens on a single input channel and converts its messages to output messages on other channels. It is probably best to start with setting that *Input channel*. When you switch on Roudi, you'll see the SINGLE page. Press and release A+B to switch to the second level of pages and press B until you are in the SETTINGS page. Now, set the *Input channel* to the output channel of you master keyboard connected to the midiboy.
 
-- Menus show names of channels. However, internally they are stored by their channel number.
-  This can cause issues when you change the output channel settings:
-  
-    Say you have set up your synth named SYNTHI on channel 3. And you use SYNTHI in a preset.
-    After some time you need to change the channel of SYNTHI to 5. You make the changes in
-    the output channel settings. Now, the preset will keep using channel 3 (and show
-    the new name for channel 3). If you want your preset to use the SYNTHI again, you have to
-    manually change it and Save it. 
-  
+## Level One Pages
 
+These pages are used when you want to play music. 
 
-## Changelog
+Press and release A+B to switch to the level two pages.
 
+### SINGLE page
 
-## Notes
+- Use **up** and **down** to select output channel.
+- Use **left** or **right** to switch to the naming of the channel.
+
+### MULTI page
+
+- If you select the same channel twice in LAYER of SPLIT mode, only the left channel will be used.
+
+## Level Two Pages
+
+These pages are used when you want to monitor the MIDI messages or setup Roudi. 
+
+Press and release A+B to switch to the level one pages.
+
+### SETTINGS page
+
+### MONITOR page
+
+### MONITOR SETTINGS page
+
+## Concepts and Notes
+
+- All changes you make are saved automatically.
+- The MIDI configuration active on the level on page remains active in the level two page. So, e.g. if you are on a MULTI and you switch to the MONITOR, you'll see the output of the MULTI routing.
 - There are two conventions for numbering notes in MIDI:
   1. MIDI note 60 = C3 
   2. MIDI note 60 = C4 = middle C = 261.63Hz, MIDI note 69 = A4 = 440.00Hz
   We chose the second convention. 
+- If you change the MIDI channels of your MIDI instruments, its Roudi channel name will no longer correspond. The easiest way to correct is, is to go into the old name in SINGLE and save it to the new channel number. 
 
-## Multi
+# Changelog
 
-If you select the same channel twice, only the first channel will be used.
+- version 0.1: Beta release
 
 
-#
+
+
+# TODO
 
 Filters: program change overrides cc filter for CC0
          mod wheel overrides cc filter for CC1
@@ -65,5 +82,11 @@ Filters: program change overrides cc filter for CC0
 #define ENABLE_RAW exist in Debug.cpp
 #define ENABLE_DEBUG exists in PageMonitor.cpp
 
+# Credits and License
 
-halo
+- Roudi written by Headphone Cairn Software
+
+  ![Headphone Cairn Logo](README.png)
+
+- MIDI libraries and more by [Blokas](https://blokas.io/).
+- An stl for a case for the midiboy is available on [Thingiverse](https://www.thingiverse.com/thing:4878526)
