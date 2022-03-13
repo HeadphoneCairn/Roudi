@@ -59,7 +59,7 @@ void PageSingle::SaveIfModified()
   SingleValues values = {GetFirstLine(), GetSelectedLine()};
   
   // Save values
-  EE::SetSingle(values);
+  EE::SetSingle(values); // (will only save if values have changed)
 }
 
 void PageSingle::SetMidiConfiguration(uint8_t selected_line)

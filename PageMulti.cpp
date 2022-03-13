@@ -164,7 +164,7 @@ void PageMulti::SaveIfModified()
   m_values.first_line = GetFirstLine();
 
   // Save values
-  EE::SetMulti(m_which, m_values);
+  EE::SetMulti(m_which, m_values); // (will only save if values have changed)
 }
 
 void PageMulti::SaveAs()

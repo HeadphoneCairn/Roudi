@@ -763,21 +763,21 @@ x Put everything on disk
 x Channels menu
 x connect menus 
 x Save first_line and selected line and field
-- save on switch
+x save on switch
   x Multi
   x single
-  - settings
-- save on timer
+  x settings
+x save on timer
   x multi
   x single
-  - settings
+  x settings
 x Make fake Midi Monitor
 x Use 12 characters for channels anyway????
-- Order of OnStart OnStop Line in Page ... in subclasses
+x Order of OnStart OnStop Line in Page ... in subclasses
 x Allow for single mode, next to split and layer!
 - Uitroepteken in namen
 - Multi namen beperken tot hoofdletters + nummers + leestekens
-- Save the selected page upon timeout: Maybe too much EEPROM access?
+x Save the selected page upon timeout: Maybe too much EEPROM access?
 x De SaveOnlyIfModified moet eigenlijk gewoon in de data.cpp komen. Dat hoort niet in de pages!
 - In de toekomst kijken of de settings-in-memory wel hoeven. Als er niet on-the-fly veel
   settings woren geraadpleegd, dan is gewoon lezen van de EEPROM ook goed. Zoals ik doe 
@@ -804,16 +804,6 @@ x Play when velocity is smaller than x%? Useful?
 x Settings should change MIDI configuration on the fly!
 x Make scrollbar canvas 25 chars wide
 x New multi menu???
-  ======== 1. MULTI =======
-  SPLIT mode      split: C4
-  01       channel       05
-  Typhon             Erebus
-  +1       octave         0
-  0%       velocity      0%
-  off        pb          on
-           modwheel
-  on         cc          on
-  velocity toch in 0 tot 120????
 x rotate values if beyond end ? No, prefer no rotation.
 - Coding style:
   - Add const to member functions if necessary. And to their parameters.
@@ -863,3 +853,25 @@ x Combine SingleLine and BoolLine
 x Implement filter of pitch bend / mod wheel / cc's for multi
   and how it can be combined with setting filter.
 x Multivalue: channel specific stuff should be in a struct!
+  ======== 1. MULTI =======
+  SPLIT mode    split at C4
+  01       channel       05
+  Typhon      |      Erebus
+  +1       octave         0
+  off    pitch bend      on
+  on      modwheel      off
+  on    control change   on
+  0      min velocity     0
+  127    max velocity   127
+- Of toch nog beter:
+  ======== 1. MULTI =======
+  Mode                split    
+  Split at               C4
+  Left           01. Typhon
+  Right    05. abcdefghijkl
+  Octave            +1    0
+  Pitch bend       off   on
+  Modwheel          on  off
+  Control change    on   on
+  Min velocity       0    0
+  Max velocity     127  127

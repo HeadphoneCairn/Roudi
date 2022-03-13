@@ -62,10 +62,12 @@ void PageSettings::OnStart(uint8_t)
 
 void PageSettings::OnStop() 
 {  
-  EE::SetSettings();
-  
-  m_selected_line = GetSelectedLine();
-  m_first_line = GetFirstLine();
+  SaveIfModified();
+}
+
+void PageSettings::OnTimeout()
+{
+  SaveIfModified();
 }
 
 const char* PageSettings::GetTitle()
@@ -109,6 +111,14 @@ Page::LineResult PageSettings::ActualLine(LineFunction func, uint8_t line, uint8
     case 16: return SingleLine(func, PSTR_filter_other,             settings.filter.other            , GetMonitorFltr);
     default: return DefaultLine(func);
   }
+}
+
+void PageSettings::SaveIfModified()
+{
+  EE::SetSettings();
+  
+  m_selected_line = GetSelectedLine();
+  m_first_line = GetFirstLine();
 }
 
 void PageSettings::SetMidiConfiguration()
