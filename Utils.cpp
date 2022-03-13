@@ -16,11 +16,14 @@ const uint8_t MaxLength = MaxNameLength;
 #define UNDERSCORE '_' // represents and empty postion that can be filled, lowest possible value
 
 static const char PSTR_complete_char_set[] PROGMEM = {
-  UNDERSCORE, UNDERSCORE, 
+  UNDERSCORE, UNDERSCORE,
   'a', 'z',
   'A', 'Z',
   '0', '9',
-  '(', '.',
+  '!', '#',
+  '%', '/',
+  ':', '@',
+  '[', '^',
   ' ', ' ', 
   '\0' };
 
@@ -28,7 +31,10 @@ static const char PSTR_uppercase_char_set[] PROGMEM = {
   UNDERSCORE, UNDERSCORE, 
   'A', 'Z',
   '0', '9',
-  '(', '.',
+  '!', '#',
+  '%', '/',
+  ':', '@',
+  '[', '^',
   ' ', ' ', 
   '\0' };
 
