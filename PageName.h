@@ -6,7 +6,7 @@
 class PageName: public Page
 {
 public:
-  PageName();
+  PageName(bool complete_char_set = true);
 protected:
   virtual const char* GetTitle() = 0;
   virtual LineResult Line(LineFunction func, uint8_t line, uint8_t field) override;

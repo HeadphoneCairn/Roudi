@@ -8,7 +8,7 @@
 PSTRING(PSTR_page_name_multi, " SAVE MULTI AS "); 
 PSTRING(PSTR_multi_prefix, "mul");
 
-PageNameMulti::PageNameMulti(): PageName()
+PageNameMulti::PageNameMulti(): PageName(false)
 {
 }
 

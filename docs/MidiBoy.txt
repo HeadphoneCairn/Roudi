@@ -776,7 +776,7 @@ x Use 12 characters for channels anyway????
 x Order of OnStart OnStop Line in Page ... in subclasses
 x Allow for single mode, next to split and layer!
 - Uitroepteken in namen
-- Multi namen beperken tot hoofdletters + nummers + leestekens
+x Multi namen beperken tot hoofdletters + nummers + leestekens
 x Save the selected page upon timeout: Maybe too much EEPROM access?
 x De SaveOnlyIfModified moet eigenlijk gewoon in de data.cpp komen. Dat hoort niet in de pages!
 - In de toekomst kijken of de settings-in-memory wel hoeven. Als er niet on-the-fly veel

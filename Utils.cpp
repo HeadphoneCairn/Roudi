@@ -15,7 +15,7 @@ const uint8_t MaxLength = MaxNameLength;
 
 #define UNDERSCORE '_' // represents and empty postion that can be filled, lowest possible value
 
-static const char PSTR_characters[] PROGMEM = {
+static const char PSTR_complete_char_set[] PROGMEM = {
   UNDERSCORE, UNDERSCORE, 
   'a', 'z',
   'A', 'Z',
@@ -24,13 +24,21 @@ static const char PSTR_characters[] PROGMEM = {
   ' ', ' ', 
   '\0' };
 
+static const char PSTR_uppercase_char_set[] PROGMEM = {
+  UNDERSCORE, UNDERSCORE, 
+  'A', 'Z',
+  '0', '9',
+  '(', '.',
+  ' ', ' ', 
+  '\0' };
+
 namespace {
 
-  char GetNextCharacter(char c, bool use_underscore)
+  char GetNextCharacter(char c, const char* chars)
+
   // Function to iterate through a list of possible char values
   // Complex code to save data memory :-(
   {
-    const char* chars = GetPString(PSTR_characters) + (use_underscore ? 0 : 2);
     if (c == chars[strlen(chars) - 1])
       return c; // no further values;
     for (uint8_t i = 0; i < strlen(chars)/2; i++) {
@@ -43,11 +51,10 @@ namespace {
     }
   }
 
-  char GetPreviousCharacter(char c, bool use_underscore)
+  char GetPreviousCharacter(char c, const char* chars)
   // Function to iterate through a list of possible char values
   // Complex code to save data memory :-(
   {
-    const char* chars = GetPString(PSTR_characters) + (use_underscore ? 0 : 2);
     if (c == chars[0])
       return c; // no further values;
     for (uint8_t i = 0; i < strlen(chars)/2; i++) {
@@ -63,8 +70,9 @@ namespace {
 }
 
 
-NameEditor::NameEditor():
-  m_name_buffer(nullptr)
+NameEditor::NameEditor(bool complete_char_set):
+  m_name_buffer(nullptr),
+  m_char_set(complete_char_set ? PSTR_complete_char_set : PSTR_uppercase_char_set)
 {
 }
 
@@ -106,13 +114,14 @@ bool NameEditor::UpDown(uint8_t position, bool up)
 {
   if (position >= GetPositions()) 
     return false; // Just te be sure
+  char old_character = m_name_buffer[position];
   bool use_underscore = (position + 1 == GetPositions()) || 
                         (position + 2 == GetPositions() && GetLength() != MaxLength);
-  char old_character = m_name_buffer[position];
+  const char* char_set = GetPString(m_char_set) + (use_underscore ? 0 : 2);
   if (up) {
-    m_name_buffer[position] = GetNextCharacter(old_character, use_underscore);
+    m_name_buffer[position] = GetNextCharacter(old_character, char_set);
   } else {
-    m_name_buffer[position] = GetPreviousCharacter(old_character, use_underscore);
+    m_name_buffer[position] = GetPreviousCharacter(old_character, char_set);
   }
   return m_name_buffer[position] != old_character;
 }

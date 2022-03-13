@@ -6,13 +6,14 @@
 class NameEditor
 {
 public:
-  NameEditor();
+  NameEditor(bool complete_char_set = true);
   void Init(char* name_buffer, const char* name);
   void CopyName(char* name);
   uint8_t GetLength();
   uint8_t GetPositions();
   bool UpDown(uint8_t position, bool up);
 private:
+  const char* m_char_set; // points to characters set
   char* m_name_buffer; // points to memory maintained by caller
 };
 

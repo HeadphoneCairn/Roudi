@@ -16,7 +16,14 @@ PSTRING(PSTR_name_help_1, "use left/right to move");
 PSTRING(PSTR_name_help_2, "up/down to make changes");
 PSTRING(PSTR_name_help_3, "v=save, X=cancel");
 
-PageName::PageName(): Page(), m_number_prefix_len(0), m_number(0), m_position(0), m_result(NONE)
+PageName::PageName(bool complete_char_set): 
+  Page(),
+  m_number(0),
+  m_number_max(0),
+  m_number_prefix_len(0), 
+  m_name(complete_char_set),
+  m_result(NONE),
+  m_position(0)
 {
 }
 
