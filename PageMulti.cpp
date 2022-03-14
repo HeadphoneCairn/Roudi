@@ -8,8 +8,8 @@
 
 namespace 
 {
-  PSTRING(PSTR_multi_channel_short, "|");
-  PSTRING(PSTR_multi_channel_long,  "channel");
+  PSTRING(PSTR_multi_channel_left,  "Left");
+  PSTRING(PSTR_multi_channel_right, "Right");
   PSTRING(PSTR_multi_octave,        "octave");
   PSTRING(PSTR_multi_min_velocity,  "min velocity");
   PSTRING(PSTR_multi_max_velocity,  "max velocity");
@@ -17,14 +17,16 @@ namespace
   PSTRING(PSTR_multi_mod_wheel,     "mod wheel");
   PSTRING(PSTR_multi_cc,            "control change");
 
+
+  PSTRING(PSTR_mode, "Mode");
   #define SPLIT_MODE 0
   #define LAYER_MODE 1
   #define LEFT_MODE  2
   #define RIGHT_MODE 3
-  PSTRING(PSTR_mode_split, "SPLIT mode");
-  PSTRING(PSTR_mode_layer, "LAYER mode");
-  PSTRING(PSTR_mode_left,  "LEFT mode");
-  PSTRING(PSTR_mode_right, "RIGHT mode");
+  PSTRING(PSTR_mode_split, "split");
+  PSTRING(PSTR_mode_layer, "layer");
+  PSTRING(PSTR_mode_left,  "left");
+  PSTRING(PSTR_mode_right, "right");
   PTABLE(PTAB_mode, PSTR_mode_split, PSTR_mode_layer, PSTR_mode_left, PSTR_mode_right);
   PTABLE_GETTER(GetMode, PTAB_mode);
 
@@ -33,33 +35,21 @@ namespace
   PTABLE(PSTR_on_off, PSTR_on_off_off, PSTR_on_off_on);
   PTABLE_GETTER(GetOnOff, PSTR_on_off);
 
-  PSTRING(PSTR_multi_split, "split at ");
+  PSTRING(PSTR_multi_split, "Split at");
   const char* GetSplit(uint8_t i_value, uint8_t& o_number_of_values)
   {
     o_number_of_values = 128;
-    if (i_value < o_number_of_values) {
-      char note[10]; // Should be more than long enough
-      strcpy(note, GetNoteName(i_value));
-      strcpy(data_scratch, GetPString(PSTR_multi_split));
-      strcat(data_scratch, note);
-      return data_scratch;
-    } else
+    if (i_value < o_number_of_values)
+      return GetNoteName(i_value);
+    else
       return GetPString(PSTR_unknown_value);
-  }
-
-  PSTRING(PSTR_channel_number, "%02d.");
-  const char* GetChannelNumber(uint8_t i_value, uint8_t& o_number_of_values)
-  {
-    o_number_of_values = NumberOfChannels;
-    sprintf(data_scratch, GetPString(PSTR_channel_number), i_value + 1);
-    return data_scratch;
   }
 
   const char* GetChannelName(uint8_t i_value, uint8_t& o_number_of_values)
   {
     o_number_of_values = NumberOfChannels;
     if (i_value < o_number_of_values)
-      return EE::GetChannelName(i_value);
+      return EE::GetChannelNameFormatted(i_value);
     else
       return GetPString(PSTR_unknown_value);
   }
@@ -98,7 +88,7 @@ void PageMulti::OnStart(uint8_t which_multi)
 {
   m_which = which_multi;
   EE::GetMulti(m_which, m_values);
-  SetNumberOfLines(15, m_values.selected_line, m_values.selected_field, m_values.first_line);
+  SetNumberOfLines(16, m_values.selected_line, m_values.selected_field, m_values.first_line);
   SetMidiConfiguration();
 }
 
@@ -131,24 +121,28 @@ Page::LineResult PageMulti::ActualLine(LineFunction func, uint8_t line, uint8_t 
 {
   switch (line)
   {
-    case 0: return DoubleLine(func, field, PSTR_empty, 0xFF, m_values.mode, GetMode, m_values.split_note, GetSplit);
-    case 1: return DoubleLine(func, field, PSTR_multi_channel_long, 0xFF, m_values.channel[0].channel, GetChannelNumber, m_values.channel[1].channel, GetChannelNumber);
-    case 2: return DoubleLine(func, field, PSTR_multi_channel_short, 0xFF, m_values.channel[0].channel, GetChannelName, m_values.channel[1].channel, GetChannelName);
-    case 3: return DoubleLine(func, field, PSTR_multi_octave, 0xFF, m_values.channel[0].octave, GetOctave, m_values.channel[1].octave, GetOctave);
-    case 4: return DoubleLine(func, field, PSTR_multi_pitch_bend, 0xFF, m_values.channel[0].pitch_bend, GetOnOff, m_values.channel[1].pitch_bend, GetOnOff);
-    case 5: return DoubleLine(func, field, PSTR_multi_mod_wheel, 0xFF, m_values.channel[0].mod_wheel, GetOnOff, m_values.channel[1].mod_wheel, GetOnOff);
-    case 6: return DoubleLine(func, field, PSTR_multi_cc, 0xFF, m_values.channel[0].control_change, GetOnOff, m_values.channel[1].control_change, GetOnOff);
-    case 7: return DoubleLine(func, field, PSTR_multi_min_velocity, 0xFF, m_values.channel[0].min_velocity, GetVelocity, m_values.channel[1].min_velocity, GetVelocity);
-    case 8: return DoubleLine(func, field, PSTR_multi_max_velocity, 0xFF, m_values.channel[0].max_velocity, GetVelocity, m_values.channel[1].max_velocity, GetVelocity);
-    case 9: return DefaultLine(func);
-    case 10: // Save As ... 
+    case 0: return SingleLine(func, PSTR_mode, m_values.mode, GetMode);
+    case 1: if (m_values.mode == SPLIT_MODE) 
+              return SingleLine(func, PSTR_multi_split, m_values.split_note, GetSplit);
+            else
+              return DefaultLine(func);
+    case 2: return SingleLine(func, PSTR_multi_channel_left, m_values.channel[0].channel, GetChannelName);
+    case 3: return SingleLine(func, PSTR_multi_channel_right, m_values.channel[1].channel, GetChannelName);
+    case 4: return DoubleLine(func, field, PSTR_multi_octave, 0xFF, m_values.channel[0].octave, GetOctave, m_values.channel[1].octave, GetOctave);
+    case 5: return DoubleLine(func, field, PSTR_multi_pitch_bend, 0xFF, m_values.channel[0].pitch_bend, GetOnOff, m_values.channel[1].pitch_bend, GetOnOff);
+    case 6: return DoubleLine(func, field, PSTR_multi_mod_wheel, 0xFF, m_values.channel[0].mod_wheel, GetOnOff, m_values.channel[1].mod_wheel, GetOnOff);
+    case 7: return DoubleLine(func, field, PSTR_multi_cc, 0xFF, m_values.channel[0].control_change, GetOnOff, m_values.channel[1].control_change, GetOnOff);
+    case 8: return DoubleLine(func, field, PSTR_multi_min_velocity, 0xFF, m_values.channel[0].min_velocity, GetVelocity, m_values.channel[1].min_velocity, GetVelocity);
+    case 9: return DoubleLine(func, field, PSTR_multi_max_velocity, 0xFF, m_values.channel[0].max_velocity, GetVelocity, m_values.channel[1].max_velocity, GetVelocity);
+    case 10: return DefaultLine(func);
+    case 11: // Save As ... 
       if (func == DO_LEFT || func == DO_RIGHT)
         SaveAs();
       return TextLine(func, PSTR_save_as);
-    case 11: return TextLine(func, PSTR_remove);
-    case 12: return TextLine(func, PSTR_move_left);
-    case 13: return TextLine(func, PSTR_move_right);
-    case 14: // New ...
+    case 12: return TextLine(func, PSTR_remove);
+    case 13: return TextLine(func, PSTR_move_left);
+    case 14: return TextLine(func, PSTR_move_right);
+    case 15: // New ...
       if (func == DO_LEFT || func == DO_RIGHT)
         New();
       return TextLine(func, PSTR_new);

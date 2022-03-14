@@ -876,3 +876,4 @@ x Multivalue: channel specific stuff should be in a struct!
   Control change    on   on
   Min velocity       0    0
   Max velocity     127  127
+- With new format, can go back to 14 chars for Name
