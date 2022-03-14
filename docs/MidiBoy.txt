@@ -835,6 +835,7 @@ x MIDI monitor, "IO to show line" must be completely selectable
   - My logo uses about 1000 bytes
   - Remove Pages::GetPageUsage
   - Switch back to static allocation of pages instead of dynamic saves 600 bytes
+  - Remove hardcode channel names from Data.cpp (SET_DEFAULT_CHANNEL_NAMES)
 - Should I block incoming messages on the channels of the output channels
   hmm: 5 -> 5, cannot block 5
        5 -> 5, 6: block 6???

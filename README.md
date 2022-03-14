@@ -82,6 +82,7 @@ Filters: program change overrides cc filter for CC0
 
 #define ENABLE_RAW exist in Debug.cpp
 #define ENABLE_DEBUG exists in PageMonitor.cpp
+#define SET_DEFAULT_CHANNEL_NAMES exists in Data.cpp
 
 # Credits and License
 

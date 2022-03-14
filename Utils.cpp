@@ -1,5 +1,6 @@
 #include "Utils.h"
 
+#include "Debug.h"
 #include "Data.h"
 
 #include <string.h>
@@ -48,13 +49,14 @@ namespace {
     if (c == chars[strlen(chars) - 1])
       return c; // no further values;
     for (uint8_t i = 0; i < strlen(chars)/2; i++) {
-      const char from = chars[i*2]; 
+      const char from = chars[i*2];
       const char to = chars[i*2 + 1]; 
       if (c == to)
         return chars[i*2 + 2];
       if (c >= from && c < to)
         return c + 1;
     }
+    return chars[strlen(chars) - 1]; // just in case c was not found in chars
   }
 
   char GetPreviousCharacter(char c, const char* chars)
@@ -64,13 +66,14 @@ namespace {
     if (c == chars[0])
       return c; // no further values;
     for (uint8_t i = 0; i < strlen(chars)/2; i++) {
-      const char from = chars[i*2]; 
+      const char from = chars[i*2];
       const char to = chars[i*2 + 1]; 
       if (c == from)
         return chars[i*2 - 1];
       if (c > from && c <= to)
         return c - 1;
     }
+    return chars[strlen(chars) - 1]; // just in case c was not found in chars
   }
 
 }

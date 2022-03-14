@@ -247,7 +247,7 @@ namespace EE
 
   struct EE_Header
   {
-    uint16_t magic_number = 0x2B46;
+    uint16_t magic_number = 0x2B49;
     uint8_t version = 1;
   };
 
@@ -421,22 +421,28 @@ namespace EE
     SetMidiMonSettings(default_values);
   }
 
+#define SET_DEFAULT_CHANNEL_NAMES
+#ifdef SET_DEFAULT_CHANNEL_NAMES
   PSTRING(PSTR_channel_piano,   "Piano");
+  PSTRING(PSTR_channel_wave,    "Waldorf Wave");
   PSTRING(PSTR_channel_erebus,  "Erebus");
   PSTRING(PSTR_channel_typhon,  "Typhon");
   PSTRING(PSTR_channel_ipad,    "iPad");
   PSTRING(PSTR_channel_prophet, "Prophet 6");
+#endif
 
   static void InitChannels()
   {
     for (uint8_t i = 0; i < NumberOfChannels; i++)
       EE::SetChannelName(i, GetPString(PSTR_empty));
-    // TODO: Temporary values that should be removed on release!
+#ifdef SET_DEFAULT_CHANNEL_NAMES
     EE::SetChannelName(0, GetPString(PSTR_channel_piano));
+    EE::SetChannelName(1, GetPString(PSTR_channel_wave));
     EE::SetChannelName(4, GetPString(PSTR_channel_erebus));
     EE::SetChannelName(6, GetPString(PSTR_channel_typhon));
     EE::SetChannelName(9, GetPString(PSTR_channel_ipad));
     EE::SetChannelName(10, GetPString(PSTR_channel_prophet));
+#endif
   }
 
   void Init()
