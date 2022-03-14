@@ -272,7 +272,7 @@ Page::LineResult DoubleLine(
   Page::LineFunction func,
   uint8_t field, 
   const char* name,
-  uint8_t name_pos, 
+  uint8_t value_width, 
   uint8_t& left_value, 
   ValueFunction left_function,
   uint8_t& right_value, 
@@ -292,31 +292,25 @@ Page::LineResult DoubleLine(
     // Prepare buffer
     PadRight(text, Screen::buffer_len);   
 
-    // Add name
+    // Add name (left aligned)
     const char* name_val = GetPString(name);
-    uint8_t name_len = strlen(name_val);
-    if (name_pos == 0xFF) // center name
-      name_pos = (Screen::buffer_len - name_len) >> 1;
-    if (name_pos >= Screen::buffer_len) // make sure pos is not outside screen
-      name_pos = 0;
-    name_len = min(name_len, Screen::buffer_len - name_pos); 
-    strncpy(text + name_pos, name_val, name_len);
+    const uint8_t name_len = min(strlen(name_val), Screen::buffer_len); 
+    strncpy(text, name_val, name_len);
 
-    // Add values: first value is left aligned, second is right aligned
+    // Add values: both values are right aligned, with value_width available space
     for (uint8_t i = 0; i < 2; i++) {
       uint8_t dummy;
       const char* value = pfunctions[i](*pvalues[i], dummy);
-      uint8_t value_len = strlen(value);
-      value_len = min(value_len, Screen::buffer_len);
-      if (i==0) {
-        strncpy(text, value, value_len);
-        if (field == 0)
-          inversion = { Screen::InvertGiven, 0, static_cast<uint8_t>(max(value_len -  1, 0))};  // If the value is "" a single character will be selected
-      } else { 
-        strncpy(text + Screen::buffer_len - value_len, value, value_len);
-        if (field == 1)
-          inversion = { Screen::InvertGiven, static_cast<uint8_t>(min(Screen::buffer_len - value_len, Screen::buffer_len - 1)), Screen::buffer_len - 1}; // If the value is "" a single character will be selected
-      }
+      const uint8_t value_len = strlen(value);
+      uint8_t start_pos = Screen::buffer_len - (2 - i) * value_width;
+      uint8_t length = value_len;
+      if (value_len <= value_width)
+        start_pos += value_width - value_len; // right align
+      else
+        length = value_width; // only copy characters for which we have space
+      strncpy(text + start_pos, value, length);      
+      if (i == field)
+        inversion = { Screen::InvertGiven, start_pos, static_cast<uint8_t>(start_pos + length - 1) }; // If the value is "" a single column of pixels is selected
     }
 
   } else if (func == Page::DO_LEFT) {

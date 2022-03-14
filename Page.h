@@ -82,7 +82,7 @@ Page::LineResult DoubleLine(
   Page::LineFunction func,
   uint8_t field, 
   const char* name,
-  uint8_t name_pos, 
+  uint8_t value_width, 
   uint8_t& left_value, 
   ValueFunction left_function,
   uint8_t& right_value, 

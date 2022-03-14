@@ -10,12 +10,12 @@ namespace
 {
   PSTRING(PSTR_multi_channel_left,  "Left");
   PSTRING(PSTR_multi_channel_right, "Right");
-  PSTRING(PSTR_multi_octave,        "octave");
-  PSTRING(PSTR_multi_min_velocity,  "min velocity");
-  PSTRING(PSTR_multi_max_velocity,  "max velocity");
-  PSTRING(PSTR_multi_pitch_bend,    "pitch bend");
-  PSTRING(PSTR_multi_mod_wheel,     "mod wheel");
-  PSTRING(PSTR_multi_cc,            "control change");
+  PSTRING(PSTR_multi_octave,        "Octave");
+  PSTRING(PSTR_multi_min_velocity,  "Min velocity");
+  PSTRING(PSTR_multi_max_velocity,  "Max velocity");
+  PSTRING(PSTR_multi_pitch_bend,    "Pitch bend");
+  PSTRING(PSTR_multi_mod_wheel,     "Mod wheel");
+  PSTRING(PSTR_multi_cc,            "Control change");
 
 
   PSTRING(PSTR_mode, "Mode");
@@ -128,12 +128,12 @@ Page::LineResult PageMulti::ActualLine(LineFunction func, uint8_t line, uint8_t 
               return DefaultLine(func);
     case 2: return SingleLine(func, PSTR_multi_channel_left, m_values.channel[0].channel, GetChannelName);
     case 3: return SingleLine(func, PSTR_multi_channel_right, m_values.channel[1].channel, GetChannelName);
-    case 4: return DoubleLine(func, field, PSTR_multi_octave, 0xFF, m_values.channel[0].octave, GetOctave, m_values.channel[1].octave, GetOctave);
-    case 5: return DoubleLine(func, field, PSTR_multi_pitch_bend, 0xFF, m_values.channel[0].pitch_bend, GetOnOff, m_values.channel[1].pitch_bend, GetOnOff);
-    case 6: return DoubleLine(func, field, PSTR_multi_mod_wheel, 0xFF, m_values.channel[0].mod_wheel, GetOnOff, m_values.channel[1].mod_wheel, GetOnOff);
-    case 7: return DoubleLine(func, field, PSTR_multi_cc, 0xFF, m_values.channel[0].control_change, GetOnOff, m_values.channel[1].control_change, GetOnOff);
-    case 8: return DoubleLine(func, field, PSTR_multi_min_velocity, 0xFF, m_values.channel[0].min_velocity, GetVelocity, m_values.channel[1].min_velocity, GetVelocity);
-    case 9: return DoubleLine(func, field, PSTR_multi_max_velocity, 0xFF, m_values.channel[0].max_velocity, GetVelocity, m_values.channel[1].max_velocity, GetVelocity);
+    case 4: return DoubleLine(func, field, PSTR_multi_octave, 5, m_values.channel[0].octave, GetOctave, m_values.channel[1].octave, GetOctave);
+    case 5: return DoubleLine(func, field, PSTR_multi_pitch_bend, 5, m_values.channel[0].pitch_bend, GetOnOff, m_values.channel[1].pitch_bend, GetOnOff);
+    case 6: return DoubleLine(func, field, PSTR_multi_mod_wheel, 5, m_values.channel[0].mod_wheel, GetOnOff, m_values.channel[1].mod_wheel, GetOnOff);
+    case 7: return DoubleLine(func, field, PSTR_multi_cc, 5, m_values.channel[0].control_change, GetOnOff, m_values.channel[1].control_change, GetOnOff);
+    case 8: return DoubleLine(func, field, PSTR_multi_min_velocity, 5, m_values.channel[0].min_velocity, GetVelocity, m_values.channel[1].min_velocity, GetVelocity);
+    case 9: return DoubleLine(func, field, PSTR_multi_max_velocity, 5, m_values.channel[0].max_velocity, GetVelocity, m_values.channel[1].max_velocity, GetVelocity);
     case 10: return DefaultLine(func);
     case 11: // Save As ... 
       if (func == DO_LEFT || func == DO_RIGHT)

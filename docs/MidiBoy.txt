@@ -864,7 +864,7 @@ x Multivalue: channel specific stuff should be in a struct!
   on    control change   on
   0      min velocity     0
   127    max velocity   127
-- Of toch nog beter:
+x Of toch nog beter:
   ======== 1. MULTI =======
   Mode                split    
   Split at               C4
