@@ -176,15 +176,15 @@ namespace EE
   0000-0007: Header (8 bytes)
   0008-0071: Settings: 4 bytes + 13 bytes (64 bytes)
   0072-0091: Midi Monitor Settings: 2 + 13 bytes (20 bytes)
-  0092-0299: Channels names: 16 x (12 chars + zero) (208 bytes)
-  0300-0307: Single: 1 byte for selected line (=channel), 1 for first line (8 bytes)
-  0308-0311: Multi header: only number of multis for the moment (4 bytes)
-  0312-0743: Multi x 12 (432 bytes)
+  0092-0331: Channel names: 16 x (14 chars + zero) (240 bytes)
+  0332-0339: Single: 1 byte for selected line (=channel), 1 for first line (8 bytes)
+  0340-0343: Multi header: only number of multis for the moment (4 bytes)
+  0344-0799: Multi x 12 (456 bytes)
                3 bytes for selected line, selected field, first line
-              13 bytes (12 + 1) for the name 
+              15 bytes (14 + zero) for the name 
               10 bytes (2 x 5) for channel settings
                2 bytes for mode
-            = 28 bytes, but leave space for future use => 36 bytes 
+            = 30 bytes, but leave space for future use => 38 bytes 
   ... unused memory ...
 
   NOTE: EEPROM has 100,000 write/erase cycles
@@ -194,11 +194,11 @@ namespace EE
   static const uint16_t start_of_settings = 8;
   static const uint16_t start_of_midimon_settings = 72;
   static const uint16_t start_of_channel_names = 92;
-  static const uint16_t start_of_single = 300;
-  static const uint16_t start_of_multi_header = 308;
-  static const uint16_t start_of_multis = 312;
-  static const uint16_t multi_size = 36; // currently, we use 36 bytes for a multi
-  static const uint8_t  max_multis = 12; // currently, we have a max of 12 multis  TODO number_of_multis
+  static const uint16_t start_of_single = 332;
+  static const uint16_t start_of_multi_header = 340;
+  static const uint16_t start_of_multis = 344;
+  static const uint16_t multi_size = 38; // currently, we use 38 bytes for a multi
+  static const uint8_t  max_multis = 12; // currently, we have a max of 12 multis
   
 //#define USE_SYSTEM_PUT_AND_GET
 #ifdef USE_SYSTEM_PUT_AND_GET
@@ -247,7 +247,7 @@ namespace EE
 
   struct EE_Header
   {
-    uint16_t magic_number = 0x2B49;
+    uint16_t magic_number = 0x2B4B;
     uint8_t version = 1;
   };
 
@@ -429,6 +429,7 @@ namespace EE
   PSTRING(PSTR_channel_typhon,  "Typhon");
   PSTRING(PSTR_channel_ipad,    "iPad");
   PSTRING(PSTR_channel_prophet, "Prophet 6");
+  PSTRING(PSTR_channel_moog,    "Moog Matriarch");
 #endif
 
   static void InitChannels()
@@ -438,6 +439,7 @@ namespace EE
 #ifdef SET_DEFAULT_CHANNEL_NAMES
     EE::SetChannelName(0, GetPString(PSTR_channel_piano));
     EE::SetChannelName(1, GetPString(PSTR_channel_wave));
+    EE::SetChannelName(2, GetPString(PSTR_channel_moog));
     EE::SetChannelName(4, GetPString(PSTR_channel_erebus));
     EE::SetChannelName(6, GetPString(PSTR_channel_typhon));
     EE::SetChannelName(9, GetPString(PSTR_channel_ipad));
