@@ -4,12 +4,10 @@
 #include "Data.h"
 #include "MidiFilter.h"
 #include "MidiProcessing.h"
-#include "Roudi.h"
+#include "Roudi.h" // For ENABLE_MONITOR_RAW
 
 
 PSTRING(PSTR_page_monitor, " MONITOR "); 
-
-//#define ENABLE_RAW // uncomment this to add the raw unfiltered input messages to the monitor
 
 namespace {
 
@@ -18,7 +16,7 @@ namespace {
   {
     PageMonitor* page_monitor = static_cast<PageMonitor*>(data);
 
-#ifdef ENABLE_RAW
+#ifdef ENABLE_MONITOR_RAW
   if (!(event.m_event == 0xf && event.m_data[0] == 0xfe)) { // we ignore active sensing, because it is enoying
     midi_event_t raw_event = event;
     raw_event.m_event <<= 4; 
@@ -245,7 +243,7 @@ namespace {
   PSTRING(PSTR_mm_active_sensing,    "active sensing");        // 0xfe
   PSTRING(PSTR_mm_system_reset,      "reset");                 // 0xff         
 
-#ifdef ENABLE_RAW
+#ifdef ENABLE_MONITOR_RAW
   PSTRING(PSTR_mm_raw_mesage,        "raw %x, %02x %02x %02x");           
 #endif
 }
@@ -325,7 +323,7 @@ Page::LineResult PageMonitor::LineDecode(const midi_msg_t& msg)
           snprintf(text, text_buflen, GetPString(PSTR_mm_unknown));
           break;
       }
-#ifdef ENABLE_RAW
+#ifdef ENABLE_MONITOR_RAW
     } else if (e.m_event >= 0x10) {
       snprintf(text, text_buflen, GetPString(PSTR_mm_raw_mesage), e.m_event>>4, e.m_data[0], e.m_data[1], e.m_data[2]);
 #endif

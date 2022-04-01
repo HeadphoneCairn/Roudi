@@ -876,4 +876,4 @@ x Of toch nog beter:
   Control change    on   on
   Min velocity       0    0
   Max velocity     127  127
-- Can go back to 15 chars for Name of channel and multi
+x Can go back to 14 chars for Name of channel and multi

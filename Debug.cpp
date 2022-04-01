@@ -1,6 +1,6 @@
+#include "Roudi.h"   // for #define ENABLE_DEBUG
 #include "Screen.h"
 
-#define ENABLE_DEBUG // saves about 1000 bytes of programn space
 #ifdef ENABLE_DEBUG  // --------------------------------------------------------
 
 #include <stdio.h>

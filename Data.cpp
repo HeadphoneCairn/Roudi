@@ -1,5 +1,6 @@
 #include "Data.h"
 #include "Debug.h"
+#include "Roudi.h" // for #define ENABLE_WRITE_BEEP and ENABLE_DEFAULT_CHANNEL_NAMES
 
 #include <string.h>
 #include <stdlib.h>
@@ -217,10 +218,12 @@ namespace EE
 
   void EepromPut(int idx, const uint8_t* data, int data_size)
   {
+#ifdef ENABLE_WRITE_BEEP
     // We make sure to ring a bell when we save to the EEPROM to make
     // sure that we don't save too much by accident.
     // Because we can only save 100,000 times to the EEPROM without damaging it.
     Debug::Beep();
+#endif
     const uint8_t *p = data;
     for (int count = 0; count < data_size; count++, p++)
       eeprom_write_byte((uint8_t*) (idx + count), *p);
@@ -421,8 +424,7 @@ namespace EE
     SetMidiMonSettings(default_values);
   }
 
-#define SET_DEFAULT_CHANNEL_NAMES
-#ifdef SET_DEFAULT_CHANNEL_NAMES
+#ifdef ENABLE_DEFAULT_CHANNEL_NAMES
   PSTRING(PSTR_channel_piano,   "Piano");
   PSTRING(PSTR_channel_wave,    "Waldorf Wave");
   PSTRING(PSTR_channel_erebus,  "Erebus");
@@ -436,7 +438,7 @@ namespace EE
   {
     for (uint8_t i = 0; i < NumberOfChannels; i++)
       EE::SetChannelName(i, GetPString(PSTR_empty));
-#ifdef SET_DEFAULT_CHANNEL_NAMES
+#ifdef ENABLE_DEFAULT_CHANNEL_NAMES
     EE::SetChannelName(0, GetPString(PSTR_channel_piano));
     EE::SetChannelName(1, GetPString(PSTR_channel_wave));
     EE::SetChannelName(2, GetPString(PSTR_channel_moog));

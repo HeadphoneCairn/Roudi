@@ -6,7 +6,6 @@
 #include "Pages.h"
 #include "MidiProcessing.h"
 
-const bool g_show_logo = false;
 unsigned long g_last_button_press = 0;  // in ms
 bool g_redraw_next = false;
 
@@ -23,8 +22,9 @@ void setup()
   EE::Init(); // Create the EEPROM data if it doesn't exist yet.
   MidiProcessing::Init(); // Initialize the MIDI processing subsystem
 
-  if (g_show_logo)
-    ShowLogo();
+#ifdef ENABLE_LOGO
+  ShowLogo();
+#endif
 
   // For some reason, after boot of the program, the input
   // event queue receives an up A, up >, up v, up < and up ^,
@@ -35,8 +35,9 @@ void setup()
   MidiboyInput::Event event;
   while (DinMidiboy.readInputEvent(event));
 
-  if (g_show_logo)
-    delay(1000);
+#ifdef ENABLE_LOGO
+  delay(1000);
+#endif
 
   g_last_button_press = millis();
 
