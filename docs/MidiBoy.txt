@@ -877,3 +877,4 @@ x Of toch nog beter:
   Min velocity       0    0
   Max velocity     127  127
 x Can go back to 14 chars for Name of channel and multi
+x Panic! as menu option in Single and Multi, sends to all 16 channels
