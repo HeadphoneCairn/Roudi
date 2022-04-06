@@ -188,14 +188,14 @@ namespace
         return;
       const uint8_t transposed_note = static_cast<uint8_t>(transposed_note_16);
       event.m_data[1] = transposed_note; // update the note in the event
-      if (event.m_event == 0x09) { // Note ON
-        const uint8_t velocity = event.m_data[2];
+      const uint8_t velocity = event.m_data[2];
+      if (event.m_event == 0x09 && velocity > 0) { // Note ON
         if (velocity < output_channel.m_minimum_velocity)
           return;
         if (velocity > output_channel.m_maximum_velocity)
           return;
         output_channel_note_is_on.Set(transposed_note, true); // Mark the (transposed) note as ON
-      } else { // Note Off
+      } else { // Note Off (either 0x8 or 0x9 with velocity 0)
         if (!output_channel_note_is_on.Get(transposed_note))
           return; // The note is not ON, so we don't send an OFF
         output_channel_note_is_on.Set(transposed_note, false); // Mark the (transposed) note as OFF
@@ -227,27 +227,34 @@ namespace
   }
 
   bool SwitchOffAllNotes(fifo_t& output_queue)
-  // Sends All Notes Off on the config channels where notes were on.
-  {
-    if (g_output_queue.hasSpaceFor(Configuration::m_max_number_of_output_channels /*number of involved output channels*/)) {
-      midi_event_t all_notes_off_event;
-      all_notes_off_event.m_event = 0xb; // Control Change
-      all_notes_off_event.m_data[1] = 0x7b; // All Notes Off
-      all_notes_off_event.m_data[2] = 0x00; // ignored
-      for (uint8_t i = 0; i < configuration.m_nbr_output_channels; i++) {
-        if (g_state.m_note_is_on[i].HasAtLeastOne(true)) {
-          // Only send all notes off, if some notes were on.
-          // This is needed to prevent sending notes off to all channels we are iterating over in the menu
-          // while moving to the channel we want.  
-          all_notes_off_event.m_data[0] = 0xb0 | (configuration.m_output_channel[i].m_channel & 0x0f);
-          output_queue.push(all_notes_off_event);
-          g_state.m_note_is_on[i].SetAll(false);
+  // This started out as sending an "All Notes Off" message to all active output channels.
+  // But not all synths treat this message correctly (I am talking about you Dreadbox Typhon)
+  // So we now just send a NOTE off for each note that is on.
+  // This function returns false if not all note offs could have been sent (because the output queue is full)
+  // else true. In the first case, the program should call this function again after treating the output
+  // buffer. In the latter case, the program can switch to a next configuration.  
+  {    
+    // For each channel, send note offs to all notes that are on 
+    midi_event_t note_off_event;
+    note_off_event.m_event = 0x8; // Note OFF
+    note_off_event.m_data[2] = 64; // Typically unused velocity
+    for (uint8_t i = 0; i < configuration.m_nbr_output_channels; i++) {
+      note_off_event.m_data[0] = 0x80 | (configuration.m_output_channel[i].m_channel & 0x0f); // Note off on correct channel
+      Bitfield& output_channel_note_is_on = g_state.m_note_is_on[i];
+      for (uint8_t note = 0; note < 128; note++) {
+        if (output_channel_note_is_on.Get(note) && g_output_queue.hasSpaceFor(1)) {
+          note_off_event.m_data[1] = note; // Note number
+          output_queue.push(note_off_event);
+          output_channel_note_is_on.Set(note, false);
         }
       }
-      return true;
-    } else {
-      return false;
     }
+
+    // Verify that all notes have been switched off
+    bool all_notes_off = true;
+    for (uint8_t i = 0; i < configuration.m_nbr_output_channels; i++)
+      all_notes_off &= !g_state.m_note_is_on[i].HasAtLeastOne(true);
+    return all_notes_off;
   }
 
 }
@@ -339,7 +346,7 @@ namespace MidiProcessing
       g_next_configuration_available = false;
       return true;
     } else {
-      // Output queue is full, cannot add note offs
+      // Output queue is full, cannot add all note offs
       // Please retry after flushing the output queue.  
       return false;
     }
