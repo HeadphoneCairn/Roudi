@@ -242,7 +242,7 @@ namespace
       note_off_event.m_data[0] = 0x80 | (configuration.m_output_channel[i].m_channel & 0x0f); // Note off on correct channel
       Bitfield& output_channel_note_is_on = g_state.m_note_is_on[i];
       for (uint8_t note = 0; note < 128; note++) {
-        if (output_channel_note_is_on.Get(note) && g_output_queue.hasSpaceFor(1)) {
+        if (output_channel_note_is_on.Get(note) && !output_queue.full()) {
           note_off_event.m_data[1] = note; // Note number
           output_queue.push(note_off_event);
           output_channel_note_is_on.Set(note, false);
