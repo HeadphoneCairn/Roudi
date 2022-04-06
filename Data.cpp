@@ -250,7 +250,7 @@ namespace EE
 
   struct EE_Header
   {
-    uint16_t magic_number = 0x2B4B;
+    uint16_t magic_number = 0x2B4C;
     uint8_t version = 1;
   };
 
@@ -441,9 +441,9 @@ namespace EE
 #ifdef ENABLE_DEFAULT_CHANNEL_NAMES
     EE::SetChannelName(0, GetPString(PSTR_channel_piano));
     EE::SetChannelName(1, GetPString(PSTR_channel_wave));
-    EE::SetChannelName(2, GetPString(PSTR_channel_moog));
-    EE::SetChannelName(4, GetPString(PSTR_channel_erebus));
-    EE::SetChannelName(6, GetPString(PSTR_channel_typhon));
+    EE::SetChannelName(2, GetPString(PSTR_channel_typhon));
+    EE::SetChannelName(3, GetPString(PSTR_channel_erebus));
+    EE::SetChannelName(4, GetPString(PSTR_channel_moog));
     EE::SetChannelName(9, GetPString(PSTR_channel_ipad));
     EE::SetChannelName(10, GetPString(PSTR_channel_prophet));
 #endif

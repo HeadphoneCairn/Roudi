@@ -206,8 +206,8 @@ void PageMulti::SetMidiConfiguration()
     // In SPLIT_MODE, the top channel will be at the right side of the keyboard [split_note, 127]
     // and the bottom channel will be at the left side of the keyboard [0, split_note - 1]. 
     const uint8_t split_note = max(1, m_values.split_note); // split_node must be at least 1
-    next_config.m_output_channel[0].m_minimum_note = split_note;
-    next_config.m_output_channel[1].m_maximum_note = split_note - 1;
+    next_config.m_output_channel[0].m_maximum_note = split_note - 1;
+    next_config.m_output_channel[1].m_minimum_note = split_note;
   }
   MidiProcessing::SetNextConfiguration(next_config);
 }
