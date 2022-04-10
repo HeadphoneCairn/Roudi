@@ -36,121 +36,25 @@ namespace
   };
 
   State g_state;
-
-  /*
-
-  bool midi_is_note_on(const midi_event_t &event)
+  
+  // Fix for UsbToMidi::process() and 1 byte system common
+  unsigned FIX_UsbToMidi_process(midi_event_t in, uint8_t out[3])
   {
-    return (event.m_data[0] & 0xf0) == 0x90 && event.m_data[2] >= 0;
+    if (in.m_event == 0x1)
+      in.m_event = 0x5;
+    return UsbToMidi::process(in, out);
   }
 
-  bool midi_is_note_off(const midi_event_t &event)
+  // Write directly to the midi out port
+  void WriteEventToOutput(const midi_event_t& event)
   {
-    uint8_t status = event.m_data[0] & 0xf0;
-    return (status == 0x80) || (status == 0x90 && event.m_data[2] == 0);
+    uint8_t msg[3];
+    uint8_t n = FIX_UsbToMidi_process(event, msg);
+    for (uint8_t i=0; i<n; ++i)
+      DinMidiboy.dinMidi().write(msg[i]);
+    if (g_midi_out_listener.call_back)
+      g_midi_out_listener.call_back(event, g_midi_out_listener.data);
   }
-
-  bool midi_is_all_notes_off(const midi_event_t &event)
-  {
-    return (event.m_data[0] & 0xf0) == 0xb0 && event.m_data[1] >= 123;
-  }
-
-  uint16_t g_channelsHadActivity = 0;
-
-  void clearAllNotes(fifo_t &outputQueue)
-  {
-    midi_event_t allNotesOff;
-    allNotesOff.m_event = 0x0b;
-    allNotesOff.m_data[1] = 123;
-    allNotesOff.m_data[2] = 0;
-    for (uint16_t i=0; i<16; ++i)
-    {
-      if (g_channelsHadActivity & (1 << i))
-      {
-        allNotesOff.m_data[0] = 0xb0 | i;
-        outputQueue.push(allNotesOff);
-      }
-    }
-    g_channelsHadActivity = 0;
-  }
-
-
-  void processEvent(fifo_t &outputQueue, const midi_event_t &event)
-  {
-    if (midi_is_note_on(event) || midi_is_note_off(event))
-    {
-      g_channelsHadActivity |= 1 << (event.m_data[0] & 0x0f);
-      //produceEvents(outputQueue, event, g_semitones, MAX_NOTES);
-    }
-    else if (midi_is_all_notes_off(event))
-    {
-      g_channelsHadActivity &= ~(1 << (event.m_data[0] & 0x0f));
-      outputQueue.push(event);
-    }
-    else
-    {
-      outputQueue.push(event);
-    }
-  }
-
-  void sendSysEx(fifo_t &outputQueue, char* s)
-  // It would be better to create a stream and write bytes to it
-  // and then use decode, I think
-  {
-    // --- SysEx Start ---
-    midi_event_t sysex;
-    sysex.m_event   = 0x0F;
-    sysex.m_data[0] = 0xF0;
-    sysex.m_data[1] = 0;
-    sysex.m_data[2] = 0;
-    outputQueue.push(sysex);
-
-    // --- Blokas (00 21 3B) + midiboy (11) ---
-    sysex.m_data[0] = 0x00;
-    outputQueue.push(sysex);
-    sysex.m_data[0] = 0x21;
-    outputQueue.push(sysex);
-    sysex.m_data[0] = 0x3B;
-    outputQueue.push(sysex);
-    sysex.m_data[0] = 0x11;
-    outputQueue.push(sysex);
-
-    // --- Sysex Data ---
-    char* p = s;
-    while (*p)
-    {   
-      sysex.m_data[0] = static_cast<uint8_t>(*p);
-      outputQueue.push(sysex);
-      p++;
-    }
-
-      // --- SysEx End ---
-    sysex.m_data[0] = 0xF7;
-    outputQueue.push(sysex);
-  }
-
-  */
-
-
-/*
-  inline uint8_t GetChannel(uint8_t command)
-  {
-    return command & 0x0F;
-  }
-  inline uint8_t GetChannel(const midi_event_t& event)
-  {
-    return GetChannel(event.m_data[0]);
-  }
-
-  inline void SetChannel(uint8_t& command, uint8_t channel)
-  {
-    command = command & 0xf0 + channel &0x0f;
-  }
-  inline void SetChannel(midi_event_t& event, uint8_t channel)
-  {
-    SetChannel(event.m_data[0], channel);
-  }
-*/
 
   void ProcessChannel(uint8_t channel, midi_event_t event, fifo_t& output_queue)
   // This function takes an input event, transforms it and sends it to an output channel
@@ -226,13 +130,10 @@ namespace
     }
   }
 
-  bool SwitchOffAllNotes(fifo_t& output_queue)
+  void SwitchOffAllNotes()
   // This started out as sending an "All Notes Off" message to all active output channels.
-  // But not all synths treat this message correctly (I am talking about you Dreadbox Typhon)
+  // But not all synths treat this message correctly (I am talking about you, Dreadbox Typhon)
   // So we now just send a NOTE off for each note that is on.
-  // This function returns false if not all note offs could have been sent (because the output queue is full)
-  // else true. In the first case, the program should call this function again after treating the output
-  // buffer. In the latter case, the program can switch to a next configuration.  
   {    
     // For each channel, send note offs to all notes that are on 
     midi_event_t note_off_event;
@@ -242,19 +143,13 @@ namespace
       note_off_event.m_data[0] = 0x80 | (configuration.m_output_channel[i].m_channel & 0x0f); // Note off on correct channel
       Bitfield& output_channel_note_is_on = g_state.m_note_is_on[i];
       for (uint8_t note = 0; note < 128; note++) {
-        if (output_channel_note_is_on.Get(note) && !output_queue.full()) {
-          note_off_event.m_data[1] = note; // Note number
-          output_queue.push(note_off_event);
-          output_channel_note_is_on.Set(note, false);
+        if (output_channel_note_is_on.Get(note)) {
+          note_off_event.m_data[1] = note;    // Note number
+          WriteEventToOutput(note_off_event); // Send the note off event
         }
       }
+      output_channel_note_is_on.SetAll(false);
     }
-
-    // Verify that all notes have been switched off
-    bool all_notes_off = true;
-    for (uint8_t i = 0; i < configuration.m_nbr_output_channels; i++)
-      all_notes_off &= !g_state.m_note_is_on[i].HasAtLeastOne(true);
-    return all_notes_off;
   }
 
 }
@@ -339,17 +234,14 @@ namespace MidiProcessing
     if (!g_next_configuration_available)
       return true;
 
-    if (SwitchOffAllNotes(g_output_queue)) {
-      // The messages to switch of the notes on the output channels have been put on the output queue.
-      // We can safely change the configuration.
-      configuration = g_next_configuration;
-      g_next_configuration_available = false;
-      return true;
-    } else {
-      // Output queue is full, cannot add all note offs
-      // Please retry after flushing the output queue.  
-      return false;
-    }
+    // TODO: We should return here if we're in the middle of sending SysEx.
+    
+    SwitchOffAllNotes();
+    // The messages to switch of the notes on the output channels have been put on the output queue.
+    // We can safely change the configuration.
+    configuration = g_next_configuration;
+    g_next_configuration_available = false;
+    return true;
   }
 
   void SetMidiInListener(const MidiListener& midi_listener)
@@ -426,26 +318,11 @@ namespace MidiProcessing
     }
   }
   
-  // Fix for UsbToMidi::process() and 1 byte system common
-  unsigned FIX_UsbToMidi_process(midi_event_t in, uint8_t out[3])
-  {
-    if (in.m_event == 0x1)
-      in.m_event = 0x5;
-    return UsbToMidi::process(in, out);
-  }
-
   void WriteToOutput()
   {
-    uint8_t msg[3];
     midi_event_t event;
     while (g_output_queue.pop(event))
-    {
-      uint8_t n = FIX_UsbToMidi_process(event, msg);
-      for (uint8_t i=0; i<n; ++i)
-        DinMidiboy.dinMidi().write(msg[i]);
-      if (g_midi_out_listener.call_back)
-        g_midi_out_listener.call_back(event, g_midi_out_listener.data);
-    }
+      WriteEventToOutput(event);
   }
 
 }
