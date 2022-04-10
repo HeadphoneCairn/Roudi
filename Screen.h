@@ -59,4 +59,14 @@ namespace Screen
 
   // Draw a wiggly line on a specified row
   void DrawWiggle(uint8_t row);
+
+  // Brightness
+  enum Brightness { 
+    BrightnessLow = 0,
+    BrightnessMedium = 1,
+    BrightnessHigh = 2
+  };
+  void SetBrightness(Brightness brightness);
+  void SetBrightness(uint8_t brightness);
+
 }

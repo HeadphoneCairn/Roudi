@@ -152,6 +152,7 @@ void GetFilterSettingsDefault(FilterSettingsValues& values)
 void GetSettingsDefault(SettingsValues& values)
 {
   memset(&values, 0, sizeof(values)); // sizeof of a reference gives the size of the referenced, so ok!
+  values.brightness = Screen::BrightnessHigh;
   GetFilterSettingsDefault(values.filter);
 }
 
@@ -251,7 +252,7 @@ namespace EE
 
   struct EE_Header
   {
-    uint16_t magic_number = 0x2B4C;
+    uint16_t magic_number = 0x2B4D;
     uint8_t version = 1;
   };
 

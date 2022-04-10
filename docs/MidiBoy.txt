@@ -811,7 +811,7 @@ x rotate values if beyond end ? No, prefer no rotation.
 - Settings:
   - velocity curve
   - filters: program change
-  - screen brightness
+  x screen brightness
 x Need thorough test of MIDI monitor with all kinds of messages, including sysex
 - None in Single wilt zeggen: blokkeer alles komende van input Channel
   Maar in about moet gewoon alles doorgestuurd worden op alle kanalen, een beetje een MIDI Thru dus.
@@ -896,3 +896,8 @@ x " %02d. %s " in multi!
   Using "%s" in sprintf uses more dynamic memory, but less program storage!
 - It' probably more logical to move the creation of a new multi from SetMulti into NewMulti
 x Rename PageNameMulti to PageMultiName and PageNameChannel to PageSingleName
+- Change order in Multi to
+  > New
+  > Move left or right
+  > Save as ...
+  > Remove ...

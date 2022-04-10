@@ -116,7 +116,7 @@ struct SettingsValues
   uint8_t input_channel;    // stored as 0-15, shown as 1-16
   uint8_t block_other;      // 0: no, 1: yes
   uint8_t velocity_curve;   // 
-  uint8_t brightness;       //
+  uint8_t brightness;       // low, medium, high
   FilterSettingsValues filter;
 };
 void GetSettingsDefault(SettingsValues& values);

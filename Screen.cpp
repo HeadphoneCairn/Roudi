@@ -1,6 +1,7 @@
 #include "screen.h"
 
 #include "DinMidiboy.h"
+#include <SH1106.h>
 
 #define FONT MIDIBOY_FONT_5X7
 
@@ -160,6 +161,22 @@ namespace Screen
       DinMidiboy.drawBits(wiggle[i%(sizeof(wiggle)/sizeof(wiggle[0]))], 1, false);
   };
 
+  void SetBrightness(Brightness brightness)
+  {
+    uint8_t brightness_to_set = 0;
+    switch (brightness) {
+      case BrightnessLow: brightness_to_set = 0; break;
+      case BrightnessMedium: brightness_to_set = 80; break;
+      case BrightnessHigh: brightness_to_set = 255; break;
+    }
+    sh1106_set_contrast(brightness_to_set);
+  }
+
+  void SetBrightness(uint8_t brightness)
+  {
+    uint8_t brightness_to_set = min(brightness, BrightnessHigh);
+    SetBrightness(static_cast<Screen::Brightness>(brightness_to_set));
+  }
 
 
 

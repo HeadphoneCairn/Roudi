@@ -18,6 +18,7 @@ void setup()
 {
   DinMidiboy.begin();
   DinMidiboy.setButtonRepeatMs(50);
+  Screen::SetBrightness(Screen::BrightnessHigh);
 
   EE::Init(); // Create the EEPROM data if it doesn't exist yet.
   MidiProcessing::Init(); // Initialize the MIDI processing subsystem

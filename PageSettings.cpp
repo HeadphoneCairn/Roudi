@@ -34,11 +34,11 @@ namespace
   PTABLE_GETTER(GetVelocityCurve, PTAB_velocity);
 
   PSTRING(PSTR_brightness, "Screen brightness");
-  const char* GetBrightness(uint8_t i_value, uint8_t& o_number_of_values)
-  {
-    o_number_of_values = 10;
-    return GetNumber(i_value + 1);
-  }
+  PSTRING(PSTR_brightness_0, "low");
+  PSTRING(PSTR_brightness_1, "medium");
+  PSTRING(PSTR_brightness_2, "high");
+  PTABLE(PTAB_brightness, PSTR_brightness_0, PSTR_brightness_1, PSTR_brightness_2);
+  PTABLE_GETTER(GetBrightness, PTAB_brightness);
 
   PSTRING(PSTR_filter_title, "Input channel filter:");
   PSTRING(PSTR_filter_0, "block");
@@ -91,7 +91,13 @@ Page::LineResult PageSettings::ActualLine(LineFunction func, uint8_t line, uint8
     case  0: return SingleLine(func, PSTR_input_channel, settings.input_channel, GetInputChannel);;
     case  1: return SingleLine(func, PSTR_block_other, settings.block_other, GetBlockOther);
     case  2: return SingleLine(func, PSTR_velocity_curve, settings.velocity_curve, GetVelocityCurve);
-    case  3: return SingleLine(func, PSTR_brightness, settings.brightness, GetBrightness);
+    case  3: { 
+             uint8_t previous_brightness = settings.brightness;
+             Page::LineResult result = SingleLine(func, PSTR_brightness, settings.brightness, GetBrightness);
+             if (previous_brightness != settings.brightness)
+               Screen::SetBrightness(settings.brightness);
+             return result;
+             }
     case  4: return TextLine(func, PSTR_filter_title);
     case  5: {
              Page::LineResult result = SingleLine(func, PSTR_filter_note_on_off, settings.filter.note_off, GetMonitorFltr);
@@ -123,7 +129,6 @@ void PageSettings::SaveIfModified()
 
 void PageSettings::SetMidiConfiguration()
 {
-  Debug::BeepHigh();
   MidiProcessing::Configuration next_config = MidiProcessing::GetConfiguration();
   next_config.m_input_channel = EE::SettingsRW().input_channel;
   next_config.m_default_filter = EE::SettingsRW().filter;
