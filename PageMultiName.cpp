@@ -1,4 +1,4 @@
-#include "PageNameMulti.h"
+#include "PageMultiName.h"
 
 #include "Debug.h"
 #include "Data.h"
@@ -8,11 +8,11 @@
 PSTRING(PSTR_page_name_multi, " SAVE MULTI AS "); 
 PSTRING(PSTR_multi_prefix, "mul");
 
-PageNameMulti::PageNameMulti(): PageName(false)
+PageMultiName::PageMultiName(): PageName(false)
 {
 }
 
-void PageNameMulti::OnStart(uint8_t which_multi)
+void PageMultiName::OnStart(uint8_t which_multi)
 {
   m_which_multi = which_multi;
   const uint8_t max_multi_allowed = min(EE::GetNumberOfMultis() + 1, EE::GetMaxNumberOfMultis()); // User can create a new multi by saving one further than current number of multis. 
@@ -22,12 +22,12 @@ void PageNameMulti::OnStart(uint8_t which_multi)
   PageName::OnStart();
 }
 
-const char* PageNameMulti::GetTitle()
+const char* PageMultiName::GetTitle()
 {
   return GetPString(PSTR_page_name_multi);
 }
 
-bool PageNameMulti::OnUpDown(UpDownAction action)
+bool PageMultiName::OnUpDown(UpDownAction action)
 {  
   bool redraw = PageName::OnUpDown(action);
   if (GetResult() == ACCEPT) {

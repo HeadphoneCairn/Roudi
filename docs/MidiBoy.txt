@@ -894,4 +894,5 @@ x Multi:
 x Share "Panic!" string  
 x " %02d. %s " in multi!
   Using "%s" in sprintf uses more dynamic memory, but less program storage!
-- It' probably more logical to move the creation of a new multi from SetMulti into NewMuti
+- It' probably more logical to move the creation of a new multi from SetMulti into NewMulti
+x Rename PageNameMulti to PageMultiName and PageNameChannel to PageSingleName

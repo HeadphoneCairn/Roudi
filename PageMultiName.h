@@ -2,14 +2,16 @@
 
 #include "PageName.h"
 
-class PageNameChannel: public PageName
+class PageMultiName: public PageName
 {
 public:
-  PageNameChannel();
+  PageMultiName();
 protected:
   virtual const char* GetTitle() override;
-  virtual void OnStart(uint8_t channel_value) override;
+  virtual void OnStart(uint8_t which_multi) override;
   virtual bool OnUpDown(UpDownAction action) override;
+private:
+  uint8_t m_which_multi;
 };
 
 

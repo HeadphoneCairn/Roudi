@@ -15,8 +15,8 @@ enum PageID
   PAGE_MONITOR_SETTINGS = 12,
 
   // --- Popup pages ---
-  PAGE_NAME_CHANNEL = 101,
-  PAGE_NAME_MULTI   = 102,
+  PAGE_SINGLE_NAME  = 101,
+  PAGE_MULTI_NAME   = 102,
   PAGE_MULTI_REMOVE = 103,
   
   // --- Special pages ---

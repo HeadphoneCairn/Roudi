@@ -46,7 +46,7 @@ Page::LineResult PageSingle::Line(LineFunction func, uint8_t line, uint8_t field
       text = (line < NumberOfChannels) ? EE::GetChannelNameFormatted(line) : GetPString(PSTR_none);
     } else if (func == DO_LEFT || func == DO_RIGHT) {
       if (line < NumberOfChannels)
-        Pages::SetNextPage(PAGE_NAME_CHANNEL, line);
+        Pages::SetNextPage(PAGE_SINGLE_NAME, line);
     } else if (func == DO_SELECTED) {
       SetMidiConfiguration(line);
     }

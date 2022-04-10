@@ -172,7 +172,7 @@ void PageMulti::SaveIfModified()
 
 void PageMulti::SaveAs()
 {
-  Pages::SetNextPage(PAGE_NAME_MULTI, m_which);
+  Pages::SetNextPage(PAGE_MULTI_NAME, m_which);
 }
 
 void PageMulti::Remove()

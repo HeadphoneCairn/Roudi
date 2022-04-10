@@ -1,4 +1,4 @@
-#include "PageNameChannel.h"
+#include "PageSingleName.h"
 
 #include "Debug.h"
 #include "Data.h"
@@ -8,22 +8,22 @@
 PSTRING(PSTR_page_name_channel, " CHANNEL NAME "); 
 PSTRING(PSTR_channel_prefix, "ch");
 
-PageNameChannel::PageNameChannel(): PageName()
+PageSingleName::PageSingleName(): PageName()
 {
 }
 
-void PageNameChannel::OnStart(uint8_t channel_value)
+void PageSingleName::OnStart(uint8_t channel_value)
 {
   SetValues(EE::GetChannelName(channel_value), channel_value, NumberOfChannels, PSTR_channel_prefix);
   PageName::OnStart();
 }
 
-const char* PageNameChannel::GetTitle()
+const char* PageSingleName::GetTitle()
 {
   return GetPString(PSTR_page_name_channel);
 }
 
-bool PageNameChannel::OnUpDown(UpDownAction action)
+bool PageSingleName::OnUpDown(UpDownAction action)
 {  
   bool redraw = PageName::OnUpDown(action);
   if (GetResult() == ACCEPT) {
