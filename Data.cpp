@@ -328,6 +328,19 @@ namespace EE
     }
   }
 
+  uint8_t RemoveMulti(uint8_t which) 
+  {
+    if (GetNumberOfMultis() > 1 && which < GetNumberOfMultis()) {
+      for (uint8_t i = which + 1; i < GetNumberOfMultis(); i++) {
+        MultiValues values;
+        GetMulti(i, values);
+        SetMulti(i - 1, values);
+      }
+      SetNumberOfMultis(GetNumberOfMultis() - 1);
+    }
+    return min(which, GetNumberOfMultis() - 1);
+  }
+
 
   // ===== S E T T I N G S =====================================================
 

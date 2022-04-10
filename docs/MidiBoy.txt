@@ -891,3 +891,5 @@ x Test with buffer of 2 => Had to use !full on output queue instead of hasSpaceF
   x Move left
   x Move right
 x Share "Panic!" string  
+- " %02d. %s " in multi!
+- It' probably more logical to move the creation of a new multi from SetMulti into NewMuti

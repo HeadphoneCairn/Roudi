@@ -20,6 +20,7 @@ private:
   LineResult ActualLine(LineFunction func, uint8_t line, uint8_t field);
   void SaveIfModified();
   void SaveAs();
+  void Remove();
   void MoveLeftOrRight(bool left);
   void New();
 private:

@@ -138,7 +138,10 @@ Page::LineResult PageMulti::ActualLine(LineFunction func, uint8_t line, uint8_t 
       if (func == DO_LEFT || func == DO_RIGHT)
         SaveAs();
       return TextLine(func, PSTR_save_as);
-    case 12: return TextLine(func, PSTR_remove);
+    case 12:
+      if (func == DO_LEFT || func == DO_RIGHT)
+        Remove();
+      return TextLine(func, PSTR_remove);
     case 13: // Move left or right
       if (func == DO_LEFT || func == DO_RIGHT)
         MoveLeftOrRight(func == DO_LEFT);
@@ -169,6 +172,14 @@ void PageMulti::SaveIfModified()
 void PageMulti::SaveAs()
 {
   Pages::SetNextPage(PAGE_NAME_MULTI, m_which);
+}
+
+void PageMulti::Remove()
+{
+  if (EE::GetNumberOfMultis() > 1)
+    Pages::SetNextPage(PAGE_MULTI_REMOVE, m_which);
+  else
+    Debug::BeepLow();
 }
 
 void PageMulti::MoveLeftOrRight(bool left)

@@ -4,6 +4,7 @@
 #include "PageMonitor.h"
 #include "PageMonitorSettings.h"
 #include "PageMulti.h"
+#include "PageMultiRemove.h"
 #include "PageNameChannel.h"
 #include "PageNameMulti.h"
 #include "PageSettings.h"
@@ -20,7 +21,8 @@
 
   Lower level:
   0. PageSingle ------- PageNameChannel
-  1. PageMulti -------- PageNameMulti
+  1. PageMulti -------- PageNameMulti, PageMultiRemove
+
   n. PageAbout
 
   Upper level:
@@ -75,6 +77,7 @@ namespace Pages
       case PAGE_MONITOR_SETTINGS: g_current_page = new PageMonitorSettings; break;
       case PAGE_NAME_CHANNEL: g_current_page = new PageNameChannel; break;
       case PAGE_NAME_MULTI:   g_current_page = new PageNameMulti; break;
+      case PAGE_MULTI_REMOVE: g_current_page = new PageMultiRemove; break;
       default:                g_current_page = new PageSingle; break;
     }
     g_current_page->Start(data);
@@ -127,7 +130,7 @@ namespace Pages
   void ButtonA() 
   {
     // Ignore A/B for some pages
-    if (g_current_lower && (g_current_lower_id == PAGE_NAME_CHANNEL || g_current_lower_id == PAGE_NAME_MULTI))
+    if (g_current_lower && (g_current_lower_id == PAGE_NAME_CHANNEL || g_current_lower_id == PAGE_NAME_MULTI || g_current_lower_id == PAGE_MULTI_REMOVE))
       return;
 
     // Go to previous page
@@ -164,7 +167,7 @@ namespace Pages
   void ButtonB()
   {
     // Ignore A/B for some pages
-    if (g_current_lower && (g_current_lower_id == PAGE_NAME_CHANNEL || g_current_lower_id == PAGE_NAME_MULTI))
+    if (g_current_lower && (g_current_lower_id == PAGE_NAME_CHANNEL || g_current_lower_id == PAGE_NAME_MULTI || g_current_lower_id == PAGE_MULTI_REMOVE))
        return;
 
     // Go to next page
@@ -200,7 +203,7 @@ namespace Pages
   void ButtonAB()
   {
     // Ignore A/B for some pages
-    if (g_current_lower && (g_current_lower_id == PAGE_NAME_CHANNEL || g_current_lower_id == PAGE_NAME_MULTI))
+    if (g_current_lower && (g_current_lower_id == PAGE_NAME_CHANNEL || g_current_lower_id == PAGE_NAME_MULTI || g_current_lower_id == PAGE_MULTI_REMOVE))
       return;
 
     g_current_lower = !g_current_lower;
@@ -226,18 +229,19 @@ namespace Pages
       max(sizeof(PageMulti), 
       max(sizeof(PageNameMulti), 
       max(sizeof(PageMonitor),
-      max(sizeof(PageSettings), sizeof(PageAbout)))))));
+      max(sizeof(PageSettings),
+      max(sizeof(PageAbout), sizeof(PageMultiRemove))))))));
 
   }
 
-  PSTRING(PSTR_page_usage, "%d %d %d %d %d %d %d");
+  PSTRING(PSTR_page_usage, "%d %d %d %d %d %d %d %d");
   const char* GetPageUsage()
   {
     snprintf(data_scratch, sizeof(data_scratch), GetPString(PSTR_page_usage),
              sizeof(PageSingle), sizeof(PageNameChannel),
              sizeof(PageMulti), sizeof(PageNameMulti),
              sizeof(PageMonitor), sizeof(PageSettings), 
-             sizeof(PageAbout));
+             sizeof(PageAbout), sizeof(PageMultiRemove));
     return data_scratch;
   }
 
