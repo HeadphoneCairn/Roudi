@@ -203,7 +203,7 @@ PSTRING(PSTR_unknown_value, "?");
 
 Page::LineResult DefaultLine(Page::LineFunction func)
 {
-  return Page::LineResult{1, GetPString(PSTR_empty), Screen::inversion_none, false};
+  return Page::LineResult{1, GetPString(PSTR_empty), Screen::inversion_all, false};
 }
 
 Page::LineResult TextLine(Page::LineFunction func, const char* pstring)

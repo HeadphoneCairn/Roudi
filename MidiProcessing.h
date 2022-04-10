@@ -60,10 +60,13 @@ namespace MidiProcessing
   // - Use SetNextConfiguration to specify the next configuration
   // - Call ActivateNextConfigurationIfAvailable until it returns true  
   void SetNextConfiguration(const Configuration& next_configuration);
-  // ActivateNextConfiguration returns true on success, but false
-  // if output queue was full, in which case the call should be 
-  // reattempted after writing the queue to MIDI out
+  // ActivateNextConfiguration returns true if configuration was changed.
   bool ActivateNextConfigurationIfAvailable();
+
+  // To be called to tell the main loop that panic has to be sent
+  void SetPanic();
+  // To be called in main loop.
+  void SendPanicIfNeeded();
 
   // This interface can be used to get notified of every incoming MIDI message
   // WARNING: The midi_listener MUST return as quickly as possible!

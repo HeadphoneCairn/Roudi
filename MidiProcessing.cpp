@@ -15,7 +15,8 @@ namespace
 
   Configuration configuration;                 // currently active MIDI configuration
   Configuration g_next_configuration;          // next configuration, to be set if ...
-  bool g_next_configuration_available = false; // ... next_confuration_available = true 
+  bool g_next_configuration_available = false; // ... next_confuration_available = true
+  bool g_panic = false; // to be set if panic has to be sent to all channels 
   MidiListener g_midi_in_listener = {nullptr, nullptr};
   MidiListener g_midi_out_listener = {nullptr, nullptr};
   
@@ -232,16 +233,38 @@ namespace MidiProcessing
   bool ActivateNextConfigurationIfAvailable()
   {
     if (!g_next_configuration_available)
-      return true;
+      return false;
 
     // TODO: We should return here if we're in the middle of sending SysEx.
-    
+
     SwitchOffAllNotes();
     // The messages to switch of the notes on the output channels have been put on the output queue.
     // We can safely change the configuration.
     configuration = g_next_configuration;
     g_next_configuration_available = false;
     return true;
+  }
+
+  void SetPanic()
+  {
+    g_panic = true;
+  }
+
+  void SendPanicIfNeeded()
+  {
+    if (!g_panic)
+      return;
+ 
+    midi_event_t note_off_event;
+    note_off_event.m_event = 0xb; // Control change
+    note_off_event.m_data[1] = 0x78; // All Sound Off
+    note_off_event.m_data[2] = 0x00; // unused
+    for (uint8_t i = 0xb0; i < 0xc0; i++) {
+      note_off_event.m_data[0] = i; // Control change on correct channel
+      WriteEventToOutput(note_off_event); // Send the note off event
+      }
+
+    g_panic = false;
   }
 
   void SetMidiInListener(const MidiListener& midi_listener)

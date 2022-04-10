@@ -118,6 +118,9 @@ void loop()
     g_last_button_press = 0;
   }
 
+  // --- Send Panic if needed ---
+  MidiProcessing::SendPanicIfNeeded();
+
   // --- Change the midi configuration if needed ---
   MidiProcessing::ActivateNextConfigurationIfAvailable();
 

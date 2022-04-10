@@ -42,6 +42,11 @@ Press and release A+B to switch to the level two pages.
 - If you select the same channel twice in LAYER of SPLIT mode, only the left channel will be used.
 - The pitch bend, mod wheel, ... on/off overrides the same filters in the SETTINGS.
 
+### ABOUT page
+
+- Some information about Roudi
+- On this page, the input channel is blocked. This is the same as "None" on the SINGLE page.
+
 ## Level Two Pages
 
 These pages are used when you want to monitor the MIDI messages or setup Roudi. 

@@ -75,6 +75,7 @@ namespace
   PSTRING(PSTR_move_left, "> Move left");
   PSTRING(PSTR_move_right, "> Move right");
   PSTRING(PSTR_new, "> New");
+  PSTRING(PSTR_panic, "> Panic!");
 }
 
 
@@ -88,7 +89,7 @@ void PageMulti::OnStart(uint8_t which_multi)
 {
   m_which = which_multi;
   EE::GetMulti(m_which, m_values);
-  SetNumberOfLines(16, m_values.selected_line, m_values.selected_field, m_values.first_line);
+  SetNumberOfLines(18, m_values.selected_line, m_values.selected_field, m_values.first_line);
   SetMidiConfiguration();
 }
 
@@ -146,6 +147,10 @@ Page::LineResult PageMulti::ActualLine(LineFunction func, uint8_t line, uint8_t 
       if (func == DO_LEFT || func == DO_RIGHT)
         New();
       return TextLine(func, PSTR_new);
+    case 17: // Panic
+      if (func == DO_LEFT || func == DO_RIGHT)
+        MidiProcessing::SetPanic(); 
+      return TextLine(func, PSTR_panic);
     default: return DefaultLine(func);
   }
 }
