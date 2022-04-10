@@ -8,6 +8,8 @@
 
 namespace 
 {
+  PSTRING(PSTR_multi_title_format,  " %02d. %s ");
+
   PSTRING(PSTR_multi_channel_left,  "Left");
   PSTRING(PSTR_multi_channel_right, "Right");
   PSTRING(PSTR_multi_octave,        "Octave");
@@ -103,7 +105,7 @@ void PageMulti::OnTimeout()
 
 const char* PageMulti::GetTitle()
 {
-  sprintf(Screen::buffer, " %02d. %s ", m_which + 1, m_values.name);
+  sprintf(Screen::buffer, GetPString(PSTR_multi_title_format), m_which + 1, m_values.name);
   return Screen::buffer;
 }
 
