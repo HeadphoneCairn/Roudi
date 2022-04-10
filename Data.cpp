@@ -38,6 +38,7 @@ const char* GetPStringFromPTable(const char *const ptable[], uint8_t which)
 
 // --- Globally defined strings ---
 PSTRING(PSTR_empty, "");
+PSTRING(PSTR_panic, "> Panic!");
 
 // --- Octaves ---
 #define MAX_OCTAVES 6

@@ -74,7 +74,6 @@ namespace
   PSTRING(PSTR_remove, "> Remove ...");
   PSTRING(PSTR_move_left, "> Move left or right");
   PSTRING(PSTR_new, "> New");
-  PSTRING(PSTR_panic, "> Panic!");
 }
 
 

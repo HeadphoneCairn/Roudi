@@ -9,7 +9,6 @@ namespace
 {
   PSTRING(PSTR_page_single, " SINGLE "); 
   PSTRING(PSTR_none, "None");
-  PSTRING(PSTR_panic, "> Panic!");
 }
 
 PageSingle::PageSingle(): Page()

@@ -890,4 +890,4 @@ x Test with buffer of 2 => Had to use !full on output queue instead of hasSpaceF
   - Remove ...
   x Move left
   x Move right
-- Share "Panic!" string  
+x Share "Panic!" string  
