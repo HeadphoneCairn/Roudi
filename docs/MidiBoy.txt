@@ -886,8 +886,8 @@ x Panic! as menu option in Single and Multi, sends to all 16 channels both Notes
 x Test with buffer of 2 => Had to use !full on output queue instead of hasSpaceFor
 - Check fifo_t for bugs
 - Need some kind of version number on About screen
-- Multi:
-  - Remove ...
+x Multi:
+  x Remove ...
   x Move left
   x Move right
 x Share "Panic!" string  

@@ -13,7 +13,6 @@ protected:
   virtual LineResult Line(LineFunction func, uint8_t line, uint8_t field) override;
 private:
   uint8_t m_which_multi;
-  char m_remove[Screen::MaxCharsCanvas+1];
 };
 
 
