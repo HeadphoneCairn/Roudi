@@ -95,7 +95,7 @@ Page::LineResult PageSettings::ActualLine(LineFunction func, uint8_t line, uint8
              uint8_t previous_brightness = settings.brightness;
              Page::LineResult result = SingleLine(func, PSTR_brightness, settings.brightness, GetBrightness);
              if (previous_brightness != settings.brightness)
-               Screen::SetBrightness(settings.brightness);
+               Screen::SetBrightness(static_cast<Screen::Brightness>(settings.brightness));
              return result;
              }
     case  4: return TextLine(func, PSTR_filter_title);

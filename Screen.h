@@ -67,6 +67,5 @@ namespace Screen
     BrightnessHigh = 2
   };
   void SetBrightness(Brightness brightness);
-  void SetBrightness(uint8_t brightness);
 
 }

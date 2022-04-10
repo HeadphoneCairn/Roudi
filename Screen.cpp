@@ -172,14 +172,6 @@ namespace Screen
     sh1106_set_contrast(brightness_to_set);
   }
 
-  void SetBrightness(uint8_t brightness)
-  {
-    uint8_t brightness_to_set = min(brightness, BrightnessHigh);
-    SetBrightness(static_cast<Screen::Brightness>(brightness_to_set));
-  }
-
-
-
 
 /*
   // To test:

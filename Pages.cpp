@@ -94,7 +94,7 @@ namespace Pages
 
   void Start()
   {
-    Screen::SetBrightness(EE::Settings().brightness);
+    Screen::SetBrightness(static_cast<Screen::Brightness>(EE::Settings().brightness));
     ShowPage(g_current_lower_id);
   }
 
