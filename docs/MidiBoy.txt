@@ -888,6 +888,6 @@ x Test with buffer of 2 => Had to use !full on output queue instead of hasSpaceF
 - Need some kind of version number on About screen
 - Multi:
   - Remove ...
-  - Move left
-  - Move right
-  
+  x Move left
+  x Move right
+- Share "Panic!" string  

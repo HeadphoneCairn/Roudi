@@ -70,10 +70,9 @@ namespace
     return GetNumber(VelocityValueToVelocityMidi(i_value));
   }
 
-  PSTRING(PSTR_save_as, "> Save As ...");
+  PSTRING(PSTR_save_as, "> Save as ...");
   PSTRING(PSTR_remove, "> Remove ...");
-  PSTRING(PSTR_move_left, "> Move left");
-  PSTRING(PSTR_move_right, "> Move right");
+  PSTRING(PSTR_move_left, "> Move left or right");
   PSTRING(PSTR_new, "> New");
   PSTRING(PSTR_panic, "> Panic!");
 }
@@ -89,7 +88,7 @@ void PageMulti::OnStart(uint8_t which_multi)
 {
   m_which = which_multi;
   EE::GetMulti(m_which, m_values);
-  SetNumberOfLines(18, m_values.selected_line, m_values.selected_field, m_values.first_line);
+  SetNumberOfLines(17, m_values.selected_line, m_values.selected_field, m_values.first_line);
   SetMidiConfiguration();
 }
 
@@ -136,18 +135,20 @@ Page::LineResult PageMulti::ActualLine(LineFunction func, uint8_t line, uint8_t 
     case 8: return DoubleLine(func, field, PSTR_multi_min_velocity, 5, m_values.channel[0].min_velocity, GetVelocity, m_values.channel[1].min_velocity, GetVelocity);
     case 9: return DoubleLine(func, field, PSTR_multi_max_velocity, 5, m_values.channel[0].max_velocity, GetVelocity, m_values.channel[1].max_velocity, GetVelocity);
     case 10: return DefaultLine(func);
-    case 11: // Save As ... 
+    case 11: // Save as ... 
       if (func == DO_LEFT || func == DO_RIGHT)
         SaveAs();
       return TextLine(func, PSTR_save_as);
     case 12: return TextLine(func, PSTR_remove);
-    case 13: return TextLine(func, PSTR_move_left);
-    case 14: return TextLine(func, PSTR_move_right);
-    case 15: // New ...
+    case 13: // Move left or right
+      if (func == DO_LEFT || func == DO_RIGHT)
+        MoveLeftOrRight(func == DO_LEFT);
+      return TextLine(func, PSTR_move_left);
+    case 14: // New ...
       if (func == DO_LEFT || func == DO_RIGHT)
         New();
       return TextLine(func, PSTR_new);
-    case 17: // Panic
+    case 16: // Panic!
       if (func == DO_LEFT || func == DO_RIGHT)
         MidiProcessing::SetPanic(); 
       return TextLine(func, PSTR_panic);
@@ -171,16 +172,28 @@ void PageMulti::SaveAs()
   Pages::SetNextPage(PAGE_NAME_MULTI, m_which);
 }
 
-void PageMulti::New()
+void PageMulti::MoveLeftOrRight(bool left)
 {
-  uint8_t num_multi = EE::GetNumberOfMultis();
-  if (num_multi < EE::GetMaxNumberOfMultis()) {
-    MultiValues default_values;
-    GetMultiDefault(default_values);
-    EE::SetMulti(num_multi, default_values);
-    Pages::SetNextPage(PAGE_MULTI, num_multi);
+  uint8_t new_which = left ? m_which - 1 : m_which + 1; // We make use of 0 - 1 = 255
+  if (new_which < EE::GetNumberOfMultis()) {
+    // We will now swap m_which with new_which
+    // Save values from new_which to current m_which
+    MultiValues original_values;
+    EE::GetMulti(new_which, original_values);
+    EE::SetMulti(m_which, original_values);
+    // Replace current m_which with the new one, save and update the page
+    m_which = new_which;
+    SaveIfModified();
+    Pages::SetNextPage(PAGE_MULTI, m_which); 
   } else
     Debug::BeepLow();
+}
+
+void PageMulti::New()
+{
+  uint8_t new_multi = EE::NewMulti();
+  if (new_multi != 0xFF)
+    Pages::SetNextPage(PAGE_MULTI, new_multi);
 }
 
 void PageMulti::SetMidiConfiguration()

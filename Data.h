@@ -152,6 +152,7 @@ namespace EE
   uint8_t GetMaxNumberOfMultis();
   void SetMulti(uint8_t which, const MultiValues& values); // Only [0..GetNumberOfMultis] can be set, as long as GetNumberOfMultis()<GetMaxNumberOfMultis()
   void GetMulti(uint8_t which, MultiValues& values);
+  uint8_t NewMulti(); // Returns number of new multi, or 0xFF if no new multi could be made
 
   // --- Settings ---
   SettingsValues& SettingsRW();     // Access the settings values in write/read mode, only used in Settings Page

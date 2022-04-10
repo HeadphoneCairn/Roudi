@@ -314,6 +314,20 @@ namespace EE
       EEPROM_GET(start_of_multis + static_cast<uint16_t>(which) * multi_size, values);
   }
 
+  uint8_t NewMulti()
+  {
+    uint8_t new_multi = EE::GetNumberOfMultis();
+    if (new_multi < EE::GetMaxNumberOfMultis()) {
+      MultiValues default_values;
+      GetMultiDefault(default_values);
+      SetMulti(new_multi, default_values);
+      return new_multi;
+    } else {
+      return 0xFF;
+    }
+  }
+
+
   // ===== S E T T I N G S =====================================================
 
   SettingsValues g_settings_values; // Global variabel to have direct speedy access to the settings,
