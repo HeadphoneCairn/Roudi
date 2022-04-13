@@ -132,6 +132,5 @@ void PageSettings::SetMidiConfiguration()
   MidiProcessing::Configuration next_config = MidiProcessing::GetConfiguration();
   next_config.m_input_channel = EE::SettingsRW().input_channel;
   next_config.m_default_filter = EE::SettingsRW().filter;
-  next_config.m_velocity_curve = static_cast<MidiProcessing::Configuration::VelocityCurve>(EE::SettingsRW().velocity_curve);
   MidiProcessing::SetNextConfiguration(next_config);
 }

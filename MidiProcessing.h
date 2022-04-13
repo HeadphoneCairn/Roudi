@@ -36,16 +36,10 @@ namespace MidiProcessing
     Configuration();
     void SetDefaults();
   public:
-    enum VelocityCurve { 
-      Linear = 0, 
-      Exponential = 1,  
-      Logarithmic = 2
-    };
     enum { m_max_number_of_output_channels = 2};
   public:
     uint8_t m_input_channel;
     uint8_t m_nbr_output_channels;
-    VelocityCurve m_velocity_curve;    
     FilterSettingsValues m_default_filter;
     bool m_override_default_filter;
     OutputConfiguration m_output_channel[m_max_number_of_output_channels];

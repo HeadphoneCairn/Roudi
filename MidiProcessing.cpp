@@ -41,6 +41,19 @@ namespace
 
   // === V E L O C I T Y   C U R V E S =========================================
 
+  enum VelocityCurve { 
+    Linear = 0, 
+    Exponential = 1,  
+    Logarithmic = 2
+  };
+
+  // The arrays below contain velocity mappings. 
+  // They contain the expected output velocity for input velocities
+  // 0, 4, 8, 12, 16, ... 128 
+  // Note: Also tried putting all data in one big array, but that didn't save
+  //       any memory. So, chose separate arrays because those are slightly
+  //       more user friendly.
+
 	const PROGMEM uint8_t PVELMAP_linear[33] = {
       0,   4,   8,  12,  16,  20,  24,  28,
      32,  36,  40,  44,  48,  52,  56,  60,
@@ -67,12 +80,12 @@ namespace
 
   const uint8_t* g_velocities = PVELMAP_linear;
 
-  void SwitchVelocityMap(Configuration::VelocityCurve curve)
+  void SwitchVelocityMap(VelocityCurve curve)
   {
     switch(curve) {
-      case Configuration::VelocityCurve::Linear:      g_velocities = PVELMAP_linear;      return;
-      case Configuration::VelocityCurve::Exponential: g_velocities = PVELMAP_exponential; return;
-      case Configuration::VelocityCurve::Logarithmic: g_velocities = PVELMAP_logarithmic; return;
+      case VelocityCurve::Linear:      g_velocities = PVELMAP_linear;      return;
+      case VelocityCurve::Exponential: g_velocities = PVELMAP_exponential; return;
+      case VelocityCurve::Logarithmic: g_velocities = PVELMAP_logarithmic; return;
     }
     return;
   }
@@ -177,7 +190,7 @@ namespace
         for (uint8_t i = 0; i < configuration.m_nbr_output_channels; i++)
           ProcessChannel(i, event, output_queue);
       } else { // other channel
-        if (!EE::Settings().block_other) // Should really also be in the Configuration
+        if (!EE::Settings().block_other) // Should really also be in the Configuration, as should velocity_curve?????
           output_queue.push(event); // pass if not blocked in settings
       }
     } else {
@@ -248,7 +261,6 @@ namespace MidiProcessing
   {
     m_input_channel = 0;
     m_nbr_output_channels = 0;
-    m_velocity_curve = VelocityCurve::Linear;
     m_default_filter = EE::Settings().filter;
     m_override_default_filter = false;
     for (uint8_t i = 0; i < m_max_number_of_output_channels; ++i)
@@ -300,7 +312,7 @@ namespace MidiProcessing
     // We can safely change the configuration.
     configuration = g_next_configuration;
     // Switch the velocity map
-    SwitchVelocityMap(configuration.m_velocity_curve);
+    SwitchVelocityMap(static_cast<VelocityCurve>(EE::Settings().velocity_curve));
     // We are done
     g_next_configuration_available = false;
     return true;
