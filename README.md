@@ -55,6 +55,13 @@ Press and release A+B to switch to the level one pages.
 
 ### SETTINGS page
 
+Velocity curve
+- linear
+- exponential
+- linear
+Applied **before** velocity filter in MULTI.
+TODO Add diagram.
+
 ### MONITOR page
 
 ### MONITOR SETTINGS page

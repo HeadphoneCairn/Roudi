@@ -27,9 +27,9 @@ namespace
   PTABLE_GETTER(GetBlockOther, PTAB_block_other);
 
   PSTRING(PSTR_velocity_curve, "Velocity curve");
-  PSTRING(PSTR_velocity_0, "soft");
-  PSTRING(PSTR_velocity_1, "medium");
-  PSTRING(PSTR_velocity_2, "hard");
+  PSTRING(PSTR_velocity_0, "linear");
+  PSTRING(PSTR_velocity_1, "expon");
+  PSTRING(PSTR_velocity_2, "logar");
   PTABLE(PTAB_velocity, PSTR_velocity_0, PSTR_velocity_1, PSTR_velocity_2);
   PTABLE_GETTER(GetVelocityCurve, PTAB_velocity);
 
@@ -132,5 +132,6 @@ void PageSettings::SetMidiConfiguration()
   MidiProcessing::Configuration next_config = MidiProcessing::GetConfiguration();
   next_config.m_input_channel = EE::SettingsRW().input_channel;
   next_config.m_default_filter = EE::SettingsRW().filter;
+  next_config.m_velocity_curve = static_cast<MidiProcessing::Configuration::VelocityCurve>(EE::SettingsRW().velocity_curve);
   MidiProcessing::SetNextConfiguration(next_config);
 }

@@ -37,7 +37,60 @@ namespace
   };
 
   State g_state;
-  
+
+
+  // === V E L O C I T Y   C U R V E S =========================================
+
+	const PROGMEM uint8_t PVELMAP_linear[33] = {
+      0,   4,   8,  12,  16,  20,  24,  28,
+     32,  36,  40,  44,  48,  52,  56,  60,
+     64,  68,  72,  76,  80,  84,  88,  92,
+     96, 100, 104, 108, 112, 116, 120, 124,
+    128
+  };
+
+	const PROGMEM uint8_t PVELMAP_exponential[33] = {   // TODO!!!
+      0,   4,   8,  13,  16,  20,  24,  28,
+     32,  36,  40,  44,  48,  52,  56,  60,
+     64,  68,  72,  76,  80,  84,  88,  92,
+     96, 100, 104, 108, 112, 116, 120, 124,
+    128
+  };
+
+  const PROGMEM uint8_t PVELMAP_logarithmic[33] = {
+      0,  18,  25,  30,  35,  40,  44,  48,
+     52,  56,  59,  63,  66,  69,  73,  76,
+     79,  82,  85,  89,  92,  95,  98, 101,
+    104, 107, 110, 113, 116, 119, 122, 125,
+    128
+  };
+
+  const uint8_t* g_velocities = PVELMAP_linear;
+
+  void SwitchVelocityMap(Configuration::VelocityCurve curve)
+  {
+    switch(curve) {
+      case Configuration::VelocityCurve::Linear:      g_velocities = PVELMAP_linear;      return;
+      case Configuration::VelocityCurve::Exponential: g_velocities = PVELMAP_exponential; return;
+      case Configuration::VelocityCurve::Logarithmic: g_velocities = PVELMAP_logarithmic; return;
+    }
+    return;
+  }
+
+  uint8_t MapVelocity(uint8_t v_in)
+  {
+    if (v_in == 0)
+      return 0; // NOTE ON with velocity 0 has special NOTE OFF meaning, so never change!
+    const uint8_t from = v_in >> 2;
+    const uint8_t table_from = pgm_read_byte((const uint8_t *)g_velocities + from); 
+    const uint8_t table_to   = pgm_read_byte((const uint8_t *)g_velocities + from + 1); 
+    uint8_t v_out = (((table_to - table_from) * (v_in - (from << 2)))>>2) + table_from;  // (should be < 85) * (is max 3)
+    return v_out;
+  }
+
+
+  // === P R O C E S S I N G ===================================================
+
   // Fix for UsbToMidi::process() and 1 byte system common
   unsigned FIX_UsbToMidi_process(midi_event_t in, uint8_t out[3])
   {
@@ -93,8 +146,12 @@ namespace
         return;
       const uint8_t transposed_note = static_cast<uint8_t>(transposed_note_16);
       event.m_data[1] = transposed_note; // update the note in the event
-      const uint8_t velocity = event.m_data[2];
+      uint8_t velocity = event.m_data[2];
       if (event.m_event == 0x09 && velocity > 0) { // Note ON
+        // Apply velocity curve (or should we do it after the velocity filter?)
+        velocity = MapVelocity(velocity);
+        event.m_data[2] = velocity;
+        // Filter based on velocity
         if (velocity < output_channel.m_minimum_velocity)
           return;
         if (velocity > output_channel.m_maximum_velocity)
@@ -191,6 +248,7 @@ namespace MidiProcessing
   {
     m_input_channel = 0;
     m_nbr_output_channels = 0;
+    m_velocity_curve = VelocityCurve::Linear;
     m_default_filter = EE::Settings().filter;
     m_override_default_filter = false;
     for (uint8_t i = 0; i < m_max_number_of_output_channels; ++i)
@@ -241,6 +299,9 @@ namespace MidiProcessing
     // The messages to switch of the notes on the output channels have been put on the output queue.
     // We can safely change the configuration.
     configuration = g_next_configuration;
+    // Switch the velocity map
+    SwitchVelocityMap(configuration.m_velocity_curve);
+    // We are done
     g_next_configuration_available = false;
     return true;
   }
