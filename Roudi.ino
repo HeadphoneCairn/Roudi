@@ -42,6 +42,10 @@ void setup()
 
   g_last_button_press = millis();
 
+#ifdef ENABLE_DUMP_VELOCITY_MAP
+  MidiProcessing::DumpVelocityMap(MidiProcessing::Logarithmic);
+#endif
+
   Pages::Start(); // Start showing the menus
 }
 

@@ -4,6 +4,7 @@
 #include "Debug.h"
 #include "MidiFilter.h"
 #include "Utils.h"
+#include "Roudi.h"
 
 #include "DinMidiboy.h"
 #include <fifo.h>
@@ -41,12 +42,6 @@ namespace
 
   // === V E L O C I T Y   C U R V E S =========================================
 
-  enum VelocityCurve { 
-    Linear = 0, 
-    Exponential = 1,  
-    Logarithmic = 2
-  };
-
   // The arrays below contain velocity mappings. 
   // They contain the expected output velocity for input velocities
   // 0, 4, 8, 12, 16, ... 128 
@@ -80,24 +75,25 @@ namespace
 
   const uint8_t* g_velocities = PVELMAP_linear;
 
-  void SwitchVelocityMap(VelocityCurve curve)
-  {
-    switch(curve) {
-      case VelocityCurve::Linear:      g_velocities = PVELMAP_linear;      return;
-      case VelocityCurve::Exponential: g_velocities = PVELMAP_exponential; return;
-      case VelocityCurve::Logarithmic: g_velocities = PVELMAP_logarithmic; return;
-    }
-    return;
-  }
-
   uint8_t MapVelocity(uint8_t v_in)
   {
+    // Check input
     if (v_in == 0)
       return 0; // NOTE ON with velocity 0 has special NOTE OFF meaning, so never change!
+    if (v_in > 127)
+      v_in = 127; // safety precaution, 127 is max allowed velocity
+
+    // Perform mapping, using linear interpolation
     const uint8_t from = v_in >> 2;
     const uint8_t table_from = pgm_read_byte((const uint8_t *)g_velocities + from); 
     const uint8_t table_to   = pgm_read_byte((const uint8_t *)g_velocities + from + 1); 
-    uint8_t v_out = (((table_to - table_from) * (v_in - (from << 2)))>>2) + table_from;  // (should be < 85) * (is max 3)
+    uint8_t v_out = (((table_to - table_from) * (v_in - (from << 2)))>>2) + table_from;  // (should be max 85) * (is max 3)
+
+    // Check output
+    if (v_out == 0)
+      v_out = 1; // output velocity 0 is only allowed when input velocity is 0!
+    if (v_out > 127)
+      v_out = 127; // safety precaution, 127 is max allowed velocity
     return v_out;
   }
 
@@ -161,7 +157,7 @@ namespace
       event.m_data[1] = transposed_note; // update the note in the event
       uint8_t velocity = event.m_data[2];
       if (event.m_event == 0x09 && velocity > 0) { // Note ON
-        // Apply velocity curve (or should we do it after the velocity filter?)
+        // Apply velocity map (or should we do it after the velocity filter?)
         velocity = MapVelocity(velocity);
         event.m_data[2] = velocity;
         // Filter based on velocity
@@ -225,6 +221,7 @@ namespace
 
 }
 
+
 namespace MidiProcessing
 {
 
@@ -266,6 +263,38 @@ namespace MidiProcessing
     for (uint8_t i = 0; i < m_max_number_of_output_channels; ++i)
       m_output_channel[i].SetDefaults();
   }
+
+  //==============================================================================
+  // 
+  //                        V E L O C I T Y   M A P
+  //
+  //==============================================================================
+
+  void SwitchVelocityMap(VelocityMap velocity_map)
+  {
+    switch (velocity_map) {
+      case VelocityMap::Linear:      g_velocities = PVELMAP_linear;      return;
+      case VelocityMap::Exponential: g_velocities = PVELMAP_exponential; return;
+      case VelocityMap::Logarithmic: g_velocities = PVELMAP_logarithmic; return;
+    }
+    return;
+  }
+
+#ifdef ENABLE_DUMP_VELOCITY_MAP
+  void DumpVelocityMap(VelocityMap velocity_map)
+  {
+    SwitchVelocityMap(velocity_map);
+    for (uint8_t v_in = 0; v_in < 128; v_in++) {
+      uint8_t v_out = MapVelocity(v_in);
+      midi_event_t note_off_event;
+      note_off_event.m_event = 0x8; // Note off 
+      note_off_event.m_data[0] = 0x80; // Note off on channel 1
+      note_off_event.m_data[1] = v_in; // Selected note represents our input velocity
+      note_off_event.m_data[2] = v_out; // Velocity represents our out velocity
+      WriteEventToOutput(note_off_event); // Send the note off event
+    }
+  }
+#endif
 
   //==============================================================================
   // 
@@ -312,7 +341,7 @@ namespace MidiProcessing
     // We can safely change the configuration.
     configuration = g_next_configuration;
     // Switch the velocity map
-    SwitchVelocityMap(static_cast<VelocityCurve>(EE::Settings().velocity_curve));
+    SwitchVelocityMap(static_cast<VelocityMap>(EE::Settings().velocity_curve));
     // We are done
     g_next_configuration_available = false;
     return true;

@@ -83,7 +83,20 @@ namespace MidiProcessing
   // Put the output messages on the output MIDI port
   void WriteToOutput();
 
-  uint8_t Velocity(uint8_t v_in);
-  void Switch(uint8_t w);
-
+  // Velocity maps representing velocity curves
+  enum VelocityMap { 
+    Linear = 0, 
+    Exponential = 1,  
+    Logarithmic = 2
+  };
+  // Select which velocity map is applied to outgoing notes
+  void SwitchVelocityMap(VelocityMap velocity_map);
+#ifdef ENABLE_DUMP_VELOCITY_MAP
+  // This function was created to verify the correctness of a velocity map.
+  // It dumps the map to the MIDI out in a silly way:
+  //   For each possible velocity 0-127, a NOTE OFF is sent to channel 1
+  //   where the note number is the input velocity and the velocity is 
+  //   the output velocity (= the mapped velocity).
+  void DumpVelocityMap(VelocityMap velocity_map);
+#endif
 }

@@ -27,6 +27,9 @@
 // Should be off on release.
 //#define ENABLE_MONITOR_RAW
 
+// Special mode to dump a velocity map to the MIDI out.
+// Use only for verifying the velocity maps.
+//#define ENABLE_DUMP_VELOCITY_MAP
 
 // --- Uhm ---
 
