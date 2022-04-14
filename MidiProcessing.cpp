@@ -44,7 +44,8 @@ namespace
 
   // The arrays below contain velocity mappings. 
   // They contain the expected output velocity for input velocities
-  // 0, 4, 8, 12, 16, ... 128 
+  //    0, 4, 8, 12, 16, ... 128
+  // The velocity curve is determined from these maps by linear interpolation.
   // Note: Also tried putting all data in one big array, but that didn't save
   //       any memory. So, chose separate arrays because those are slightly
   //       more user friendly.
@@ -266,24 +267,24 @@ namespace MidiProcessing
 
   //==============================================================================
   // 
-  //                        V E L O C I T Y   M A P
+  //                     V E L O C I T Y   C U R V E S
   //
   //==============================================================================
 
-  void SwitchVelocityMap(VelocityMap velocity_map)
+  void SetVelocityCurve(VelocityCurve curve)
   {
-    switch (velocity_map) {
-      case VelocityMap::Linear:      g_velocities = PVELMAP_linear;      return;
-      case VelocityMap::Exponential: g_velocities = PVELMAP_exponential; return;
-      case VelocityMap::Logarithmic: g_velocities = PVELMAP_logarithmic; return;
+    switch (curve) {
+      case VelocityCurve::Linear:      g_velocities = PVELMAP_linear;      return;
+      case VelocityCurve::Exponential: g_velocities = PVELMAP_exponential; return;
+      case VelocityCurve::Logarithmic: g_velocities = PVELMAP_logarithmic; return;
     }
     return;
   }
 
-#ifdef ENABLE_DUMP_VELOCITY_MAP
-  void DumpVelocityMap(VelocityMap velocity_map)
+#ifdef ENABLE_DUMP_VELOCITY_CURVE
+  void DumpVelocityCurve(VelocityCurve curve)
   {
-    SwitchVelocityMap(velocity_map);
+    SetVelocityCurve(curve);
     for (uint8_t v_in = 0; v_in < 128; v_in++) {
       uint8_t v_out = MapVelocity(v_in);
       midi_event_t note_off_event;
@@ -341,7 +342,7 @@ namespace MidiProcessing
     // We can safely change the configuration.
     configuration = g_next_configuration;
     // Switch the velocity map
-    SwitchVelocityMap(static_cast<VelocityMap>(EE::Settings().velocity_curve));
+    SetVelocityCurve(static_cast<VelocityCurve>(EE::Settings().velocity_curve));
     // We are done
     g_next_configuration_available = false;
     return true;

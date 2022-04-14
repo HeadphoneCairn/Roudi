@@ -84,19 +84,19 @@ namespace MidiProcessing
   void WriteToOutput();
 
   // Velocity maps representing velocity curves
-  enum VelocityMap { 
+  enum VelocityCurve { 
     Linear = 0, 
     Exponential = 1,  
     Logarithmic = 2
   };
   // Select which velocity map is applied to outgoing notes
-  void SwitchVelocityMap(VelocityMap velocity_map);
-#ifdef ENABLE_DUMP_VELOCITY_MAP
+  void SetVelocityCurve(VelocityCurve curve);
+#ifdef ENABLE_DUMP_VELOCITY_CURVE
   // This function was created to verify the correctness of a velocity map.
   // It dumps the map to the MIDI out in a silly way:
   //   For each possible velocity 0-127, a NOTE OFF is sent to channel 1
   //   where the note number is the input velocity and the velocity is 
   //   the output velocity (= the mapped velocity).
-  void DumpVelocityMap(VelocityMap velocity_map);
+  void DumpVelocityCurve(VelocityCurve curve);
 #endif
 }
