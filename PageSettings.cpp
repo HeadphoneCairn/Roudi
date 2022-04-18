@@ -30,7 +30,8 @@ namespace
   PSTRING(PSTR_velocity_0, "linear");
   PSTRING(PSTR_velocity_1, "expon");
   PSTRING(PSTR_velocity_2, "logar");
-  PTABLE(PTAB_velocity, PSTR_velocity_0, PSTR_velocity_1, PSTR_velocity_2);
+  PSTRING(PSTR_velocity_3, "custom");
+  PTABLE(PTAB_velocity, PSTR_velocity_0, PSTR_velocity_1, PSTR_velocity_2, PSTR_velocity_3);
   PTABLE_GETTER(GetVelocityCurve, PTAB_velocity);
 
   PSTRING(PSTR_brightness, "Screen brightness");

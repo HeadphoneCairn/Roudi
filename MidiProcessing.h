@@ -87,7 +87,8 @@ namespace MidiProcessing
   enum VelocityCurve { 
     Linear = 0, 
     Exponential = 1,  
-    Logarithmic = 2
+    Logarithmic = 2,
+    Custom = 3
   };
   // Select which velocity map is applied to outgoing notes
   void SetVelocityCurve(VelocityCurve curve);

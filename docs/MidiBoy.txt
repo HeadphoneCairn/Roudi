@@ -903,6 +903,7 @@ x Rename PageNameMulti to PageMultiName and PageNameChannel to PageSingleName
   > Remove ...
 - pitch bend to aftertouch: integrate in pitch bend setting? on / off / after-touch(pressure)
 x at startup select correct curve (just like we now use correct brightness)
-- create proper exponential velocity curve and improve logarithmic
+x create proper exponential velocity curve and improve logarithmic
   onderzoek vreemde input nummer 0, 4, ... en interpolatie
   veiligbeid inbouwen: niet over 127!!! of onder 0
+x Add rounding to MapVelocity?

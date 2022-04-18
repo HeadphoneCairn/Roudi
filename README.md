@@ -55,12 +55,20 @@ Press and release A+B to switch to the level one pages.
 
 ### SETTINGS page
 
-Velocity curve
-- linear
-- exponential
-- linear
-Applied **before** velocity filter in MULTI.
-TODO Add diagram.
+- Block other channels: 
+
+- Velocity curve. This allows you to change influence the output velocity. It can be useful if your keyboard is not as (or too) responsive as you would like. Note that the velocity mapping is applied **before** the velocity filter in MULTI.
+  There are currently four velocity curves available 
+  - **linear**: output is the same as input velocity 
+  - **expon**ential: output has lower velocity than input
+  - **logar**ithmic: output has higher velocity than input
+  - **custom**: personalised velocity curve
+
+  Graphical representation: 
+
+  ![Velocity curves](VelocityCurves.png)
+
+- Screen brightness: Self explanatory.
 
 ### MONITOR page
 

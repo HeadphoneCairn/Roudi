@@ -43,7 +43,7 @@ void setup()
   g_last_button_press = millis();
 
 #ifdef ENABLE_DUMP_VELOCITY_CURVE
-  MidiProcessing::DumpVelocityCurve(MidiProcessing::Logarithmic);
+  MidiProcessing::DumpVelocityCurve(MidiProcessing::Custom);
 #endif
 
   Pages::Start(); // Start showing the menus
