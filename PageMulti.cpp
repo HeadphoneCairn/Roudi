@@ -135,22 +135,22 @@ Page::LineResult PageMulti::ActualLine(LineFunction func, uint8_t line, uint8_t 
     case 8: return DoubleLine(func, field, PSTR_multi_min_velocity, 5, m_values.channel[0].min_velocity, GetVelocity, m_values.channel[1].min_velocity, GetVelocity);
     case 9: return DoubleLine(func, field, PSTR_multi_max_velocity, 5, m_values.channel[0].max_velocity, GetVelocity, m_values.channel[1].max_velocity, GetVelocity);
     case 10: return DefaultLine(func);
-    case 11: // Save as ... 
-      if (func == DO_LEFT || func == DO_RIGHT)
-        SaveAs();
-      return TextLine(func, PSTR_save_as);
-    case 12:
-      if (func == DO_LEFT || func == DO_RIGHT)
-        Remove();
-      return TextLine(func, PSTR_remove);
-    case 13: // Move left or right
-      if (func == DO_LEFT || func == DO_RIGHT)
-        MoveLeftOrRight(func == DO_LEFT);
-      return TextLine(func, PSTR_move_left);
-    case 14: // New ...
+    case 11: // New
       if (func == DO_LEFT || func == DO_RIGHT)
         New();
       return TextLine(func, PSTR_new);
+    case 12: // Move left or right
+      if (func == DO_LEFT || func == DO_RIGHT)
+        MoveLeftOrRight(func == DO_LEFT);
+      return TextLine(func, PSTR_move_left);
+    case 13: // Save as ... 
+      if (func == DO_LEFT || func == DO_RIGHT)
+        SaveAs();
+      return TextLine(func, PSTR_save_as);
+    case 14: // Remove ...
+      if (func == DO_LEFT || func == DO_RIGHT)
+        Remove();
+      return TextLine(func, PSTR_remove);
     case 16: // Panic!
       if (func == DO_LEFT || func == DO_RIGHT)
         MidiProcessing::SetPanic(); 
