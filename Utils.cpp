@@ -18,54 +18,16 @@ const uint8_t MaxLength = MaxNameLength;
 
 PSTRING(PSTR_complete_char_set,  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-+,.:;!?()[]&@#|\"'^ ");
 
-namespace {
-
-
-  char GetNextCharacter(char c, const char* char_set, char start_char, bool use_underscore)
-  {
-    // Prepend character set with underscore if needed
-    if (use_underscore && c == UNDERSCORE)
-      return start_char;
-
-    const char* p = strchr_P(char_set, c);
-    if (p==nullptr) // c was not found in the char_set
-      return start_char;
-    p++; // next
-
-    char out;
-    strncpy_P(&out, p, 1); 
-    if (out == 0) // c was the last character in char_set
-      return c;
-    else
-      return out;
-  }
-
-  char GetPreviousCharacter(char c, const char* char_set, char start_char, bool use_underscore)
-  {
-    // Prepend character set with underscore if needed
-    if (use_underscore && (c == start_char || c == UNDERSCORE))
-      return UNDERSCORE;
-
-    const char* p = strchr_P(char_set, c);
-    if (p==nullptr) // c was not found in the char_set
-      return start_char;  
-    if (p==char_set) // c was first char in char_set
-      return c;
-    p--; // previous
-
-    char out;
-    strncpy_P(&out, p, 1);
-    return out;
-  }
-
-}
-
-
 NameEditor::NameEditor(bool complete_char_set):
-  m_name_buffer(nullptr),
-  m_char_set(complete_char_set ? PSTR_complete_char_set : PSTR_complete_char_set + 26),
-  m_start_char(complete_char_set ? 'a' : 'A')
+  m_name_buffer(nullptr)
 {
+  if (complete_char_set) {
+    m_char_set = PSTR_complete_char_set;
+    m_start_char = 'a';  
+  } else { // We do not allow lowercase characters.
+    m_char_set = PSTR_complete_char_set + 26;
+    m_start_char = 'A';  
+  }
 }
 
 void NameEditor::Init(char* name_buffer, const char* name)
@@ -110,11 +72,48 @@ bool NameEditor::UpDown(uint8_t position, bool up)
   bool use_underscore = (position + 1 == GetPositions()) || 
                         (position + 2 == GetPositions() && GetLength() != MaxLength);
   if (up) {
-    m_name_buffer[position] = GetNextCharacter(old_character, m_char_set, m_start_char, use_underscore);
+    m_name_buffer[position] = GetNextCharacter(old_character, use_underscore);
   } else {
-    m_name_buffer[position] = GetPreviousCharacter(old_character, m_char_set, m_start_char, use_underscore);
+    m_name_buffer[position] = GetPreviousCharacter(old_character, use_underscore);
   }
   return m_name_buffer[position] != old_character;
+}
+
+char NameEditor::GetNextCharacter(char c, bool use_underscore)
+{
+  // Prepend character set with underscore if needed
+  if (use_underscore && c == UNDERSCORE)
+    return m_start_char;
+
+  const char* p = strchr_P(m_char_set, c);
+  if (p == nullptr) // c was not found in the char_set
+    return m_start_char;
+  p++; // next
+
+  char out;
+  strncpy_P(&out, p, 1); 
+  if (out == 0) // c was the last character in char_set
+    return c;
+  else
+    return out;
+}
+
+char NameEditor::GetPreviousCharacter(char c, bool use_underscore)
+{
+  // Prepend character set with underscore if needed
+  if (use_underscore && (c == m_start_char || c == UNDERSCORE))
+    return UNDERSCORE;
+
+  const char* p = strchr_P(m_char_set, c);
+  if (p == nullptr) // c was not found in the char_set
+    return m_start_char;  
+  if (p == m_char_set) // c was first char in char_set
+    return c;
+  p--; // previous
+
+  char out;
+  strncpy_P(&out, p, 1);
+  return out;
 }
 
 

@@ -16,6 +16,9 @@ private:
   const char* m_char_set; // points to characters set
   char m_start_char; // contains first character of character set
   char* m_name_buffer; // points to memory maintained by caller
+private:
+  char GetNextCharacter(char c, bool use_underscore);
+  char GetPreviousCharacter(char c, bool use_underscore);
 };
 
 // --- Bitfield ---
