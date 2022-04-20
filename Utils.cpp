@@ -16,64 +16,46 @@ const uint8_t MaxLength = MaxNameLength;
 
 #define UNDERSCORE '_' // represents and empty postion that can be filled, lowest possible value
 
-static const char PSTR_complete_char_set[] PROGMEM = {
-  UNDERSCORE, UNDERSCORE,
-  'a', 'z',
-  'A', 'Z',
-  '0', '9',
-  '!', '#',
-  '%', '/',
-  ':', '@',
-  '[', '^',
-  ' ', ' ', 
-  '\0' };
-
-static const char PSTR_uppercase_char_set[] PROGMEM = {
-  UNDERSCORE, UNDERSCORE, 
-  'A', 'Z',
-  '0', '9',
-  '!', '#',
-  '%', '/',
-  ':', '@',
-  '[', '^',
-  ' ', ' ', 
-  '\0' };
+PSTRING(PSTR_complete_char_set,  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-+,.:;!?()[]&@#|\"'^ ");
 
 namespace {
 
-  char GetNextCharacter(char c, const char* chars)
 
-  // Function to iterate through a list of possible char values
-  // Complex code to save data memory :-(
+  char GetNextCharacter(char c, const char* char_set, char start_char, bool use_underscore)
   {
-    if (c == chars[strlen(chars) - 1])
-      return c; // no further values;
-    for (uint8_t i = 0; i < strlen(chars)/2; i++) {
-      const char from = chars[i*2];
-      const char to = chars[i*2 + 1]; 
-      if (c == to)
-        return chars[i*2 + 2];
-      if (c >= from && c < to)
-        return c + 1;
-    }
-    return chars[strlen(chars) - 1]; // just in case c was not found in chars
+    // Prepend character set with underscore if needed
+    if (use_underscore && c == UNDERSCORE)
+      return start_char;
+
+    const char* p = strchr_P(char_set, c);
+    if (p==nullptr) // c was not found in the char_set
+      return start_char;
+    p++; // next
+
+    char out;
+    strncpy_P(&out, p, 1); 
+    if (out == 0) // c was the last character in char_set
+      return c;
+    else
+      return out;
   }
 
-  char GetPreviousCharacter(char c, const char* chars)
-  // Function to iterate through a list of possible char values
-  // Complex code to save data memory :-(
+  char GetPreviousCharacter(char c, const char* char_set, char start_char, bool use_underscore)
   {
-    if (c == chars[0])
-      return c; // no further values;
-    for (uint8_t i = 0; i < strlen(chars)/2; i++) {
-      const char from = chars[i*2];
-      const char to = chars[i*2 + 1]; 
-      if (c == from)
-        return chars[i*2 - 1];
-      if (c > from && c <= to)
-        return c - 1;
-    }
-    return chars[strlen(chars) - 1]; // just in case c was not found in chars
+    // Prepend character set with underscore if needed
+    if (use_underscore && (c == start_char || c == UNDERSCORE))
+      return UNDERSCORE;
+
+    const char* p = strchr_P(char_set, c);
+    if (p==nullptr) // c was not found in the char_set
+      return start_char;  
+    if (p==char_set) // c was first char in char_set
+      return c;
+    p--; // previous
+
+    char out;
+    strncpy_P(&out, p, 1);
+    return out;
   }
 
 }
@@ -81,7 +63,8 @@ namespace {
 
 NameEditor::NameEditor(bool complete_char_set):
   m_name_buffer(nullptr),
-  m_char_set(complete_char_set ? PSTR_complete_char_set : PSTR_uppercase_char_set)
+  m_char_set(complete_char_set ? PSTR_complete_char_set : PSTR_complete_char_set + 26),
+  m_start_char(complete_char_set ? 'a' : 'A')
 {
 }
 
@@ -126,11 +109,10 @@ bool NameEditor::UpDown(uint8_t position, bool up)
   char old_character = m_name_buffer[position];
   bool use_underscore = (position + 1 == GetPositions()) || 
                         (position + 2 == GetPositions() && GetLength() != MaxLength);
-  const char* char_set = GetPString(m_char_set) + (use_underscore ? 0 : 2);
   if (up) {
-    m_name_buffer[position] = GetNextCharacter(old_character, char_set);
+    m_name_buffer[position] = GetNextCharacter(old_character, m_char_set, m_start_char, use_underscore);
   } else {
-    m_name_buffer[position] = GetPreviousCharacter(old_character, char_set);
+    m_name_buffer[position] = GetPreviousCharacter(old_character, m_char_set, m_start_char, use_underscore);
   }
   return m_name_buffer[position] != old_character;
 }

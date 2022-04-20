@@ -882,7 +882,8 @@ x Of toch nog beter:
 x Can go back to 14 chars for Name of channel and multi
 x Panic! as menu option in Single and Multi, sends to all 16 channels both Notes off and Sounds off??
 - Disallow ActivateNextConfigurationIfAvailable when Sysexclusive is being sent
-- I still want abcdefgh...ABCD for the name editor instead of a-zA-Z...
+x I still want abcdefgh...ABCD for the name editor instead of a-zA-Z...
+  => Did it. Used 62 extra bytes though ...
 - Consider adding the RAW MIDI as an option in the midi monitor menu.
 x Test with buffer of 2 => Had to use !full on output queue instead of hasSpaceFor
 - Check fifo_t for bugs

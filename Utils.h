@@ -14,6 +14,7 @@ public:
   bool UpDown(uint8_t position, bool up);
 private:
   const char* m_char_set; // points to characters set
+  char m_start_char; // contains first character of character set
   char* m_name_buffer; // points to memory maintained by caller
 };
 
