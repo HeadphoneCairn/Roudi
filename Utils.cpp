@@ -84,18 +84,16 @@ char NameEditor::GetNextCharacter(char c, bool use_underscore)
   // Prepend character set with underscore if needed
   if (use_underscore && c == UNDERSCORE)
     return m_start_char;
-
+  // Search character c in the character set
   const char* p = strchr_P(m_char_set, c);
-  if (p == nullptr) // c was not found in the char_set
+  // If c was not found, return the first character of the character set as a fallback
+  if (p == nullptr)
     return m_start_char;
-  p++; // next
-
+  // Get character after c in the character set
+  p++;
   char out;
-  strncpy_P(&out, p, 1); 
-  if (out == 0) // c was the last character in char_set
-    return c;
-  else
-    return out;
+  strncpy_P(&out, p, 1);
+  return out ? out : c; // if out == \0, we return c
 }
 
 char NameEditor::GetPreviousCharacter(char c, bool use_underscore)
@@ -103,14 +101,16 @@ char NameEditor::GetPreviousCharacter(char c, bool use_underscore)
   // Prepend character set with underscore if needed
   if (use_underscore && (c == m_start_char || c == UNDERSCORE))
     return UNDERSCORE;
-
+  // Search character c in the character set
   const char* p = strchr_P(m_char_set, c);
-  if (p == nullptr) // c was not found in the char_set
-    return m_start_char;  
-  if (p == m_char_set) // c was first char in char_set
+  // If c was not found, return the first character of the character set as a fallback
+  if (p == nullptr)
+    return m_start_char;
+  // If c is the first character of the character set
+  if (p == m_char_set)
     return c;
-  p--; // previous
-
+  // Get character before c in the character set
+  p--;
   char out;
   strncpy_P(&out, p, 1);
   return out;
