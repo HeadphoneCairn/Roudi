@@ -72,7 +72,7 @@ Press and release A+B to switch to the level one pages.
 
   Graphical representation: 
 
-  ![Velocity curves](VelocityCurves.png)
+  ![Velocity curves](bitmaps/VelocityCurves.png)
 
 - Screen brightness: Self explanatory.
 
@@ -110,7 +110,7 @@ Filters: program change overrides cc filter for CC0
 
 - Roudi written by Headphone Cairn Software.
 
-  ![Headphone Cairn Logo](README.png)
+  ![Headphone Cairn Logo](bitmaps/Headphone%20Cairn2.png)
 
 - MIDI libraries and more by [Blokas](https://blokas.io/).
 - An stl for a case for the midiboy is available on [Thingiverse](https://www.thingiverse.com/thing:4878526).
