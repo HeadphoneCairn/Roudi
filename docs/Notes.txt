@@ -908,3 +908,4 @@ x create proper exponential velocity curve and improve logarithmic
   onderzoek vreemde input nummer 0, 4, ... en interpolatie
   veiligbeid inbouwen: niet over 127!!! of onder 0
 x Add rounding to MapVelocity?
+- Add stls to repository

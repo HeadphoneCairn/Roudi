@@ -1,0 +1,34 @@
+=== Microsoft VS code gebruiken ===
+Installeer eerst de Arduino omgeving zoals beschreven door Blokas:
+- https://blokas.io/midiboy/software/1/
+Als dat allemaal werkt, installeer MS VS Code:
+- https://maker.pro/arduino/tutorial/how-to-use-visual-studio-code-for-arduino
+  => extension vscode-arduino
+Opmerkingen
+- Je moet VS code opnieuw starten
+- Dan een folder laden met een ino bestand
+- Dan ctr-shift-p
+  - Arduino board config => Midiboy (Blokas AVR Boards)  # kan ook door onderaan in het scherm op de balk te klikken
+  - Arduino select programmer => USBasp                  # kan ook door onderaan in het scherm op de balk te klikken
+- VS Code opnieuw opstarten
+- Dan de arduino.json in de .vscode folder van je ino editen:
+  {
+    "programmer": "USBasp",
+    "board": "Blokas:avr:midiboy",
+    "sketch": "midikoorts.ino",
+    "port": "COM5"                                       # extension laat niet toe geen seriele poort te kiezen, maar werkt als manueel ingevuld wordt met onzinwaarde
+  }
+- Voor intellisense:
+  c_cpp_properties.json editen
+  In "includePath": [                 
+    "${workspaceFolder}/**",
+    "C:/Users/pietv/AppData/Local/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/avr/include/**",
+    "C:/Users/pietv/AppData/Local/Arduino15/packages/arduino/hardware/avr/1.8.4/cores/arduino/**",
+    "C:/Users/pietv/AppData/Local/Arduino15/packages/Blokas/hardware/avr/1.0.6/libraries/Midiboy/src/**",
+    "C:/Users/pietv/Documents/Arduino/libraries/**",
+    "C:/Program Files (x86)/Arduino/libraries/**"
+  ],
+  toevoegen. Merk op dat C:/Users/pietv/AppData/Local/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7
+  is ook in C:\Program Files (x86)\Arduino\hardware\tools\avr\avr\include
+- Nog eens VS Code opnieuw opstarten?
+
