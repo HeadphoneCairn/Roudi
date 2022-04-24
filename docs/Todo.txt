@@ -135,8 +135,9 @@ x I still want abcdefgh...ABCD for the name editor instead of a-zA-Z...
 - Consider adding the RAW MIDI as an option in the midi monitor menu.
 x Test with buffer of 2 => Had to use !full on output queue instead of hasSpaceFor
 - Check TFifo for bugs. Looks like hasSpaceFor doesn't work well for small 1 or 2 element buffers.
-x Need some kind of version number on About screen
+- Need some kind of version number on About screen
   => Made a simple define for it. Not the best solution, but OK.
+  - Better also have build date or something
 x Multi:
   x Remove ...
   x Move left
