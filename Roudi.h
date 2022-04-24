@@ -2,6 +2,10 @@
 
 // --- Some global defines that can be used to configure Roudi ---
 
+// Version shown on About Page
+#define ROUDI_VERSION  "      version 1.0"
+#define ROUDI_DATE     "       2019-2022"
+
 // Enables showing of Headphone Cairn logo at startup. 
 // Should be on on release.
 //#define ENABLE_LOGO

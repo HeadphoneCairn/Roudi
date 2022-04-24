@@ -12,6 +12,12 @@ Roudi was created to make it easy to use a MIDI master keyboard with basic funct
 
 Disclaimer: Due to the limitations of the midiboy, Roudi is also somewhat limited in functionality and ease of use. Furthermore, most of the program storage space is used, as is the RAM memory, so not many improvements are still possible.
 
+# Changelog
+
+## version 1.0
+
+- Initial release
+
 # Usage
 
 ## Keys
@@ -85,11 +91,6 @@ Press and release A+B to switch to the level one pages.
 - If you change the MIDI channels of your MIDI instruments, its Roudi channel name will no longer correspond. The easiest way to correct is, is to go into the old name in SINGLE and save it to the new channel number.
 - Every time you change the midi configuration such as: select a channel in single or multi, change octave, velocity, setting, ... note offs are sent to all active MIDI channels. So, basically when you change stuff, any note you are holding down an your keyboard will be terminated.
 
-# Changelog
-
-- version 0.1: Beta release
-
-
 
 
 # TODO
@@ -113,3 +114,4 @@ Filters: program change overrides cc filter for CC0
 
 - MIDI libraries and more by [Blokas](https://blokas.io/).
 - An stl for a case for the midiboy is available on [Thingiverse](https://www.thingiverse.com/thing:4878526).
+

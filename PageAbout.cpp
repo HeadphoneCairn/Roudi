@@ -5,7 +5,7 @@
 #include "MemoryFree.h"
 #include "MidiProcessing.h"
 #include "Pages.h"
-#include "Roudi.h" // for ENABLE_MEMORY_STATUS
+#include "Roudi.h" // for VERSION and ENABLE_MEMORY_STATUS
 
 
 PSTRING(PSTR_page_about, " ABOUT ROUDI "); 
@@ -14,13 +14,13 @@ PSTRING(PSTR_page_about, " ABOUT ROUDI ");
 PSTRING(PSTR_about_00, "");
 PSTRING(PSTR_about_01, "         Roudi");
 PSTRING(PSTR_about_02, "ROUter for miDI messages");
-PSTRING(PSTR_about_03, "      version 0.1");
-PSTRING(PSTR_about_04, "       2019-2022");
+PSTRING(PSTR_about_03, ROUDI_VERSION);
+PSTRING(PSTR_about_04, ROUDI_DATE);
 PSTRING(PSTR_about_05, "");
 PSTRING(PSTR_about_06, "Made by Headphone Cairn");
 PSTRING(PSTR_about_07, "Software for the Blokas");
 PSTRING(PSTR_about_08, "midiboy.");
-PSTRING(PSTR_about_09, "Parts by blokas, a.o.");
+PSTRING(PSTR_about_09, "Parts by Blokas, a.o.");
 PSTRING(PSTR_about_10, "");
 PSTRING(PSTR_about_11, "SOME HELP:");
 PSTRING(PSTR_about_12, " A or B: switch pages");
