@@ -116,7 +116,7 @@ char NameEditor::GetPreviousCharacter(char c, bool use_underscore)
   return out;
 }
 
-
+#if 0
 //==============================================================================
 //
 //                             B I T F I E L D
@@ -177,6 +177,81 @@ void Bitfield::GetInternalPosition(uint8_t position, uint8_t& byte, uint8_t& byt
   const uint8_t bit = 7 - (position - (byte << 3));
   byte_value = 1 << bit;
 }
+#endif
+
+
+//==============================================================================
+//
+//                             C O U N T E R S
+//
+//==============================================================================
+
+Counters::Counters()
+{
+  SetAll(0);
+}
+
+void Counters::SetAll(uint8_t value) {
+  if (value > 15) value = 15;
+  memset(m_values, (value << 4) + value, sizeof(m_values));
+}
+
+void Counters::Set(uint8_t position, uint8_t value) {
+  position = RestrictPosition(position);
+  if (value > 15) value = 15;
+  RawSet(position, value);
+}
+
+uint8_t Counters::Get(uint8_t position) const {
+  position = RestrictPosition(position);
+  return RawGet(position);
+}
+
+void Counters::Increment(uint8_t position) {
+  position = RestrictPosition(position);
+  uint8_t value = RawGet(position);
+  if (value < 15)
+    RawSet(position, value + 1);
+}
+
+void Counters::Decrement(uint8_t position) {
+  position = RestrictPosition(position);
+  uint8_t value = RawGet(position);
+  if (value > 0)
+    RawSet(position, value - 1);
+}
+
+//void Counters::Print() const {
+//  for (uint8_t i = 0; i < sizeof(m_values) * 2; i++)
+//    std::cout << (int) Get(i) << ", ";
+//  std::cout << std::endl;
+//}
+
+uint8_t Counters::RestrictPosition(uint8_t position) const {
+  if (position >= sizeof(m_values) * 2)
+    return sizeof(m_values) * 2 - 1;
+  else
+    return position;
+}
+
+void Counters::RawSet(uint8_t position, uint8_t value) {
+  uint8_t byte = position >> 1;
+  if (position & 0x1)
+    m_values[byte] = m_values[byte] & 0xF0 | value;
+  else
+    m_values[byte] = m_values[byte] & 0x0F | (value << 4);
+}
+
+uint8_t Counters::RawGet(uint8_t position) const {
+  uint8_t byte = position >> 1;
+  if (position & 0x1)
+    return m_values[byte] & 0x0F;
+  else
+    return (m_values[byte] & 0xF0) >> 4;
+}
+
+
+
 
 //==============================================================================
 //

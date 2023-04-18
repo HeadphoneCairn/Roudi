@@ -32,9 +32,9 @@ namespace
     State() { Init(); }
     void Init() {
       for (uint8_t i = 0; i < Configuration::m_max_number_of_output_channels; i++)
-        m_note_is_on[i].SetAll(false);
+        m_active_note_on_count[i].SetAll(0);
     }
-    Bitfield m_note_is_on[Configuration::m_max_number_of_output_channels];
+    Counters m_active_note_on_count[Configuration::m_max_number_of_output_channels];
   };
 
   State g_state;
@@ -134,8 +134,8 @@ namespace
   // This function takes an input event, transforms it and sends it to an output channel
   {
     // -- Init ---
-    const OutputConfiguration& output_channel = configuration.m_output_channel[channel];    
-    Bitfield& output_channel_note_is_on = g_state.m_note_is_on[channel];
+    const OutputConfiguration& output_channel = configuration.m_output_channel[channel];
+    Counters& output_channel_active_note_on_count = g_state.m_active_note_on_count[channel];
 
     // --- Filter message ---
     FilterSettingsValues filter = configuration.m_default_filter;
@@ -152,11 +152,17 @@ namespace
     
     // --- Note on/off ---
     // Normally, every note ON is followed by a note OFF.
-    // This code uses filters and as such does not send all note ONs to the output.
-    // When -a bit later- the note OFF for such an event comes in, it is better to not send 
-    // it to the output. (At least I think that maybe some simple/older MIDI implementations
-    // might have problem with this.) Solution: keep track of the sent note ONs and only
-    // send a note OFF, when an ON was sent. 
+    // This code uses a velocity filter and as such does not send all note ONs to the output.
+    // When -a bit later- the note OFF for such an event comes in, we don't know whether it
+    // was filtered out or not, so we have to send it. However it is better to not send 
+    // it to the output if it was filtered out. (At least I think that maybe some simple/older 
+    // MIDI implementations might have problem with this.) Solution: keep track of the sent 
+    // note ONs and only send a note OFF, when an ON was sent. This was originally implemented
+    // with a simple true/false state, but I have noticed that some more advanced keyboards 
+    // are capable of sending multiple note ONs before sending the note OFFs (required for
+    // certain piano techniques). So I changed the tracking to a counter based system.
+    // Typically the counters will not go over 1, but for fast repeated notes on a piano, it
+    // can go higher. We support up to 15 of these notes max.  
     if (event.m_event == 0x9 || event.m_event == 0x8) { // Note ON or OFF
       const uint8_t note = event.m_data[1];
       if (note < output_channel.m_minimum_note || note > output_channel.m_maximum_note)
@@ -176,11 +182,11 @@ namespace
           return;
         if (velocity > output_channel.m_maximum_velocity)
           return;
-        output_channel_note_is_on.Set(transposed_note, true); // Mark the (transposed) note as ON
+        output_channel_active_note_on_count.Increment(transposed_note); // Increment number of active notes for this note
       } else { // Note Off (either 0x8 or 0x9 with velocity 0)
-        if (!output_channel_note_is_on.Get(transposed_note))
+        if (output_channel_active_note_on_count.Get(transposed_note) == 0)
           return; // The note is not ON, so we don't send an OFF
-        output_channel_note_is_on.Set(transposed_note, false); // Mark the (transposed) note as OFF
+        output_channel_active_note_on_count.Decrement(transposed_note); // Decrement number of active notes for this note
       }
     }
 
@@ -210,8 +216,12 @@ namespace
 
   void SwitchOffAllNotes()
   // This started out as sending an "All Notes Off" message to all active output channels.
-  // But not all synths treat this message correctly (I am talking about you, Dreadbox Typhon)
+  // But not all synths treat this message correctly, e.g.:
+  // - Dreadbox Erebus: stops all notes, but when you send a new note ON, it doesn't respond
+  // - Dreadbox Typhon: does nothing when you send this meesage
   // So we now just send a NOTE off for each note that is on.
+  // (I thought of just sending a note off for 0-127, but the piano keyboard can require
+  //  more than one note off for the same note.)
   {    
     // For each channel, send note offs to all notes that are on 
     midi_event_t note_off_event;
@@ -219,14 +229,14 @@ namespace
     note_off_event.m_data[2] = 64; // Typically unused velocity
     for (uint8_t i = 0; i < configuration.m_nbr_output_channels; i++) {
       note_off_event.m_data[0] = 0x80 | (configuration.m_output_channel[i].m_channel & 0x0f); // Note off on correct channel
-      Bitfield& output_channel_note_is_on = g_state.m_note_is_on[i];
+      Counters& output_channel_active_note_on_count = g_state.m_active_note_on_count[i];
       for (uint8_t note = 0; note < 128; note++) {
-        if (output_channel_note_is_on.Get(note)) {
+        for (uint8_t active = 0; active < output_channel_active_note_on_count.Get(note); active++) {
           note_off_event.m_data[1] = note;    // Note number
           WriteEventToOutput(note_off_event); // Send the note off event
         }
       }
-      output_channel_note_is_on.SetAll(false);
+      output_channel_active_note_on_count.SetAll(0);
     }
   }
 

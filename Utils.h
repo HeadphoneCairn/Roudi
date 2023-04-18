@@ -21,6 +21,7 @@ private:
   char GetPreviousCharacter(char c, bool use_underscore);
 };
 
+#if 0
 // --- Bitfield ---
 // Why use the standard C++ bitfield, when you can write your own?
 class Bitfield
@@ -36,6 +37,27 @@ private:
   void GetInternalPosition(uint8_t position, uint8_t& byte, uint8_t& byte_value);
   uint8_t m_values[16]; // 16 * 8 = 128 bits
 };
+#endif
+
+// --- Counters ---
+class Counters
+// Stores an array of 4-bit counters (so possible values 0..15).
+{
+public:
+  Counters();
+  void SetAll(uint8_t value);
+  void Set(uint8_t position, uint8_t value);
+  uint8_t Get(uint8_t position) const;
+  void Increment(uint8_t position);
+  void Decrement(uint8_t position);
+  //void Print() const; {
+private:
+  uint8_t RestrictPosition(uint8_t position) const;
+  void RawSet(uint8_t position, uint8_t value);
+  uint8_t RawGet(uint8_t position) const;
+  uint8_t m_values[64]; // so 128 counters
+};
+
 
 // --- String functions ---
 // Pad string 'text' with 'len' * 'c' characters
