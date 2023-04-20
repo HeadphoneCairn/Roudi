@@ -44,8 +44,7 @@ protected:// to implement
   virtual void OnTimeout() { return; }
   enum UpDownAction { UP, DOWN };
   virtual bool OnUpDown(UpDownAction action); // returns whether to redraw screen
-private:
-  void Draw(uint8_t from = 0, uint8_t to = 7);
+  virtual void Draw(uint8_t from = 0, uint8_t to = 7);
 private:
   uint8_t m_number_of_lines;
   uint8_t m_first_line; // the first displayed line

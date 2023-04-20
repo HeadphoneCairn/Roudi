@@ -18,6 +18,7 @@ enum PageID
   PAGE_SINGLE_NAME  = 101,
   PAGE_MULTI_NAME   = 102,
   PAGE_MULTI_REMOVE = 103,
+  PAGE_VELOCITY_EDIT= 105,
   
   // --- Special pages ---
   PAGE_NONE         = 255

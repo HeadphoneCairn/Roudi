@@ -9,6 +9,7 @@
 #include "PageMultiName.h"
 #include "PageSettings.h"
 #include "PageSingle.h"
+#include "PageVelocityEdit.h"
 
 #include "Debug.h"
 #include "Data.h"
@@ -20,21 +21,22 @@
 /* Pages overview
 
   Lower level:
-  0. PageSingle ------- PageSingleName
-  1. PageMulti -------- PageMultiName, PageMultiRemove
-
-  n. PageAbout
+    0. PageSingle ------- PageSingleName
+    1. PageMulti -------- PageMultiName, PageMultiRemove
+    ..
+    n. PageAbout
 
   Upper level:
-  1.0  PageMonitor
-  1.1. PageSettings
+    1.0  PageMonitor
+    1.1. PageSettings
+    1.2. PageMonitorSettings
 */
 
 
 namespace 
 {
   PageID  g_current_lower_id = PAGE_SINGLE;
-  PageID  g_current_upper_id = PAGE_MONITOR;
+  PageID  g_current_upper_id = PAGE_VELOCITY_EDIT;
   Page*   g_current_page     = nullptr;
   bool    g_current_lower    = true;
   uint8_t g_current_multi   = 0;
@@ -78,6 +80,7 @@ namespace Pages
       case PAGE_SINGLE_NAME:  g_current_page = new PageSingleName; break;
       case PAGE_MULTI_NAME:   g_current_page = new PageMultiName; break;
       case PAGE_MULTI_REMOVE: g_current_page = new PageMultiRemove; break;
+      case PAGE_VELOCITY_EDIT:g_current_page = new PageVelocityEdit; break;
       default:                g_current_page = new PageSingle; break;
     }
     g_current_page->Start(data);
@@ -156,7 +159,8 @@ namespace Pages
       }
     } else {
       switch (g_current_upper_id) {
-        case PAGE_MONITOR: page_to_show = PAGE_MONITOR_SETTINGS; break;
+        case PAGE_VELOCITY_EDIT: page_to_show = PAGE_MONITOR_SETTINGS; break;
+        case PAGE_MONITOR: page_to_show = PAGE_VELOCITY_EDIT; break;
         case PAGE_SETTINGS: page_to_show = PAGE_MONITOR; break;
         case PAGE_MONITOR_SETTINGS: page_to_show = PAGE_SETTINGS; break;
       }
@@ -192,9 +196,10 @@ namespace Pages
       }
     } else {
       switch (g_current_upper_id) {
+        case PAGE_VELOCITY_EDIT: page_to_show = PAGE_MONITOR; break;
         case PAGE_MONITOR: page_to_show = PAGE_SETTINGS; break;
         case PAGE_SETTINGS: page_to_show = PAGE_MONITOR_SETTINGS; break;
-        case PAGE_MONITOR_SETTINGS: page_to_show = PAGE_MONITOR; break;
+        case PAGE_MONITOR_SETTINGS: page_to_show = PAGE_VELOCITY_EDIT; break;
       }
     }
 
