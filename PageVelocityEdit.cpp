@@ -10,11 +10,33 @@
 namespace
 {
   PSTRING(PSTR_page_velocity_edit, " VELOCITY ");
-  PSTRING(PSTR_fff,  "fff"); 
-  PSTRING(PSTR_ppp,  "ppp"); 
-  PSTRING(PSTR_vel,  "    1    64    127    v X");
+  //PSTRING(PSTR_fff,  "fff"); 
+  //PSTRING(PSTR_ppp,  "ppp"); 
+  //PSTRING(PSTR_vel,  "    1    64       127 v X");
+  //PSTRING(PSTR_line_0,  "o");
+//  PSTRING(PSTR_line_1, "u");
+//  PSTRING(PSTR_line_2, "t");
+//  PSTRING(PSTR_line_3, "p");
+//  PSTRING(PSTR_line_4, "u");
+//  PSTRING(PSTR_line_5, "t");
+//  PSTRING(PSTR_line_6,  "  1  i n p u t  127   v X");
+//  PSTRING(PSTR_line_5,  "t          127->127      ");
+//  PSTRING(PSTR_line_6,  "     i n p u t        v X");  
+//  PSTRING(PSTR_line_5,  "t");
+//  PSTRING(PSTR_line_6,  "  i n p u t 127->127  v X");
+//  PSTRING(PSTR_line_6, "      i n p u t       v X");
 
-  const uint8_t left_x = 21;
+  PSTRING(PSTR_line_0, "o                     v X");
+  PSTRING(PSTR_line_1, "u                     ");
+  PSTRING(PSTR_line_2, "t                     ");
+  PSTRING(PSTR_line_3, "p                     in");
+  PSTRING(PSTR_line_4, "u         (127,127)   127");
+  PSTRING(PSTR_line_5, "t                     out");
+  PSTRING(PSTR_line_6, "      i n p u t       127");
+
+
+
+  const uint8_t left_x = 12;
   const uint8_t left_y = 10;
 
   const uint8_t new_linear_map[] = {
@@ -55,7 +77,7 @@ void PageVelocityEdit::OnStart(uint8_t)
 {
 //  SingleValues values;
 //  EE::GetSingle(values);
-  SetNumberOfLines(7, 6);
+  SetNumberOfLines(7, 1);
   m_position = 0;
 //  SetMidiConfiguration(values.channel);
 }
@@ -95,18 +117,20 @@ Page::LineResult PageVelocityEdit::Line(LineFunction func, uint8_t line, uint8_t
   bool redraw = false;
 
   if (func == GET_TEXT) {
-    if (line == 0) {
-      text = GetPString(PSTR_fff);
-    } else if (line == 5) {
-      text = GetPString(PSTR_ppp);
-    } else if (line == 6) {
-      text = GetPString(PSTR_vel);
-      if (m_position == 17)
-        inversion = { Screen::InvertGiven, 22, 22 };
-      else if (m_position == 18)
-        inversion = { Screen::InvertGiven, 24, 24 };
-    } else {
-      text = GetPString(PSTR_empty);
+    switch(line) {
+      case 0: text = GetPString(PSTR_line_0); break;
+      case 1: text = GetPString(PSTR_line_1);
+        if (m_position == 17)
+          inversion = { Screen::InvertGiven, 22, 22 };
+        else if (m_position == 18)
+          inversion = { Screen::InvertGiven, 24, 24 };
+        break;
+      case 2: text = GetPString(PSTR_line_2); break;
+      case 3: text = GetPString(PSTR_line_3); break;
+      case 4: text = GetPString(PSTR_line_4); break;
+      case 5: text = GetPString(PSTR_line_5); break;
+      case 6: text = GetPString(PSTR_line_6); break;
+      default: text = GetPString(PSTR_empty); break;
     }
   } else if (func == DO_LEFT && m_position > 0) {
     m_position--;

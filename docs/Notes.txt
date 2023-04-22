@@ -757,6 +757,15 @@ t
 p
 u
 t
-   i  n  p  u  t     v X 
+  1  i n p u t  127   v X
 
-   1   input  127    v X 
+  i n p u t    127 -> 127  
+
+
+127->
+127
+
+120->
+123
+
+v X
