@@ -10,21 +10,6 @@
 namespace
 {
   PSTRING(PSTR_page_velocity_edit, " VELOCITY ");
-  //PSTRING(PSTR_fff,  "fff"); 
-  //PSTRING(PSTR_ppp,  "ppp"); 
-  //PSTRING(PSTR_vel,  "    1    64       127 v X");
-  //PSTRING(PSTR_line_0,  "o");
-//  PSTRING(PSTR_line_1, "u");
-//  PSTRING(PSTR_line_2, "t");
-//  PSTRING(PSTR_line_3, "p");
-//  PSTRING(PSTR_line_4, "u");
-//  PSTRING(PSTR_line_5, "t");
-//  PSTRING(PSTR_line_6,  "  1  i n p u t  127   v X");
-//  PSTRING(PSTR_line_5,  "t          127->127      ");
-//  PSTRING(PSTR_line_6,  "     i n p u t        v X");  
-//  PSTRING(PSTR_line_5,  "t");
-//  PSTRING(PSTR_line_6,  "  i n p u t 127->127  v X");
-//  PSTRING(PSTR_line_6, "      i n p u t       v X");
 
   PSTRING(PSTR_line_0, "o                     v X");
   PSTRING(PSTR_line_1, "u                     ");
@@ -77,7 +62,7 @@ void PageVelocityEdit::OnStart(uint8_t)
 {
 //  SingleValues values;
 //  EE::GetSingle(values);
-  SetNumberOfLines(7, 1);
+  SetNumberOfLines(7, 0);
   m_position = 0;
 //  SetMidiConfiguration(values.channel);
 }
@@ -118,13 +103,13 @@ Page::LineResult PageVelocityEdit::Line(LineFunction func, uint8_t line, uint8_t
 
   if (func == GET_TEXT) {
     switch(line) {
-      case 0: text = GetPString(PSTR_line_0); break;
-      case 1: text = GetPString(PSTR_line_1);
+      case 0: text = GetPString(PSTR_line_0); 
         if (m_position == 17)
           inversion = { Screen::InvertGiven, 22, 22 };
         else if (m_position == 18)
           inversion = { Screen::InvertGiven, 24, 24 };
         break;
+      case 1: text = GetPString(PSTR_line_1); break;
       case 2: text = GetPString(PSTR_line_2); break;
       case 3: text = GetPString(PSTR_line_3); break;
       case 4: text = GetPString(PSTR_line_4); break;
