@@ -236,18 +236,20 @@ namespace Pages
       max(sizeof(PageMultiName), 
       max(sizeof(PageMonitor),
       max(sizeof(PageSettings),
-      max(sizeof(PageAbout), sizeof(PageMultiRemove))))))));
+      max(sizeof(PageAbout),
+      max(sizeof(PageMultiRemove), sizeof(PageVelocityEdit)))))))));
 
   }
 
-  PSTRING(PSTR_page_usage, "%d %d %d %d %d %d %d %d");
+  PSTRING(PSTR_page_usage, "%d %d %d %d %d %d %d %d %d");
   const char* GetPageUsage()
   {
     snprintf(data_scratch, sizeof(data_scratch), GetPString(PSTR_page_usage),
              sizeof(PageSingle), sizeof(PageSingleName),
              sizeof(PageMulti), sizeof(PageMultiName),
              sizeof(PageMonitor), sizeof(PageSettings), 
-             sizeof(PageAbout), sizeof(PageMultiRemove));
+             sizeof(PageAbout), sizeof(PageMultiRemove),
+             sizeof(PageVelocityEdit));
     return data_scratch;
   }
 

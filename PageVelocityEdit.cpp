@@ -55,7 +55,7 @@ void PageVelocityEdit::OnStart(uint8_t)
 {
 //  SingleValues values;
 //  EE::GetSingle(values);
-  SetNumberOfLines(7);
+  SetNumberOfLines(7, 6);
   m_position = 0;
 //  SetMidiConfiguration(values.channel);
 }
@@ -101,13 +101,17 @@ Page::LineResult PageVelocityEdit::Line(LineFunction func, uint8_t line, uint8_t
       text = GetPString(PSTR_ppp);
     } else if (line == 6) {
       text = GetPString(PSTR_vel);
+      if (m_position == 17)
+        inversion = { Screen::InvertGiven, 22, 22 };
+      else if (m_position == 18)
+        inversion = { Screen::InvertGiven, 24, 24 };
     } else {
       text = GetPString(PSTR_empty);
     }
   } else if (func == DO_LEFT && m_position > 0) {
     m_position--;
     redraw = true;
-  } else if (func == DO_RIGHT && m_position < 19) {
+  } else if (func == DO_RIGHT && m_position < 18) {
     m_position++;
     redraw = true;
   }

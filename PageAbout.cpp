@@ -61,7 +61,7 @@ PSTRING(PSTR_about_min_stack,    " min stack mem: %d bytes");
 PSTRING(PSTR_about_heap_frag_ok, " heap fragments: %d");
 PSTRING(PSTR_about_heap_frag_nok," heap fragments: %d !!!");
 PSTRING(PSTR_about_biggest_page, " biggest page: %d bytes");
-PSTRING(PSTR_about_sizeof,       " > %s");
+PSTRING(PSTR_about_sizeof,       " %s");
 #endif
 
 
