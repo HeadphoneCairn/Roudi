@@ -2,28 +2,48 @@
 
 #include "Debug.h"
 #include "Data.h"
+#include "MidiFilter.h"
 #include "MidiProcessing.h"
 #include "Pages.h"
+#include "Roudi.h" // For SetRedrawNext
 
 #include "DinMidiboy.h"
+
+#include <midi_serialization.h> // for midi_event_t
 
 namespace
 {
   PSTRING(PSTR_page_velocity_edit, " VELOCITY ");
 
   PSTRING(PSTR_line_0, "o                     v X");
-  PSTRING(PSTR_line_1, "u                     ");
-  PSTRING(PSTR_line_2, "t                     ");
-  PSTRING(PSTR_line_3, "p                     in");
-  PSTRING(PSTR_line_4, "u                     127");
-  PSTRING(PSTR_line_5, "t                     out");
-  PSTRING(PSTR_line_6, "      i n p u t       127");
+  PSTRING(PSTR_line_1, "u");
+  PSTRING(PSTR_line_2, "t");
+  PSTRING(PSTR_line_3, "p");
+  PSTRING(PSTR_line_4, "u");
+  PSTRING(PSTR_line_5, "t");
+  PSTRING(PSTR_line_6, "      i n p u t");
 
   PSTRING(PSTR_coordinates, "(%d, %d)");
+  PSTRING(PSTR_in, "in");
+  PSTRING(PSTR_out, "out");
+  PSTRING(PSTR_velocity, "%d");
 
 
   const uint8_t left_x = 12;
   const uint8_t left_y = 10;
+
+
+  void ListenIn(const midi_event_t& event, void* data)
+  {
+    PageVelocityEdit* page_velocity_edit = static_cast<PageVelocityEdit*>(data);
+
+    // If we have a note on on the active input channel, we store its velocity in m_last_note_on
+    if (event.m_event == 0x9 && event.m_data[2] !=0 && MidiFilter::IsActiveInputChannel(event))
+    {
+      page_velocity_edit->m_last_note_on = event.m_data[2];
+      SetRedrawNext();
+    }
+  }
 
 /*
   const uint8_t new_linear_map[] = {
@@ -63,15 +83,21 @@ PageVelocityEdit::PageVelocityEdit(): Page()
 
 void PageVelocityEdit::OnStart(uint8_t)
 {
-//  SingleValues values;
-//  EE::GetSingle(values);
+  // Init members
   SetNumberOfLines(7, 0);
   m_position = 0;
+  m_last_note_on = 0;
+
+  // Attach listener
+  MidiProcessing::SetMidiInListener({ListenIn, this});  
+
 //  SetMidiConfiguration(values.channel);
 }
 
 void PageVelocityEdit::OnStop()
 {
+  // Detach listener
+  MidiProcessing::SetMidiInListener({nullptr, nullptr});
 //  SaveIfModified();
 }
 
@@ -208,8 +234,15 @@ void PageVelocityEdit::Draw(uint8_t from, uint8_t to)
     Screen::Print(Screen::CanvasScrollbar, 5, 19 - strlen(Screen::buffer), Screen::buffer, Screen::LineLeave, Screen::inversion_none);
   }
 
-
-
+  // --- Draw played notes ---
+  if (m_last_note_on != 0) {
+    Screen::Print(Screen::CanvasScrollbar, 4, 22, GetPString(PSTR_in), Screen::LineLeave, Screen::inversion_none);
+    Screen::Print(Screen::CanvasScrollbar, 6, 22, GetPString(PSTR_out), Screen::LineLeave, Screen::inversion_none);
+    sprintf(Screen::buffer, GetPString(PSTR_velocity), m_last_note_on);
+    Screen::Print(Screen::CanvasScrollbar, 5, 22, Screen::buffer, Screen::LineLeave, Screen::inversion_none);
+    sprintf(Screen::buffer, GetPString(PSTR_velocity), m_last_note_on * 2);
+    Screen::Print(Screen::CanvasScrollbar, 7, 22, Screen::buffer, Screen::LineLeave, Screen::inversion_none);
+  }
 
 }
 
