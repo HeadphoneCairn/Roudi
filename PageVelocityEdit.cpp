@@ -82,24 +82,6 @@ const char* PageVelocityEdit::GetTitle()
 
 Page::LineResult PageVelocityEdit::Line(LineFunction func, uint8_t line, uint8_t field)
 {
-/*
-  if (func == DO_LEFT && m_position > 0) {
-    m_position--;
-    return Page::LineResult{1, nullptr, Screen::inversion_none, true};
-  }
-  if (func == DO_RIGHT && m_position < 19) {
-    m_position++;
-    return Page::LineResult{1, "", Screen::inversion_none, true};
-  }
-  switch(line) {
-    case 0: return Page::LineResult{1, GetPString(PSTR_fff), Screen::inversion_none, false};
-    case 5: return Page::LineResult{1, GetPString(PSTR_ppp), Screen::inversion_none, false};
-    case 6: return TextLine(func, PSTR_vel);
-  }
-  return DefaultLine(func);
-*/
-
-
   const char* text = nullptr;
   Screen::Inversion inversion = Screen::inversion_none;
   bool redraw = false;
@@ -131,6 +113,43 @@ Page::LineResult PageVelocityEdit::Line(LineFunction func, uint8_t line, uint8_t
   return {1, text, inversion, redraw};
 
 }
+
+bool PageVelocityEdit::OnUpDown(UpDownAction action)
+{
+  if (m_position < 17) {
+/*
+    uint8_t old_value = new_custom_map[m_position];
+    uint8_t increment = (action == UP) ? +4 : -4;
+    uint8_t new_value = old_value + increment;
+    if (new_value > 196)
+      new_value = 0;
+    else if (new_value > 127)
+      new_value = 127;
+    new_custom_map[m_position] = new_value;
+    return (new_value != old_value);
+*/
+    const uint8_t increment = 3;
+    uint8_t old_value = new_custom_map[m_position];
+    if (action == UP) {
+      if (new_custom_map[m_position] <= 127 - increment) 
+        new_custom_map[m_position] += increment;
+      else
+        new_custom_map[m_position] = 127;
+    } else {
+      if (new_custom_map[m_position] > increment) 
+        new_custom_map[m_position] -= increment;
+      else
+        new_custom_map[m_position] = 1;
+    }
+    return (new_custom_map[m_position] != old_value);    
+  } else if (m_position == 17) { // ACCEPT
+    Debug::BeepHigh();
+  } else if (m_position == 18) { // CANCEL
+    Debug::BeepLow();
+  }
+  return false;
+}
+
 
 
 static void DrawPixel(uint8_t pos_x, uint8_t pos_y)
