@@ -15,15 +15,17 @@ namespace
   PSTRING(PSTR_line_1, "u                     ");
   PSTRING(PSTR_line_2, "t                     ");
   PSTRING(PSTR_line_3, "p                     in");
-  PSTRING(PSTR_line_4, "u         (127,127)   127");
+  PSTRING(PSTR_line_4, "u                     127");
   PSTRING(PSTR_line_5, "t                     out");
   PSTRING(PSTR_line_6, "      i n p u t       127");
 
+  PSTRING(PSTR_coordinates, "(%d, %d)");
 
 
   const uint8_t left_x = 12;
   const uint8_t left_y = 10;
 
+/*
   const uint8_t new_linear_map[] = {
       1,
       7,  15,  23,  31, 
@@ -31,6 +33,7 @@ namespace
      71,  79,  87,  95, 
     103, 111, 119, 127 
   };
+*/
 
   uint8_t new_custom_map[] = {
     /*   1 -> */ 1,
@@ -177,6 +180,17 @@ void PageVelocityEdit::Draw(uint8_t from, uint8_t to)
     DinMidiboy.drawBits(0x81, 1, false);
     */
   }
+
+  // --- Draw coordinates ---
+  if (m_position < 17) {
+    const uint8_t x = m_position == 0 ? 1 : m_position * 8 - 1;
+    const uint8_t y = new_custom_map[m_position];
+    sprintf(Screen::buffer, GetPString(PSTR_coordinates), x, y);
+    Screen::Print(Screen::CanvasScrollbar, 5, 19 - strlen(Screen::buffer), Screen::buffer, Screen::LineLeave, Screen::inversion_none);
+  }
+
+
+
 
 }
 
