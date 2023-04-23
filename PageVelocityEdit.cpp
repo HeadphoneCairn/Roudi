@@ -26,7 +26,6 @@ namespace
   PSTRING(PSTR_coordinates, "(%d, %d)");
   PSTRING(PSTR_in, "in");
   PSTRING(PSTR_out, "out");
-  PSTRING(PSTR_velocity, "%d");
 
 
   void ListenIn(const midi_event_t& event, void* data)
@@ -221,10 +220,8 @@ void PageVelocityEdit::Draw(uint8_t from, uint8_t to)
   if (m_last_note_on != 0) {
     Screen::Print(Screen::CanvasScrollbar, 4, 22, GetPString(PSTR_in), Screen::LineLeave, Screen::inversion_none);
     Screen::Print(Screen::CanvasScrollbar, 6, 22, GetPString(PSTR_out), Screen::LineLeave, Screen::inversion_none);
-    sprintf(Screen::buffer, GetPString(PSTR_velocity), m_last_note_on);
-    Screen::Print(Screen::CanvasScrollbar, 5, 22, Screen::buffer, Screen::LineLeave, Screen::inversion_none);
-    sprintf(Screen::buffer, GetPString(PSTR_velocity), m_last_note_on * 2);
-    Screen::Print(Screen::CanvasScrollbar, 7, 22, Screen::buffer, Screen::LineLeave, Screen::inversion_none);
+    Screen::Print(Screen::CanvasScrollbar, 5, 22, GetNumber(m_last_note_on), Screen::LineLeave, Screen::inversion_none);
+    Screen::Print(Screen::CanvasScrollbar, 7, 22, GetNumber(m_last_note_on * 2), Screen::LineLeave, Screen::inversion_none);
   }
 
 }
