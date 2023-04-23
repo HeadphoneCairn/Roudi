@@ -15,7 +15,7 @@ namespace
 {
   PSTRING(PSTR_page_velocity_edit, " VELOCITY ");
 
-  PSTRING(PSTR_line_0, "o                     v X");
+  PSTRING(PSTR_line_0, "o                   v X /");
   PSTRING(PSTR_line_1, "u");
   PSTRING(PSTR_line_2, "t");
   PSTRING(PSTR_line_3, "p");
