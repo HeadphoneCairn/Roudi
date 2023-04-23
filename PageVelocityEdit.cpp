@@ -190,17 +190,15 @@ void PageVelocityEdit::Draw(uint8_t from, uint8_t to)
   const uint8_t factor_x = 5;
   const uint8_t factor_y = 3;
 
-  for (uint8_t i=0; i<17; i++) {
+  for (uint8_t i = 0; i < 17; i++) {
     uint8_t pos_x = left_x + i * factor_x;
     uint8_t pos_y = left_y + (new_custom_map[i] / factor_y);
     DrawPixel(pos_x, pos_y);
-    if (i> 0) {
+    if (i > 0) {
       const int16_t delta = new_custom_map[i] - new_custom_map[i-1];
       const int16_t rounding = delta >= 0 ? +(factor_x*factor_y)>>1 : -((factor_x*factor_y)>>1);
-      DrawPixel(pos_x - 4, pos_y - (4*delta+rounding)/(factor_x*factor_y));
-      DrawPixel(pos_x - 3, pos_y - (3*delta+rounding)/(factor_x*factor_y));
-      DrawPixel(pos_x - 2, pos_y - (2*delta+rounding)/(factor_x*factor_y));
-      DrawPixel(pos_x - 1, pos_y - (1*delta+rounding)/(factor_x*factor_y));
+      for (uint8_t x = 1; x < factor_x; x++)
+        DrawPixel(pos_x - x, pos_y - (x*delta+rounding)/(factor_x*factor_y));
     }
     if (i==m_position) {
       DrawPixel(pos_x + 1, pos_y);
