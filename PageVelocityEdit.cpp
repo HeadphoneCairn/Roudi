@@ -149,7 +149,7 @@ bool PageVelocityEdit::OnUpDown(UpDownAction action)
     new_custom_map[m_position] = new_value;
     return (new_value != old_value);
 */
-    const uint8_t increment = 3;
+    const uint8_t increment = 1;
     uint8_t old_value = new_custom_map[m_position];
     if (action == UP) {
       if (new_custom_map[m_position] <= 127 - increment) 
