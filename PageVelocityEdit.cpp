@@ -29,7 +29,6 @@ namespace
   PSTRING(PSTR_velocity, "%d");
 
 
-
   void ListenIn(const midi_event_t& event, void* data)
   {
     PageVelocityEdit* page_velocity_edit = static_cast<PageVelocityEdit*>(data);
