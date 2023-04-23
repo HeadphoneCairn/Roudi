@@ -21,16 +21,13 @@ namespace
   PSTRING(PSTR_line_3, "p");
   PSTRING(PSTR_line_4, "u");
   PSTRING(PSTR_line_5, "t");
-  PSTRING(PSTR_line_6, "      i n p u t");
+  PSTRING(PSTR_line_6, "  input");
 
   PSTRING(PSTR_coordinates, "(%d, %d)");
   PSTRING(PSTR_in, "in");
   PSTRING(PSTR_out, "out");
   PSTRING(PSTR_velocity, "%d");
 
-
-  const uint8_t left_x = 12;
-  const uint8_t left_y = 10;
 
 
   void ListenIn(const midi_event_t& event, void* data)
@@ -189,49 +186,36 @@ static void DrawPixel(uint8_t pos_x, uint8_t pos_y)
 void PageVelocityEdit::Draw(uint8_t from, uint8_t to)
 {
   Page::Draw(from, to);
-/*
-  Screen::Print(Screen::CanvasScrollbar, 3, 5, "  res.text", Screen::LineLeave, Screen::inversion_none);
-*/
-/*
-  for (uint8_t i = 1; i <= 6; ++i) {
-    DinMidiboy.setDrawPosition(left_x, i);
-    DinMidiboy.drawBits(0xFF, 1, false);
-  }
-  DinMidiboy.setDrawPosition(left_x + 1, 1);
-  DinMidiboy.drawBits(0x01, 64, false);
-*/
 
-//  if (m_position < 17) {
-//    DinMidiboy.setDrawPosition(left_x + m_position * 4, 2);
-//    DinMidiboy.drawBits(0xF0, 1, false);
-//  }
+  const uint8_t left_x = 12;
+  const uint8_t left_y = 10;
+  const uint8_t factor_x = 5;
+  const uint8_t factor_y = 3;
 
   for (uint8_t i=0; i<17; i++) {
-    uint8_t pos_x = left_x + i * 5;
-    uint8_t pos_y = left_y + (new_custom_map[i] / 3);
+    uint8_t pos_x = left_x + i * factor_x;
+    uint8_t pos_y = left_y + (new_custom_map[i] / factor_y);
     DrawPixel(pos_x, pos_y);
+    if (i> 0) {
+      const int16_t delta = new_custom_map[i] - new_custom_map[i-1];
+      const int16_t rounding = delta >= 0 ? +(factor_x*factor_y)>>1 : -((factor_x*factor_y)>>1);
+      DrawPixel(pos_x - 4, pos_y - (4*delta+rounding)/(factor_x*factor_y));
+      DrawPixel(pos_x - 3, pos_y - (3*delta+rounding)/(factor_x*factor_y));
+      DrawPixel(pos_x - 2, pos_y - (2*delta+rounding)/(factor_x*factor_y));
+      DrawPixel(pos_x - 1, pos_y - (1*delta+rounding)/(factor_x*factor_y));
+    }
     if (i==m_position) {
       DrawPixel(pos_x + 1, pos_y);
       DrawPixel(pos_x - 1, pos_y);
     }
-//    DrawPixel(pos_x, pos_y + 1);
-//    DrawPixel(pos_x, pos_y - 1);
-
-    /*
-    uint8_t line_pos_y = pos_y >> 3;
-    uint8_t bit_to_set = pos_y - (line_pos_y << 3);
-    DinMidiboy.setDrawPosition(pos_x, line_pos_y);
-    DinMidiboy.drawBits(0x01 << bit_to_set, 1, false);
-    DinMidiboy.drawBits(0x81, 1, false);
-    */
-  }
+   }
 
   // --- Draw coordinates ---
   if (m_position < 17) {
     const uint8_t x = m_position == 0 ? 1 : m_position * 8 - 1;
     const uint8_t y = new_custom_map[m_position];
     sprintf(Screen::buffer, GetPString(PSTR_coordinates), x, y);
-    Screen::Print(Screen::CanvasScrollbar, 5, 19 - strlen(Screen::buffer), Screen::buffer, Screen::LineLeave, Screen::inversion_none);
+    Screen::Print(Screen::CanvasScrollbar, 7, 19 - strlen(Screen::buffer), Screen::buffer, Screen::LineLeave, Screen::inversion_none);
   }
 
   // --- Draw played notes ---
