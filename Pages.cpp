@@ -45,6 +45,14 @@ namespace
   // if so requested by the current page. 
   PageID  g_next_page_id = PAGE_NONE;
   uint8_t g_next_page_data = 0xFF;
+
+  // In some pages, the A, the B and the AB buttons cannot be used.
+  // Strangely, putting this in a function uses more bytes, even when I try to prevent inlining through __attribute__ ((noinline))
+  #define RETURN_IF_MODAL() \
+    if (g_current_lower && (g_current_lower_id == PAGE_SINGLE_NAME || g_current_lower_id == PAGE_MULTI_NAME || g_current_lower_id == PAGE_MULTI_REMOVE)) \
+      return; \
+    if (!g_current_lower && (g_current_upper_id == PAGE_VELOCITY_EDIT)) \
+      return; 
 }
 
 namespace Pages
@@ -134,10 +142,7 @@ namespace Pages
   void ButtonA() 
   {
     // Ignore A/B for some pages
-    if (g_current_lower && (g_current_lower_id == PAGE_SINGLE_NAME || g_current_lower_id == PAGE_MULTI_NAME || g_current_lower_id == PAGE_MULTI_REMOVE))
-      return;
-    if (!g_current_lower && (g_current_upper_id == PAGE_VELOCITY_EDIT))
-      return;
+    RETURN_IF_MODAL();
 
     // Go to previous page
     uint8_t data = 0xFF;
@@ -174,10 +179,7 @@ namespace Pages
   void ButtonB()
   {
     // Ignore A/B for some pages
-    if (g_current_lower && (g_current_lower_id == PAGE_SINGLE_NAME || g_current_lower_id == PAGE_MULTI_NAME || g_current_lower_id == PAGE_MULTI_REMOVE))
-       return;
-    if (!g_current_lower && (g_current_upper_id == PAGE_VELOCITY_EDIT))
-      return;
+    RETURN_IF_MODAL();
 
     // Go to next page
     uint8_t data = 0xFF;
@@ -213,10 +215,7 @@ namespace Pages
   void ButtonAB()
   {
     // Ignore A/B for some pages
-    if (g_current_lower && (g_current_lower_id == PAGE_SINGLE_NAME || g_current_lower_id == PAGE_MULTI_NAME || g_current_lower_id == PAGE_MULTI_REMOVE))
-      return;
-    if (!g_current_lower && (g_current_upper_id == PAGE_VELOCITY_EDIT))
-      return;
+    RETURN_IF_MODAL();
 
     g_current_lower = !g_current_lower;
     ShowPage(g_current_lower ? g_current_lower_id : g_current_upper_id);
