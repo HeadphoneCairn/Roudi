@@ -40,6 +40,46 @@ namespace
     }
   }
 
+  const uint8_t left_x = 12;
+  const uint8_t left_y = 10;
+  const uint8_t factor_x = 5;
+  const uint8_t factor_y = 3;
+
+  void DrawPixel(uint8_t pos_x, uint8_t pos_y)
+  {
+    uint8_t line_pos_y = pos_y >> 3;
+    uint8_t bit_to_set = pos_y - (line_pos_y << 3);
+    DinMidiboy.setDrawPosition(pos_x, line_pos_y);
+    DinMidiboy.drawBits(0x01 << bit_to_set, 1, false);
+  }
+
+  void DrawCursor(uint8_t pos_x, uint8_t pos_y)
+  {
+    const uint8_t n = 2; // max 4
+    uint8_t bytes[2] = {0, 0};
+    uint8_t lowest_line = (pos_y - n) >> 3;
+    for (uint8_t y = pos_y - n; y <= pos_y + n; y++) {
+      uint8_t line_pos_y = y >> 3;
+      uint8_t bit_to_set = y - (line_pos_y << 3);
+      bytes[line_pos_y - lowest_line] += (0x01 << bit_to_set);
+    } 
+    DinMidiboy.setDrawPosition(pos_x, lowest_line);
+    DinMidiboy.drawBits(bytes[0], 1, false);
+    if (bytes[1]) {
+      DinMidiboy.setDrawPosition(pos_x, lowest_line+1);
+      DinMidiboy.drawBits(bytes[1], 1, false);
+    }
+  }
+
+  void DrawVelocityIn(uint16_t vel_in)
+  {
+    uint8_t pos_x = static_cast<uint16_t>(left_x) + (vel_in - 1) * (16 * static_cast<uint16_t>(factor_x)) / (127 - 1);
+    for (uint8_t line = 1; line < 7; line++) {
+      DinMidiboy.setDrawPosition(pos_x, line);
+      DinMidiboy.drawBits(0x55, 1, false);
+    }
+  }
+
 /*
   const uint8_t new_linear_map[] = {
       1,
@@ -138,17 +178,6 @@ Page::LineResult PageVelocityEdit::Line(LineFunction func, uint8_t line, uint8_t
 bool PageVelocityEdit::OnUpDown(UpDownAction action)
 {
   if (m_position < 17) {
-/*
-    uint8_t old_value = new_custom_map[m_position];
-    uint8_t increment = (action == UP) ? +4 : -4;
-    uint8_t new_value = old_value + increment;
-    if (new_value > 196)
-      new_value = 0;
-    else if (new_value > 127)
-      new_value = 127;
-    new_custom_map[m_position] = new_value;
-    return (new_value != old_value);
-*/
     const uint8_t increment = 1;
     uint8_t old_value = new_custom_map[m_position];
     if (action == UP) {
@@ -171,48 +200,8 @@ bool PageVelocityEdit::OnUpDown(UpDownAction action)
   return false;
 }
 
-const uint8_t left_x = 12;
-const uint8_t left_y = 10;
-const uint8_t factor_x = 5;
-const uint8_t factor_y = 3;
-
-static void DrawPixel(uint8_t pos_x, uint8_t pos_y)
-{
-  uint8_t line_pos_y = pos_y >> 3;
-  uint8_t bit_to_set = pos_y - (line_pos_y << 3);
-  DinMidiboy.setDrawPosition(pos_x, line_pos_y);
-  DinMidiboy.drawBits(0x01 << bit_to_set, 1, false);
-}
-
-static void DrawCursor(uint8_t pos_x, uint8_t pos_y)
-{
-  const uint8_t n = 2; // max 4
-  uint8_t bytes[2] = {0, 0};
-  uint8_t lowest_line = (pos_y - n) >> 3;
-  for (uint8_t y = pos_y - n; y <= pos_y + n; y++) {
-    uint8_t line_pos_y = y >> 3;
-    uint8_t bit_to_set = y - (line_pos_y << 3);
-    bytes[line_pos_y - lowest_line] += (0x01 << bit_to_set);
-  } 
-  DinMidiboy.setDrawPosition(pos_x, lowest_line);
-  DinMidiboy.drawBits(bytes[0], 1, false);
-  if (bytes[1]) {
-    DinMidiboy.setDrawPosition(pos_x, lowest_line+1);
-    DinMidiboy.drawBits(bytes[1], 1, false);
-  }
-}
-
-static void DrawVelocityIn(uint16_t vel_in)
-{
-  uint8_t pos_x = static_cast<uint16_t>(left_x) + (vel_in - 1) * (16 * static_cast<uint16_t>(factor_x)) / (127 - 1);
-  for (uint8_t line = 1; line < 7; line++) {
-    DinMidiboy.setDrawPosition(pos_x, line);
-    DinMidiboy.drawBits(0x55, 1, false);
-  }
-}
 
 //#define ENABLE_VELOCITY_EDIT_SIMPLE_GRAPHICS
-
 
 void PageVelocityEdit::Draw(uint8_t from, uint8_t to)
 {
