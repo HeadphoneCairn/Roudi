@@ -450,25 +450,25 @@ namespace EE
 
   // ===== M I D I M O N S E T T I N G S =======================================
 
-  void SetMidiMonSettings(const MidiMonSettingsValues& values)
+  void __attribute__ ((noinline)) SetMidiMonSettings(const MidiMonSettingsValues& values)
   {
     EEPROM_PUT(start_of_midimon_settings, values);
   }
 
-  void GetMidiMonSettings(MidiMonSettingsValues& values)
+  void __attribute__ ((noinline)) GetMidiMonSettings(MidiMonSettingsValues& values)
   {
     EEPROM_GET(start_of_midimon_settings, values);
   }
 
   // ===== V E L O C I T Y M A P ===============================================
 
-  void SetVelocityMap(uint8_t which, const VelocityMap& velocity_map)
+  void __attribute__ ((noinline)) SetVelocityMap(uint8_t which, const VelocityMap& velocity_map)
   {
     if (which < 4)
       EEPROM_PUT(start_of_velocity_maps + static_cast<uint16_t>(which) * sizeof(VelocityMap), velocity_map);
   }
 
-  void GetVelocityMap(uint8_t which, VelocityMap& velocity_map)
+  void __attribute__ ((noinline)) GetVelocityMap(uint8_t which, VelocityMap& velocity_map)
   {
     if (which >= 4)
       which = 0; // Fall back to default

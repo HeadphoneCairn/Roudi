@@ -85,7 +85,7 @@ PageVelocityEdit::PageVelocityEdit(): Page()
 {
 }
 
-void PageVelocityEdit::OnStart(uint8_t)
+void PageVelocityEdit::OnStart(uint8_t which_map)
 {
   // Init members
   SetNumberOfLines(7, 0);
@@ -93,7 +93,8 @@ void PageVelocityEdit::OnStart(uint8_t)
   m_velocity_of_last_note = 0;
 
   // Read the velocity map
-  EE::GetVelocityMap(1, m_velocity_map);
+  m_which = which_map = 1;
+  EE::GetVelocityMap(m_which, m_velocity_map);
 
   // Attach listener
   MidiProcessing::SetMidiInListener({ListenIn, this});  
@@ -104,10 +105,8 @@ void PageVelocityEdit::OnStop()
   // Detach listener
   MidiProcessing::SetMidiInListener({nullptr, nullptr});
 
-  // Restore velocity map
+  // Set the velocity map specified in the settings
   SetVelocityCurve(EE::Settings().velocity_curve);
-
-//  SaveIfModified();
 }
 
 const char* PageVelocityEdit::GetTitle()
@@ -169,13 +168,15 @@ bool PageVelocityEdit::OnUpDown(UpDownAction action)
     }
     redraw = (m_velocity_map[m_position] != old_value);    
   } else if (m_position == 17) { // ACCEPT
-    Debug::BeepHigh();
+    EE::SetVelocityMap(m_which, m_velocity_map);
+    Pages::SetNextPage(PAGE_MONITOR);
   } else if (m_position == 18) { // CANCEL
-    Debug::BeepLow();
+    Pages::SetNextPage(PAGE_MONITOR);
   } else if (m_position == 19) { // RESET
     EE::GetVelocityMap(0, m_velocity_map);
     redraw = true;
   }
+
   if (redraw)
     SetVelocityMap(m_velocity_map);
   return redraw;

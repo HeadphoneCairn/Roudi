@@ -136,6 +136,8 @@ namespace Pages
     // Ignore A/B for some pages
     if (g_current_lower && (g_current_lower_id == PAGE_SINGLE_NAME || g_current_lower_id == PAGE_MULTI_NAME || g_current_lower_id == PAGE_MULTI_REMOVE))
       return;
+    if (!g_current_lower && (g_current_upper_id == PAGE_VELOCITY_EDIT))
+      return;
 
     // Go to previous page
     uint8_t data = 0xFF;
@@ -174,6 +176,8 @@ namespace Pages
     // Ignore A/B for some pages
     if (g_current_lower && (g_current_lower_id == PAGE_SINGLE_NAME || g_current_lower_id == PAGE_MULTI_NAME || g_current_lower_id == PAGE_MULTI_REMOVE))
        return;
+    if (!g_current_lower && (g_current_upper_id == PAGE_VELOCITY_EDIT))
+      return;
 
     // Go to next page
     uint8_t data = 0xFF;
@@ -210,6 +214,8 @@ namespace Pages
   {
     // Ignore A/B for some pages
     if (g_current_lower && (g_current_lower_id == PAGE_SINGLE_NAME || g_current_lower_id == PAGE_MULTI_NAME || g_current_lower_id == PAGE_MULTI_REMOVE))
+      return;
+    if (!g_current_lower && (g_current_upper_id == PAGE_VELOCITY_EDIT))
       return;
 
     g_current_lower = !g_current_lower;
