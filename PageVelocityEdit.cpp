@@ -178,8 +178,8 @@ const uint8_t factor_y = 3;
 
 static void DrawPixel(uint8_t pos_x, uint8_t pos_y)
 {
-  uint8_t line_pos_y = pos_y >> factor_y;
-  uint8_t bit_to_set = pos_y - (line_pos_y << factor_y);
+  uint8_t line_pos_y = pos_y >> 3;
+  uint8_t bit_to_set = pos_y - (line_pos_y << 3);
   DinMidiboy.setDrawPosition(pos_x, line_pos_y);
   DinMidiboy.drawBits(0x01 << bit_to_set, 1, false);
 }
@@ -188,10 +188,10 @@ static void DrawCursor(uint8_t pos_x, uint8_t pos_y)
 {
   const uint8_t n = 2; // max 4
   uint8_t bytes[2] = {0, 0};
-  uint8_t lowest_line = (pos_y - n) >> factor_y;
+  uint8_t lowest_line = (pos_y - n) >> 3;
   for (uint8_t y = pos_y - n; y <= pos_y + n; y++) {
-    uint8_t line_pos_y = y >> factor_y;
-    uint8_t bit_to_set = y - (line_pos_y << factor_y);
+    uint8_t line_pos_y = y >> 3;
+    uint8_t bit_to_set = y - (line_pos_y << 3);
     bytes[line_pos_y - lowest_line] += (0x01 << bit_to_set);
   } 
   DinMidiboy.setDrawPosition(pos_x, lowest_line);
