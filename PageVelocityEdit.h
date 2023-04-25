@@ -17,6 +17,7 @@ protected:
 private:
   void SetMidiConfiguration(uint8_t selected_line);
   uint8_t m_position;
+  VelocityMap m_velocity_map;
 };
 
 

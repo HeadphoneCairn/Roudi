@@ -40,75 +40,6 @@ namespace
   State g_state;
 
 
-  // === V E L O C I T Y   C U R V E S =========================================
-
-  // The arrays below contain velocity mappings. 
-  // They contain the expected output velocity for input velocities
-  //    0, 4, 8, 12, 16, ... 128
-  // The velocity curve is determined from these maps by linear interpolation.
-  // Note: Also tried putting all data in one big array, but that didn't save
-  //       any memory. So, chose separate arrays because those are slightly
-  //       more user friendly.
-
-	const PROGMEM uint8_t PVELMAP_linear[33] = {
-      0,   4,   8,  12,  16,  20,  24,  28,
-     32,  36,  40,  44,  48,  52,  56,  60,
-     64,  68,  72,  76,  80,  84,  88,  92,
-     96, 100, 104, 108, 112, 116, 120, 124,
-    128
-  };
-
-	const PROGMEM uint8_t PVELMAP_exponential[33] = {
-      0,   1,   1,   2,   3,   4,   5,   7,
-      9,  11,  13,  16,  19,  22,  25,  29,
-     33,  37,  41,  46,  51,  56,  61,  67,
-     73,  79,  85,  92,  99, 106, 113, 121,
-    129
-  };
-
-  const PROGMEM uint8_t PVELMAP_logarithmic[33] = {
-      0,  23,  33,  40,  45,  50,  54,  58,
-     62,  65,  69,  72,  75,  78,  81,  84,
-     87,  89,  92,  95,  98, 100, 103, 105,
-    108, 110, 113, 115, 118, 120, 123, 125,
-    128
-  };
-
-  const PROGMEM uint8_t PVELMAP_custom[33] = {
-      0,   3,   6,   8,  12,  15,  18,  22,
-     25,  29,  33,  37,  42,  46,  52,  57,
-     62,  68,  75,  82,  89,  95, 102, 108,
-    114, 118, 122, 124, 126, 127, 127, 127,
-    127
-  };
-
-  const uint8_t* g_velocities = PVELMAP_linear;
-
-  uint8_t MapVelocity(uint8_t v_in)
-  {
-    // Check input
-    if (v_in == 0)
-      return 0; // NOTE ON with velocity 0 has special NOTE OFF meaning, so never change!
-    if (v_in > 127)
-      v_in = 127; // safety precaution, 127 is max allowed velocity
-
-    // Perform mapping, using linear interpolation
-    const uint8_t from = v_in >> 2;
-    const uint8_t table_from = pgm_read_byte((const uint8_t *)g_velocities + from); 
-    const uint8_t table_to   = pgm_read_byte((const uint8_t *)g_velocities + from + 1); 
-    uint8_t v_out = (((table_to - table_from) * (v_in - (from << 2)) + 2)>>2) + table_from;  // (should be max 85) * (is max 3)
-
-    // TODO: add rounding ????
-
-    // Check output
-    if (v_out == 0)
-      v_out = 1; // output velocity 0 is only allowed when input velocity is 0!
-    if (v_out > 127)
-      v_out = 127; // safety precaution, 127 is max allowed velocity
-    return v_out;
-  }
-
-
   // === P R O C E S S I N G ===================================================
 
   // Fix for UsbToMidi::process() and 1 byte system common
@@ -281,6 +212,7 @@ namespace MidiProcessing
     m_nbr_output_channels = 0;
     m_default_filter = EE::Settings().filter;
     m_override_default_filter = false;
+//    m_velocity_curve = EE::Settings().velocity_curve;
     for (uint8_t i = 0; i < m_max_number_of_output_channels; ++i)
       m_output_channel[i].SetDefaults();
   }
@@ -291,16 +223,6 @@ namespace MidiProcessing
   //
   //==============================================================================
 
-  void SetVelocityCurve(VelocityCurve curve)
-  {
-    switch (curve) {
-      case VelocityCurve::Linear:      g_velocities = PVELMAP_linear;      return;
-      case VelocityCurve::Exponential: g_velocities = PVELMAP_exponential; return;
-      case VelocityCurve::Logarithmic: g_velocities = PVELMAP_logarithmic; return;
-      case VelocityCurve::Custom:      g_velocities = PVELMAP_custom;      return;
-    }
-    return;
-  }
 
 #ifdef ENABLE_DUMP_VELOCITY_CURVE
   void DumpVelocityCurve(VelocityCurve curve)
@@ -363,7 +285,7 @@ namespace MidiProcessing
     // We can safely change the configuration.
     configuration = g_next_configuration;
     // Switch the velocity map
-    SetVelocityCurve(static_cast<VelocityCurve>(EE::Settings().velocity_curve));
+    SetVelocityCurve(EE::Settings().velocity_curve);
     // We are done
     g_next_configuration_available = false;
     return true;

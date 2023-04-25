@@ -27,7 +27,6 @@ namespace
   PSTRING(PSTR_in, "in");
   PSTRING(PSTR_out, "out");
 
-
   void ListenIn(const midi_event_t& event, void* data)
   {
     PageVelocityEdit* page_velocity_edit = static_cast<PageVelocityEdit*>(data);
@@ -80,36 +79,6 @@ namespace
     }
   }
 
-/*
-  const uint8_t new_linear_map[] = {
-      1,
-      7,  15,  23,  31, 
-     39,  47,  55,  63,
-     71,  79,  87,  95, 
-    103, 111, 119, 127 
-  };
-*/
-
-  uint8_t new_custom_map[] = {
-    /*   1 -> */ 1,
-    /*   7 -> */ 1,  
-    /*  15 -> */ 1,  
-    /*  23 -> */ 7,  
-    /*  31 -> */ 31,
-    /*  39 -> */  42,  
-    /*  47 -> */  53,  
-    /*  55 -> */ 65,  
-    /*  63 -> */  73,
-    /*  71 -> */  81,
-    /*  79 -> */  89,  
-    /*  87 -> */ 98,
-    /*  95 -> */  112,
-    /* 103 -> */ 127, 
-    /* 111 -> */ 127, 
-    /* 119 -> */ 127, 
-    /* 127 -> */ 127,
-  };
-
 }
 
 PageVelocityEdit::PageVelocityEdit(): Page()
@@ -123,8 +92,12 @@ void PageVelocityEdit::OnStart(uint8_t)
   m_position = 0;
   m_last_note_on = 0;
 
+  // Read the velocity map
+  EE::GetVelocityMap(1, m_velocity_map);
+
   // Attach listener
   MidiProcessing::SetMidiInListener({ListenIn, this});  
+
 
 //  SetMidiConfiguration(values.channel);
 }
@@ -181,19 +154,19 @@ bool PageVelocityEdit::OnUpDown(UpDownAction action)
 {
   if (m_position < 17) {
     const uint8_t increment = 1;
-    uint8_t old_value = new_custom_map[m_position];
+    uint8_t old_value = m_velocity_map[m_position];
     if (action == UP) {
-      if (new_custom_map[m_position] <= 127 - increment) 
-        new_custom_map[m_position] += increment;
+      if (m_velocity_map[m_position] <= 127 - increment) 
+        m_velocity_map[m_position] += increment;
       else
-        new_custom_map[m_position] = 127;
+        m_velocity_map[m_position] = 127;
     } else {
-      if (new_custom_map[m_position] > increment) 
-        new_custom_map[m_position] -= increment;
+      if (m_velocity_map[m_position] > increment) 
+        m_velocity_map[m_position] -= increment;
       else
-        new_custom_map[m_position] = 1;
+        m_velocity_map[m_position] = 1;
     }
-    return (new_custom_map[m_position] != old_value);    
+    return (m_velocity_map[m_position] != old_value);    
   } else if (m_position == 17) { // ACCEPT
     Debug::BeepHigh();
   } else if (m_position == 18) { // CANCEL
@@ -214,7 +187,7 @@ void PageVelocityEdit::Draw(uint8_t from, uint8_t to)
   // --- Draw the curve ---
   for (uint8_t i = 0; i < 17; i++) {
     uint8_t pos_x = left_x + i * factor_x;
-    uint8_t pos_y = left_y + (new_custom_map[i] / factor_y);
+    uint8_t pos_y = left_y + (m_velocity_map[i] / factor_y);
 
 #ifdef ENABLE_VELOCITY_EDIT_SIMPLE_GRAPHICS
     DrawPixel(pos_x, pos_y);
@@ -229,7 +202,7 @@ void PageVelocityEdit::Draw(uint8_t from, uint8_t to)
       DrawPixel(pos_x, pos_y);
     }
     if (i > 0) {
-      const int16_t delta = new_custom_map[i] - new_custom_map[i-1];
+      const int16_t delta = m_velocity_map[i] - m_velocity_map[i-1];
       const int16_t rounding = delta >= 0 ? +(factor_x*factor_y)>>1 : -((factor_x*factor_y)>>1);
       for (uint8_t x = 1; x < factor_x; x++)
         DrawPixel(pos_x - x, pos_y - (x*delta+rounding)/(factor_x*factor_y));
@@ -240,7 +213,7 @@ void PageVelocityEdit::Draw(uint8_t from, uint8_t to)
   // --- Draw cursor coordinates ---
   if (m_position < 17) {
     const uint8_t x = m_position == 0 ? 1 : m_position * 8 - 1;
-    const uint8_t y = new_custom_map[m_position];
+    const uint8_t y = m_velocity_map[m_position];
     sprintf(Screen::buffer, GetPString(PSTR_coordinates), x, y);
     Screen::Print(Screen::CanvasScrollbar, 7, 19 - strlen(Screen::buffer), Screen::buffer, Screen::LineLeave, Screen::inversion_none);
   }

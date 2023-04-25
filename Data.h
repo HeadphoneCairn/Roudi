@@ -47,6 +47,11 @@ uint8_t OctaveDeltaToOctaveValue(int8_t octave_delta);
 uint8_t VelocityValueToVelocityMidi(uint8_t velocity_value);
 uint8_t VelocityMidiToVelocityValue(uint8_t velocity_value);
 
+// --- Velocity Curves and Maps ---
+typedef uint8_t VelocityMap[17];
+void SetVelocityCurve(uint8_t velocity_curve);
+uint8_t MapVelocity(uint8_t v_in);
+
 // --- MIDI Note names ---
 const char* GetNoteName(uint8_t midi_note_number);
 
@@ -172,6 +177,10 @@ namespace EE
   // --- Midi Monitor Settings ---
   void SetMidiMonSettings(const MidiMonSettingsValues& values);
   void GetMidiMonSettings(MidiMonSettingsValues& values);
+
+  // --- Velocity Maps ---
+  void SetVelocityMap(uint8_t which, const VelocityMap&);
+  void GetVelocityMap(uint8_t which, VelocityMap&);
 }
 
 

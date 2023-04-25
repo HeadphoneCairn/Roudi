@@ -28,9 +28,9 @@ namespace
 
   PSTRING(PSTR_velocity_curve, "Velocity curve");
   PSTRING(PSTR_velocity_0, "linear");
-  PSTRING(PSTR_velocity_1, "expon");
-  PSTRING(PSTR_velocity_2, "logar");
-  PSTRING(PSTR_velocity_3, "custom");
+  PSTRING(PSTR_velocity_1, "custom 1");
+  PSTRING(PSTR_velocity_2, "custom 2");
+  PSTRING(PSTR_velocity_3, "custom 3");
   PTABLE(PTAB_velocity, PSTR_velocity_0, PSTR_velocity_1, PSTR_velocity_2, PSTR_velocity_3);
   PTABLE_GETTER(GetVelocityCurve, PTAB_velocity);
 

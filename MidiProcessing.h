@@ -83,15 +83,6 @@ namespace MidiProcessing
   // Put the output messages on the output MIDI port
   void WriteToOutput();
 
-  // Velocity maps representing velocity curves
-  enum VelocityCurve { 
-    Linear = 0, 
-    Exponential = 1,  
-    Logarithmic = 2,
-    Custom = 3
-  };
-  // Select which velocity map is applied to outgoing notes
-  void SetVelocityCurve(VelocityCurve curve);
 #ifdef ENABLE_DUMP_VELOCITY_CURVE
   // This function was created to verify the correctness of a velocity map.
   // It dumps the map to the MIDI out in a silly way:

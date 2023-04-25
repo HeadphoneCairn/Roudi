@@ -78,6 +78,43 @@ uint8_t VelocityMidiToVelocityValue(uint8_t velocity_value)
   return velocity_value / 6;
 }
 
+// --- Velocity Curves and Maps ---
+static uint8_t g_velocity_map[17];
+
+void SetVelocityCurve(uint8_t velocity_curve)
+{
+  EE::GetVelocityMap(velocity_curve, g_velocity_map);
+}
+
+uint8_t MapVelocity(uint8_t v_in)
+{
+  // Check input
+  if (v_in == 0)
+    return 0; // NOTE ON with velocity 0 has special NOTE OFF meaning, so never change!
+  if (v_in > 127)
+    v_in = 127; // safety precaution, 127 is max allowed velocity
+
+  // Perform mapping, using linear interpolation
+  const uint16_t from = v_in >> 3;
+  const uint16_t from_out = static_cast<uint16_t>(g_velocity_map[from]);
+  const uint16_t to_out = static_cast<uint16_t>(g_velocity_map[from+1]);
+  const uint16_t from_in = (from << 3) - 1;
+  const uint16_t to_in = (from << 3) + 7;
+  uint16_t v_out = 0;
+  if (from > 0)
+    v_out = ((to_in - v_in) * from_out + (v_in - from_in) * to_out + 4) >> 3;
+  else // special case interval 1..7
+    v_out = ((to_in - v_in) * from_out + (v_in - 1) * to_out + 3) / 6;
+
+  // Check output
+  if (v_out == 0)
+    v_out = 1; // output velocity 0 is only allowed when input velocity is 0!
+  if (v_out > 127)
+    v_out = 127; // safety precaution, 127 is max allowed velocity
+
+  return static_cast<uint8_t>(v_out);
+}
+
 
 // --- MIDI Note names ---
 PSTRING(PSTR_note_name_00, "C%d");
@@ -179,10 +216,11 @@ namespace EE
   0000-0007: Header (8 bytes)
   0008-0071: Settings: 4 bytes + 13 bytes (64 bytes)
   0072-0091: Midi Monitor Settings: 2 + 13 bytes (20 bytes)
-  0092-0331: Channel names: 16 x (14 chars + zero) (240 bytes)
-  0332-0339: Single: 1 byte for selected line (=channel), 1 for first line (8 bytes)
-  0340-0343: Multi header: only number of multis for the moment (4 bytes)
-  0344-0799: Multi x 12 (456 bytes)
+  0092-0159: Velocity maps: 4 x 17 bytes (68 bytes)
+  0160-0399: Channel names: 16 x (14 chars + zero) (240 bytes)
+  0400-0407: Single: 1 byte for selected line (=channel), 1 for first line (8 bytes)
+  0408-0411: Multi header: only number of multis for the moment (4 bytes)
+  0412-0867: Multi x 12 (456 bytes)
                3 bytes for selected line, selected field, first line
               15 bytes (14 + zero) for the name 
               10 bytes (2 x 5) for channel settings
@@ -196,10 +234,11 @@ namespace EE
   static const uint16_t start_of_header = 0;
   static const uint16_t start_of_settings = 8;
   static const uint16_t start_of_midimon_settings = 72;
-  static const uint16_t start_of_channel_names = 92;
-  static const uint16_t start_of_single = 332;
-  static const uint16_t start_of_multi_header = 340;
-  static const uint16_t start_of_multis = 344;
+  static const uint16_t start_of_velocity_maps = 92;
+  static const uint16_t start_of_channel_names = 160;
+  static const uint16_t start_of_single = 400;
+  static const uint16_t start_of_multi_header = 408;
+  static const uint16_t start_of_multis = 412;
   static const uint16_t multi_size = 38; // currently, we use 38 bytes for a multi
   static const uint8_t  max_multis = 12; // currently, we have a max of 12 multis
   
@@ -252,7 +291,7 @@ namespace EE
 
   struct EE_Header
   {
-    uint16_t magic_number = 0x2B4D;
+    uint16_t magic_number = 0xAC0F;
     uint8_t version = 1;
   };
 
@@ -416,6 +455,21 @@ namespace EE
     EEPROM_GET(start_of_midimon_settings, values);
   }
 
+  // ===== V E L O C I T Y M A P ===============================================
+
+  void SetVelocityMap(uint8_t which, const VelocityMap& velocity_map)
+  {
+    if (which < 4)
+      EEPROM_PUT(start_of_velocity_maps + static_cast<uint16_t>(which) * sizeof(VelocityMap), velocity_map);
+  }
+
+  void GetVelocityMap(uint8_t which, VelocityMap& velocity_map)
+  {
+    if (which >= 4)
+      which = 0; // Fall back to default
+    EEPROM_GET(start_of_velocity_maps + static_cast<uint16_t>(which) * sizeof(VelocityMap), velocity_map);
+  }
+
   // ===== I N I T =============================================================
 
   static void InitHeader()
@@ -478,6 +532,41 @@ namespace EE
 #endif
   }
 
+//#define USE_NORMAL_VELOCITY_MAP_INIT
+#ifdef USE_NORMAL_VELOCITY_MAP_INIT
+  // Normal code: uses 248 bytes program storage
+  const PROGMEM uint8_t velocity_map_linear[17] = {
+      1,
+      7,  15,  23,  31, 
+     39,  47,  55,  63,
+     71,  79,  87,  95, 
+    103, 111, 119, 127 
+  };
+
+  static void InitVelocityMaps()
+  {
+    uint8_t default_velocity_map[17];
+    memcpy_P(default_velocity_map, velocity_map_linear, 17);
+    for (uint8_t i = 0; i < 4; i++)
+      SetVelocityMap(i, default_velocity_map);
+  }
+#else
+  // Ugly hacked code: uses 90 bytes program storage
+  const char velocity_map_linear[17] PROGMEM = {
+      1,
+      7,  15,  23,  31, 
+     39,  47,  55,  63,
+     71,  79,  87,  95, 
+    103, 111, 119, 127 
+  };
+  static void InitVelocityMaps()
+  {
+    strncpy_P(progmem_string_buffer, velocity_map_linear, 17);
+    for (uint8_t i = 0; i < 4; i++)
+      SetVelocityMap(i, (VelocityMap&) progmem_string_buffer);
+  }
+#endif
+
   void Init()
   {
     // Write default data to EEPROM, if there is no data yet
@@ -491,9 +580,10 @@ namespace EE
       InitSettings();
       InitChannels();
       InitMidiMonSettings();
+      InitVelocityMaps();
     }
     // Read the data that is constantly in memory for speedy access
-    GetSettings();  
+    GetSettings();
   }
 }
 
