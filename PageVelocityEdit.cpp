@@ -202,6 +202,14 @@ static void DrawCursor(uint8_t pos_x, uint8_t pos_y)
   }
 }
 
+static void DrawVelocityIn(uint16_t vel_in)
+{
+  uint8_t pos_x = static_cast<uint16_t>(left_x) + (vel_in - 1) * (16 * static_cast<uint16_t>(factor_x)) / (127 - 1);
+  for (uint8_t line = 1; line < 7; line++) {
+    DinMidiboy.setDrawPosition(pos_x, line);
+    DinMidiboy.drawBits(0x55, 1, false);
+  }
+}
 
 //#define ENABLE_VELOCITY_EDIT_SIMPLE_GRAPHICS
 
@@ -210,7 +218,7 @@ void PageVelocityEdit::Draw(uint8_t from, uint8_t to)
 {
   Page::Draw(from, to);
 
-
+  // --- Draw the curve ---
   for (uint8_t i = 0; i < 17; i++) {
     uint8_t pos_x = left_x + i * factor_x;
     uint8_t pos_y = left_y + (new_custom_map[i] / factor_y);
@@ -236,7 +244,7 @@ void PageVelocityEdit::Draw(uint8_t from, uint8_t to)
 #endif
    }
 
-  // --- Draw coordinates ---
+  // --- Draw cursor coordinates ---
   if (m_position < 17) {
     const uint8_t x = m_position == 0 ? 1 : m_position * 8 - 1;
     const uint8_t y = new_custom_map[m_position];
@@ -250,6 +258,7 @@ void PageVelocityEdit::Draw(uint8_t from, uint8_t to)
     Screen::Print(Screen::CanvasScrollbar, 6, 22, GetPString(PSTR_out), Screen::LineLeave, Screen::inversion_none);
     Screen::Print(Screen::CanvasScrollbar, 5, 22, GetNumber(m_last_note_on), Screen::LineLeave, Screen::inversion_none);
     Screen::Print(Screen::CanvasScrollbar, 7, 22, GetNumber(m_last_note_on * 2), Screen::LineLeave, Screen::inversion_none);
+    DrawVelocityIn(m_last_note_on);
   }
 
 }
