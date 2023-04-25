@@ -79,11 +79,16 @@ uint8_t VelocityMidiToVelocityValue(uint8_t velocity_value)
 }
 
 // --- Velocity Curves and Maps ---
-static uint8_t g_velocity_map[17];
+static VelocityMap g_velocity_map;
 
 void SetVelocityCurve(uint8_t velocity_curve)
 {
   EE::GetVelocityMap(velocity_curve, g_velocity_map);
+}
+
+void SetVelocityMap(const VelocityMap& velocity_map)
+{
+  memcpy(g_velocity_map, velocity_map, sizeof(VelocityMap));
 }
 
 uint8_t MapVelocity(uint8_t v_in)

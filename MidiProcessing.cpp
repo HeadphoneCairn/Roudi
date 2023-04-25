@@ -212,7 +212,6 @@ namespace MidiProcessing
     m_nbr_output_channels = 0;
     m_default_filter = EE::Settings().filter;
     m_override_default_filter = false;
-//    m_velocity_curve = EE::Settings().velocity_curve;
     for (uint8_t i = 0; i < m_max_number_of_output_channels; ++i)
       m_output_channel[i].SetDefaults();
   }

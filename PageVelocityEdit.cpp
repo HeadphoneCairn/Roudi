@@ -31,10 +31,10 @@ namespace
   {
     PageVelocityEdit* page_velocity_edit = static_cast<PageVelocityEdit*>(data);
 
-    // If we have a note on on the active input channel, we store its velocity in m_last_note_on
+    // If we have a note on on the active input channel, we store its velocity in m_velocity_of_last_note
     if (event.m_event == 0x9 && event.m_data[2] !=0 && MidiFilter::IsActiveInputChannel(event))
     {
-      page_velocity_edit->m_last_note_on = event.m_data[2];
+      page_velocity_edit->m_velocity_of_last_note = event.m_data[2];
       SetRedrawNext();
     }
   }
@@ -90,22 +90,23 @@ void PageVelocityEdit::OnStart(uint8_t)
   // Init members
   SetNumberOfLines(7, 0);
   m_position = 0;
-  m_last_note_on = 0;
+  m_velocity_of_last_note = 0;
 
   // Read the velocity map
   EE::GetVelocityMap(1, m_velocity_map);
 
   // Attach listener
   MidiProcessing::SetMidiInListener({ListenIn, this});  
-
-
-//  SetMidiConfiguration(values.channel);
 }
 
 void PageVelocityEdit::OnStop()
 {
   // Detach listener
   MidiProcessing::SetMidiInListener({nullptr, nullptr});
+
+  // Restore velocity map
+  SetVelocityCurve(EE::Settings().velocity_curve);
+
 //  SaveIfModified();
 }
 
@@ -147,11 +148,11 @@ Page::LineResult PageVelocityEdit::Line(LineFunction func, uint8_t line, uint8_t
   }
 
   return {1, text, inversion, redraw};
-
 }
 
 bool PageVelocityEdit::OnUpDown(UpDownAction action)
 {
+  bool redraw = false;
   if (m_position < 17) {
     const uint8_t increment = 1;
     uint8_t old_value = m_velocity_map[m_position];
@@ -166,15 +167,18 @@ bool PageVelocityEdit::OnUpDown(UpDownAction action)
       else
         m_velocity_map[m_position] = 1;
     }
-    return (m_velocity_map[m_position] != old_value);    
+    redraw = (m_velocity_map[m_position] != old_value);    
   } else if (m_position == 17) { // ACCEPT
     Debug::BeepHigh();
   } else if (m_position == 18) { // CANCEL
     Debug::BeepLow();
   } else if (m_position == 19) { // RESET
-    Debug::Beep();
+    EE::GetVelocityMap(0, m_velocity_map);
+    redraw = true;
   }
-  return false;
+  if (redraw)
+    SetVelocityMap(m_velocity_map);
+  return redraw;
 }
 
 
@@ -219,28 +223,12 @@ void PageVelocityEdit::Draw(uint8_t from, uint8_t to)
   }
 
   // --- Draw played notes ---
-  if (m_last_note_on != 0) {
+  if (m_velocity_of_last_note != 0) {
     Screen::Print(Screen::CanvasScrollbar, 4, 22, GetPString(PSTR_in), Screen::LineLeave, Screen::inversion_none);
     Screen::Print(Screen::CanvasScrollbar, 6, 22, GetPString(PSTR_out), Screen::LineLeave, Screen::inversion_none);
-    Screen::Print(Screen::CanvasScrollbar, 5, 22, GetNumber(m_last_note_on), Screen::LineLeave, Screen::inversion_none);
-    Screen::Print(Screen::CanvasScrollbar, 7, 22, GetNumber(m_last_note_on * 2), Screen::LineLeave, Screen::inversion_none);
-    DrawVelocityIn(m_last_note_on);
+    Screen::Print(Screen::CanvasScrollbar, 5, 22, GetNumber(m_velocity_of_last_note), Screen::LineLeave, Screen::inversion_none);
+    Screen::Print(Screen::CanvasScrollbar, 7, 22, GetNumber(MapVelocity(m_velocity_of_last_note)), Screen::LineLeave, Screen::inversion_none);
+    DrawVelocityIn(m_velocity_of_last_note);
   }
 
-}
-
-
-void PageVelocityEdit::SetMidiConfiguration(uint8_t selected_line)
-{
-/*
-  MidiProcessing::Configuration next_config;
-  next_config.m_input_channel = EE::Settings().input_channel;
-  if (selected_line < NumberOfChannels) {
-    next_config.m_nbr_output_channels = 1;
-    next_config.m_output_channel[0].m_channel = selected_line;
-  } else {
-    next_config.m_nbr_output_channels = 0;
-  }
-  MidiProcessing::SetNextConfiguration(next_config);
-*/
 }
