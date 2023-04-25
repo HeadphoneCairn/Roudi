@@ -151,8 +151,10 @@ Page::LineResult PageVelocityEdit::Line(LineFunction func, uint8_t line, uint8_t
     switch(line) {
       case 0: text = GetPString(PSTR_line_0); 
         if (m_position == 17)
-          inversion = { Screen::InvertGiven, 22, 22 };
+          inversion = { Screen::InvertGiven, 20, 20 };
         else if (m_position == 18)
+          inversion = { Screen::InvertGiven, 22, 22 };
+        else if (m_position == 19)
           inversion = { Screen::InvertGiven, 24, 24 };
         break;
       case 1: text = GetPString(PSTR_line_1); break;
@@ -166,7 +168,7 @@ Page::LineResult PageVelocityEdit::Line(LineFunction func, uint8_t line, uint8_t
   } else if (func == DO_LEFT && m_position > 0) {
     m_position--;
     redraw = true;
-  } else if (func == DO_RIGHT && m_position < 18) {
+  } else if (func == DO_RIGHT && m_position < 19) {
     m_position++;
     redraw = true;
   }
@@ -196,6 +198,8 @@ bool PageVelocityEdit::OnUpDown(UpDownAction action)
     Debug::BeepHigh();
   } else if (m_position == 18) { // CANCEL
     Debug::BeepLow();
+  } else if (m_position == 19) { // RESET
+    Debug::Beep();
   }
   return false;
 }
