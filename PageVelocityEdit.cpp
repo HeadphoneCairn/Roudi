@@ -171,39 +171,69 @@ bool PageVelocityEdit::OnUpDown(UpDownAction action)
   return false;
 }
 
-
+const uint8_t left_x = 12;
+const uint8_t left_y = 10;
+const uint8_t factor_x = 5;
+const uint8_t factor_y = 3;
 
 static void DrawPixel(uint8_t pos_x, uint8_t pos_y)
 {
-  uint8_t line_pos_y = pos_y >> 3;
-  uint8_t bit_to_set = pos_y - (line_pos_y << 3);
+  uint8_t line_pos_y = pos_y >> factor_y;
+  uint8_t bit_to_set = pos_y - (line_pos_y << factor_y);
   DinMidiboy.setDrawPosition(pos_x, line_pos_y);
   DinMidiboy.drawBits(0x01 << bit_to_set, 1, false);
 }
+
+static void DrawCursor(uint8_t pos_x, uint8_t pos_y)
+{
+  const uint8_t n = 2; // max 4
+  uint8_t bytes[2] = {0, 0};
+  uint8_t lowest_line = (pos_y - n) >> factor_y;
+  for (uint8_t y = pos_y - n; y <= pos_y + n; y++) {
+    uint8_t line_pos_y = y >> factor_y;
+    uint8_t bit_to_set = y - (line_pos_y << factor_y);
+    bytes[line_pos_y - lowest_line] += (0x01 << bit_to_set);
+  } 
+  DinMidiboy.setDrawPosition(pos_x, lowest_line);
+  DinMidiboy.drawBits(bytes[0], 1, false);
+  if (bytes[1]) {
+    DinMidiboy.setDrawPosition(pos_x, lowest_line+1);
+    DinMidiboy.drawBits(bytes[1], 1, false);
+  }
+}
+
+
+//#define ENABLE_VELOCITY_EDIT_SIMPLE_GRAPHICS
+
 
 void PageVelocityEdit::Draw(uint8_t from, uint8_t to)
 {
   Page::Draw(from, to);
 
-  const uint8_t left_x = 12;
-  const uint8_t left_y = 10;
-  const uint8_t factor_x = 5;
-  const uint8_t factor_y = 3;
 
   for (uint8_t i = 0; i < 17; i++) {
     uint8_t pos_x = left_x + i * factor_x;
     uint8_t pos_y = left_y + (new_custom_map[i] / factor_y);
+
+#ifdef ENABLE_VELOCITY_EDIT_SIMPLE_GRAPHICS
     DrawPixel(pos_x, pos_y);
+    if (i==m_position) {
+      DrawPixel(pos_x + 1, pos_y);
+      DrawPixel(pos_x - 1, pos_y);
+    }
+#else
+    if (i==m_position) {
+      DrawCursor(pos_x, pos_y);
+    } else {
+      DrawPixel(pos_x, pos_y);
+    }
     if (i > 0) {
       const int16_t delta = new_custom_map[i] - new_custom_map[i-1];
       const int16_t rounding = delta >= 0 ? +(factor_x*factor_y)>>1 : -((factor_x*factor_y)>>1);
       for (uint8_t x = 1; x < factor_x; x++)
         DrawPixel(pos_x - x, pos_y - (x*delta+rounding)/(factor_x*factor_y));
     }
-    if (i==m_position) {
-      DrawPixel(pos_x + 1, pos_y);
-      DrawPixel(pos_x - 1, pos_y);
-    }
+#endif
    }
 
   // --- Draw coordinates ---
