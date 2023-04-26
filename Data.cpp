@@ -40,13 +40,7 @@ const char* GetPStringFromPTable(const char *const ptable[], uint8_t which)
 PSTRING(PSTR_empty, "");
 PSTRING(PSTR_panic, "> Panic!");
 PSTRING(PSTR_done, "> Done");
-
-
-PSTRING(PSTR_velocity_curve_0, "linear");
-PSTRING(PSTR_velocity_curve_1, "custom 1");
-PSTRING(PSTR_velocity_curve_2, "custom 2");
-PSTRING(PSTR_velocity_curve_3, "custom 3");
-
+PSTRING(PSTR_velocity_curve_edit_title, " VELOCITY CURVE EDIT ");
 
 // --- Octaves ---
 #define MAX_OCTAVES 6
@@ -88,6 +82,18 @@ uint8_t VelocityMidiToVelocityValue(uint8_t velocity_value)
 
 // --- Velocity Curves and Maps ---
 static VelocityMap g_velocity_map;
+
+PSTRING(PSTR_velocity_default, "linear");
+PSTRING(PSTR_velocity_user, "user %d");
+
+uint8_t GetNumberOfVelocityCurves() { return 4; }
+const char* GetVelocityCurveName(uint8_t which) 
+{
+  if (which == 0 || which >= GetNumberOfVelocityCurves())
+    return GetPString(PSTR_velocity_default);
+  sprintf(data_scratch, GetPString(PSTR_velocity_user), which);
+  return data_scratch; 
+}
 
 void SetVelocityCurve(uint8_t velocity_curve)
 {

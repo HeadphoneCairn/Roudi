@@ -28,8 +28,11 @@ namespace
   PTABLE_GETTER(GetBlockOther, PTAB_block_other);
 
   PSTRING(PSTR_velocity_curve, "Velocity curve");
-  PTABLE(PTAB_velocity, PSTR_velocity_curve_0, PSTR_velocity_curve_1, PSTR_velocity_curve_2, PSTR_velocity_curve_3);
-  PTABLE_GETTER(GetVelocityCurve, PTAB_velocity);
+  const char* GetVelocityCurve(uint8_t i_value, uint8_t& o_number_of_values)
+  {
+    o_number_of_values = GetNumberOfVelocityCurves();
+    return GetVelocityCurveName(i_value);
+  }
 
   PSTRING(PSTR_velocity_curve_edit, "Velocity curve edit   ...");
 

@@ -36,12 +36,7 @@ extern char data_scratch[Screen::MaxCharsCanvas + 1];
 PSTRINGREF(PSTR_empty);
 PSTRINGREF(PSTR_panic);
 PSTRINGREF(PSTR_done);
-
-PSTRINGREF(PSTR_velocity_curve_0);
-PSTRINGREF(PSTR_velocity_curve_1);
-PSTRINGREF(PSTR_velocity_curve_2);
-PSTRINGREF(PSTR_velocity_curve_3);
-
+PSTRINGREF(PSTR_velocity_curve_edit_title);
 
 // --- Octaves ---
 // Encapsulated the number of octaves to transpose
@@ -56,6 +51,8 @@ uint8_t VelocityMidiToVelocityValue(uint8_t velocity_value);
 
 // --- Velocity Curves and Maps ---
 typedef uint8_t VelocityMap[17];
+uint8_t GetNumberOfVelocityCurves();
+const char* GetVelocityCurveName(uint8_t which);
 void SetVelocityCurve(uint8_t velocity_curve); // 0 = linear, 1..3 = custom
 void SetVelocityMap(const VelocityMap& velocity_map); // sets specific values
 uint8_t MapVelocity(uint8_t v_in);

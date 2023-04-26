@@ -8,7 +8,16 @@
 
 namespace
 {
-  PSTRING(PSTR_page_velocity_select, " VELOCITY CURVE EDIT ");
+  #define ADD_ELLIPSIS // uses 44 more bytes of program space
+  #ifdef ADD_ELLIPSIS
+  const char* GetVelocityCurveNameWithEllipsis(int which)
+  {
+    strcpy(Screen::buffer, GetVelocityCurveName(which));
+    PadRight(Screen::buffer, 22 - strlen(Screen::buffer));
+    PadRight(Screen::buffer, 3, '.');
+    return Screen::buffer;
+  }
+  #endif
 }
 
 PageVelocitySelect::PageVelocitySelect(): Page()
@@ -18,63 +27,42 @@ PageVelocitySelect::PageVelocitySelect(): Page()
 void PageVelocitySelect::OnStart(uint8_t which_curve)
 {
   SetNumberOfLines(6, which_curve);
-
 }
 
 void PageVelocitySelect::OnStop()
 {
-//  SaveIfModified();
 }
 
 const char* PageVelocitySelect::GetTitle()
 {
-  return GetPString(PSTR_page_velocity_select);
+  return GetPString(PSTR_velocity_curve_edit_title);
 }
-
-#define ADD_ELLIPSIS // uses 112 more bytes of program space
-#ifdef ADD_ELLIPSIS
-const char* GetVelocityCurve(const char* velocity_curve)
-{
-  strcpy(data_scratch, GetPString(velocity_curve));
-  PadRight(data_scratch, 22-strlen(data_scratch));
-  PadRight(data_scratch, 3, '.');
-  return data_scratch;
-}
-#endif
 
 Page::LineResult PageVelocitySelect::Line(LineFunction func, uint8_t line, uint8_t field)
 {
-  if (line < 4) {
+  const char* p; 
+  if (line == 0) {
+    p = GetVelocityCurveName(0);
+  } else if (line < 4) {
     if (func==DO_LEFT || func==DO_RIGHT)
       Pages::SetNextPage(PAGE_VELOCITY_EDIT, line);
 #ifdef ADD_ELLIPSIS
-    const char* p = nullptr;
-    switch (line) {
-      case 0: p=PSTR_velocity_curve_0; break;
-      case 1: p=PSTR_velocity_curve_1; break;
-      case 2: p=PSTR_velocity_curve_2; break;
-      case 3: p=PSTR_velocity_curve_3; break;
-    }
-    return Page::LineResult{1, GetVelocityCurve(p), Screen::inversion_all, false};
+      p = GetVelocityCurveNameWithEllipsis(line);
 #else
-    const char* p = nullptr;
-    switch (line) {
-      case 0: p=PSTR_velocity_curve_0; break;
-      case 1: p=PSTR_velocity_curve_1; break;
-      case 2: p=PSTR_velocity_curve_2; break;
-      case 3: p=PSTR_velocity_curve_3; break;
-    }
-    return TextLine(func, p);
+      p = GetVelocityCurveName(line);
 #endif
-  } else if (line==5) {
+  } else if (line == 5) {
     if (func==DO_LEFT || func==DO_RIGHT)
       Pages::SetNextPage(PAGE_SETTINGS);
-    return TextLine(func, PSTR_done);
+    p = GetPString(PSTR_done);
   } else {
-    return DefaultLine(func);
+    p = GetPString(PSTR_empty);
   }
 
+  return Page::LineResult{1, p, Screen::inversion_all, false};
 }
+
+
 
 void PageVelocitySelect::SetMidiConfiguration(uint8_t selected_line)
 {

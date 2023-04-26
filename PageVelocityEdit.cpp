@@ -13,8 +13,6 @@
 
 namespace
 {
-  PSTRING(PSTR_page_velocity_edit, " VELOCITY ");
-
   PSTRING(PSTR_line_0, "o                   v X /");
   PSTRING(PSTR_line_1, "u");
   PSTRING(PSTR_line_2, "t");
@@ -111,7 +109,7 @@ void PageVelocityEdit::OnStop()
 
 const char* PageVelocityEdit::GetTitle()
 {
-  return GetPString(PSTR_page_velocity_edit);
+  return GetPString(PSTR_velocity_curve_edit_title);
 }
 
 Page::LineResult PageVelocityEdit::Line(LineFunction func, uint8_t line, uint8_t field)
@@ -188,6 +186,7 @@ bool PageVelocityEdit::OnUpDown(UpDownAction action)
 void PageVelocityEdit::Draw(uint8_t from, uint8_t to)
 {
   Page::Draw(from, to);
+  Screen::Print(Screen::CanvasScrollbar, 6, 13, GetVelocityCurveName(m_which), Screen::LineLeave, Screen::inversion_none);
 
   // --- Draw the curve ---
   for (uint8_t i = 0; i < 17; i++) {
@@ -231,5 +230,7 @@ void PageVelocityEdit::Draw(uint8_t from, uint8_t to)
     Screen::Print(Screen::CanvasScrollbar, 7, 22, GetNumber(MapVelocity(m_velocity_of_last_note)), Screen::LineLeave, Screen::inversion_none);
     DrawVelocityIn(m_velocity_of_last_note);
   }
+
+
 
 }
