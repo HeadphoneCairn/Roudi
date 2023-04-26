@@ -93,7 +93,7 @@ void PageVelocityEdit::OnStart(uint8_t which_map)
   m_velocity_of_last_note = 0;
 
   // Read the velocity map
-  m_which = which_map = 1;
+  m_which = which_map;
   EE::GetVelocityMap(m_which, m_velocity_map);
 
   // Attach listener
@@ -169,9 +169,9 @@ bool PageVelocityEdit::OnUpDown(UpDownAction action)
     redraw = (m_velocity_map[m_position] != old_value);    
   } else if (m_position == 17) { // ACCEPT
     EE::SetVelocityMap(m_which, m_velocity_map);
-    Pages::SetNextPage(PAGE_MONITOR);
+    Pages::SetNextPage(PAGE_VELOCITY_SELECT);
   } else if (m_position == 18) { // CANCEL
-    Pages::SetNextPage(PAGE_MONITOR);
+    Pages::SetNextPage(PAGE_VELOCITY_SELECT);
   } else if (m_position == 19) { // RESET
     EE::GetVelocityMap(0, m_velocity_map);
     redraw = true;
