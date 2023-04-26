@@ -5,20 +5,21 @@
 enum PageID
 {
   // --- Lower pages ---
-  PAGE_SINGLE       = 0,
-  PAGE_MULTI        = 1,
-  PAGE_ABOUT        = 2,
+  PAGE_SINGLE           = 0,
+  PAGE_MULTI            = 1,
+  PAGE_ABOUT            = 2,
 
   // --- Upper pages ---
-  PAGE_MONITOR      = 10,
-  PAGE_SETTINGS     = 11,
+  PAGE_MONITOR          = 10,
+  PAGE_SETTINGS         = 11,
   PAGE_MONITOR_SETTINGS = 12,
 
   // --- Popup pages ---
-  PAGE_SINGLE_NAME  = 101,
-  PAGE_MULTI_NAME   = 102,
-  PAGE_MULTI_REMOVE = 103,
-  PAGE_VELOCITY_EDIT= 105,
+  PAGE_SINGLE_NAME      = 101,
+  PAGE_MULTI_NAME       = 102,
+  PAGE_MULTI_REMOVE     = 103,
+  PAGE_VELOCITY_SELECT  = 104,
+  PAGE_VELOCITY_EDIT    = 105,
   
   // --- Special pages ---
   PAGE_NONE         = 255

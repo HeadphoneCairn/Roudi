@@ -35,6 +35,7 @@ extern char data_scratch[Screen::MaxCharsCanvas + 1];
 // --- Globally defined strings ---
 PSTRINGREF(PSTR_empty);
 PSTRINGREF(PSTR_panic);
+PSTRINGREF(PSTR_done);
 
 // --- Octaves ---
 // Encapsulated the number of octaves to transpose

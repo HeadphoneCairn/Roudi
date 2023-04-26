@@ -4,6 +4,7 @@
 #include "Debug.h"
 #include "MidiFilter.h"
 #include "MidiProcessing.h"
+#include "Pages.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -34,6 +35,8 @@ namespace
   PTABLE(PTAB_velocity, PSTR_velocity_0, PSTR_velocity_1, PSTR_velocity_2, PSTR_velocity_3);
   PTABLE_GETTER(GetVelocityCurve, PTAB_velocity);
 
+  PSTRING(PSTR_velocity_curve_edit, "Velocity curve edit   ...");
+
   PSTRING(PSTR_brightness, "Screen brightness");
   PSTRING(PSTR_brightness_0, "low");
   PSTRING(PSTR_brightness_1, "medium");
@@ -58,7 +61,7 @@ PageSettings::PageSettings():
 void PageSettings::OnStart(uint8_t)
 {
   SettingsValues& values = EE::SettingsRW();
-  SetNumberOfLines(17, m_selected_line, 0, m_first_line);
+  SetNumberOfLines(18, m_selected_line, 0, m_first_line);
 }
 
 void PageSettings::OnStop() 
@@ -92,30 +95,37 @@ Page::LineResult PageSettings::ActualLine(LineFunction func, uint8_t line, uint8
     case  0: return SingleLine(func, PSTR_input_channel, settings.input_channel, GetInputChannel);;
     case  1: return SingleLine(func, PSTR_block_other, settings.block_other, GetBlockOther);
     case  2: return SingleLine(func, PSTR_velocity_curve, settings.velocity_curve, GetVelocityCurve);
-    case  3: { 
-             uint8_t previous_brightness = settings.brightness;
-             Page::LineResult result = SingleLine(func, PSTR_brightness, settings.brightness, GetBrightness);
-             if (previous_brightness != settings.brightness)
-               Screen::SetBrightness(static_cast<Screen::Brightness>(settings.brightness));
-             return result;
+    case  3: {
+              if (func == DO_LEFT || func == DO_RIGHT) {
+                Pages::SetNextPage(PAGE_VELOCITY_SELECT, settings.velocity_curve);
+                return DefaultLine(func);
+              } else
+                return TextLine(func, PSTR_velocity_curve_edit);
              }
-    case  4: return TextLine(func, PSTR_filter_title);
-    case  5: {
-             Page::LineResult result = SingleLine(func, PSTR_filter_note_on_off, settings.filter.note_off, GetMonitorFltr);
-             settings.filter.note_on = settings.filter.note_off; // on and off should be filter together
-             return result; 
+    case  4: { 
+              uint8_t previous_brightness = settings.brightness;
+              Page::LineResult result = SingleLine(func, PSTR_brightness, settings.brightness, GetBrightness);
+              if (previous_brightness != settings.brightness)
+                Screen::SetBrightness(static_cast<Screen::Brightness>(settings.brightness));
+              return result;
              }
-    case  6: return SingleLine(func, PSTR_filter_pitch_bend,        settings.filter.pitch_bend       , GetMonitorFltr);
-    case  7: return SingleLine(func, PSTR_filter_channel_pressure,  settings.filter.channel_pressure , GetMonitorFltr);
-    case  8: return SingleLine(func, PSTR_filter_key_pressure,      settings.filter.key_pressure     , GetMonitorFltr);
-    case  9: return SingleLine(func, PSTR_filter_program_change,    settings.filter.program_change   , GetMonitorFltr);
-    case 10: return SingleLine(func, PSTR_filter_cc_1_mod_wheel,    settings.filter.cc_mod_wheel     , GetMonitorFltr);    
-    case 11: return SingleLine(func, PSTR_filter_cc_other,          settings.filter.cc_other         , GetMonitorFltr);
-    case 12: return SingleLine(func, PSTR_filter_time_sync,         settings.filter.time_sync        , GetMonitorFltr);
-    case 13: return SingleLine(func, PSTR_filter_transport,         settings.filter.transport        , GetMonitorFltr); 
-    case 14: return SingleLine(func, PSTR_filter_system_exclusive,  settings.filter.system_exclusive , GetMonitorFltr);
-    case 15: return SingleLine(func, PSTR_filter_active_sensing,    settings.filter.active_sensing   , GetMonitorFltr);
-    case 16: return SingleLine(func, PSTR_filter_other,             settings.filter.other            , GetMonitorFltr);
+    case  5: return TextLine(func, PSTR_filter_title);
+    case  6: {
+              Page::LineResult result = SingleLine(func, PSTR_filter_note_on_off, settings.filter.note_off, GetMonitorFltr);
+              settings.filter.note_on = settings.filter.note_off; // on and off should be filter together
+              return result; 
+             }
+    case  7: return SingleLine(func, PSTR_filter_pitch_bend,        settings.filter.pitch_bend       , GetMonitorFltr);
+    case  8: return SingleLine(func, PSTR_filter_channel_pressure,  settings.filter.channel_pressure , GetMonitorFltr);
+    case  9: return SingleLine(func, PSTR_filter_key_pressure,      settings.filter.key_pressure     , GetMonitorFltr);
+    case 10: return SingleLine(func, PSTR_filter_program_change,    settings.filter.program_change   , GetMonitorFltr);
+    case 11: return SingleLine(func, PSTR_filter_cc_1_mod_wheel,    settings.filter.cc_mod_wheel     , GetMonitorFltr);    
+    case 12: return SingleLine(func, PSTR_filter_cc_other,          settings.filter.cc_other         , GetMonitorFltr);
+    case 13: return SingleLine(func, PSTR_filter_time_sync,         settings.filter.time_sync        , GetMonitorFltr);
+    case 14: return SingleLine(func, PSTR_filter_transport,         settings.filter.transport        , GetMonitorFltr); 
+    case 15: return SingleLine(func, PSTR_filter_system_exclusive,  settings.filter.system_exclusive , GetMonitorFltr);
+    case 16: return SingleLine(func, PSTR_filter_active_sensing,    settings.filter.active_sensing   , GetMonitorFltr);
+    case 17: return SingleLine(func, PSTR_filter_other,             settings.filter.other            , GetMonitorFltr);
     default: return DefaultLine(func);
   }
 }
