@@ -41,6 +41,13 @@ PSTRING(PSTR_empty, "");
 PSTRING(PSTR_panic, "> Panic!");
 PSTRING(PSTR_done, "> Done");
 
+
+PSTRING(PSTR_velocity_curve_0, "linear");
+PSTRING(PSTR_velocity_curve_1, "custom 1");
+PSTRING(PSTR_velocity_curve_2, "custom 2");
+PSTRING(PSTR_velocity_curve_3, "custom 3");
+
+
 // --- Octaves ---
 #define MAX_OCTAVES 6
 uint8_t GetNumberOfOctaves()

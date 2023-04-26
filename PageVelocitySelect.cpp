@@ -7,11 +7,7 @@
 
 namespace
 {
-  PSTRING(PSTR_page_velocity_select, " VELOCITY CURVE ");
-  PSTRING(PSTR_curve_0, "linear ...");
-  PSTRING(PSTR_curve_1, "custom 1 ...");
-  PSTRING(PSTR_curve_2, "custom 2 ...");
-  PSTRING(PSTR_curve_3, "custom 3 ...");
+  PSTRING(PSTR_page_velocity_select, " EDIT VELOCITY CURVE ");
 }
 
 PageVelocitySelect::PageVelocitySelect(): Page()
@@ -37,10 +33,10 @@ const char* PageVelocitySelect::GetTitle()
 Page::LineResult PageVelocitySelect::Line(LineFunction func, uint8_t line, uint8_t field)
 {
   switch (line) {
-    case 0: return TextLine(func, PSTR_curve_0);
-    case 1: return TextLine(func, PSTR_curve_1);
-    case 2: return TextLine(func, PSTR_curve_2);
-    case 3: return TextLine(func, PSTR_curve_3);
+    case 0: return TextLine(func, PSTR_velocity_curve_0);
+    case 1: return TextLine(func, PSTR_velocity_curve_1);
+    case 2: return TextLine(func, PSTR_velocity_curve_2);
+    case 3: return TextLine(func, PSTR_velocity_curve_3);
     case 5:
       if (func==DO_LEFT || func==DO_RIGHT)
         Pages::SetNextPage(PAGE_SETTINGS);

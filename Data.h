@@ -37,6 +37,12 @@ PSTRINGREF(PSTR_empty);
 PSTRINGREF(PSTR_panic);
 PSTRINGREF(PSTR_done);
 
+PSTRINGREF(PSTR_velocity_curve_0);
+PSTRINGREF(PSTR_velocity_curve_1);
+PSTRINGREF(PSTR_velocity_curve_2);
+PSTRINGREF(PSTR_velocity_curve_3);
+
+
 // --- Octaves ---
 // Encapsulated the number of octaves to transpose
 uint8_t GetNumberOfOctaves();
