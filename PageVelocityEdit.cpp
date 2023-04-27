@@ -7,6 +7,8 @@
 #include "Pages.h"
 #include "Roudi.h" // For SetRedrawNext
 
+#ifdef ENABLE_VELOCITY_EDIT_PAGE
+
 #include "DinMidiboy.h"
 
 #include <midi_serialization.h> // for midi_event_t
@@ -180,10 +182,9 @@ bool PageVelocityEdit::OnUpDown(UpDownAction action)
   return redraw;
 }
 
-
-//#define ENABLE_VELOCITY_EDIT_SIMPLE_GRAPHICS
-
 void PageVelocityEdit::Draw(uint8_t from, uint8_t to)
+// Due to a lack of program space and RAM, I cannot add the code to optimize drawing.
+// So, it is a bit slow, but still OK.
 {
   Page::Draw(from, to);
   const char* curve_name = GetVelocityCurveName(m_which);
@@ -194,7 +195,7 @@ void PageVelocityEdit::Draw(uint8_t from, uint8_t to)
     uint8_t pos_x = left_x + i * factor_x;
     uint8_t pos_y = left_y + (m_velocity_map[i] / factor_y);
 
-#ifdef ENABLE_VELOCITY_EDIT_SIMPLE_GRAPHICS
+#ifdef ENABLE_VELOCITY_EDIT_PAGE_SIMPLE_GRAPHICS
     DrawPixel(pos_x, pos_y);
     if (i==m_position) {
       DrawPixel(pos_x + 1, pos_y);
@@ -232,6 +233,45 @@ void PageVelocityEdit::Draw(uint8_t from, uint8_t to)
     DrawVelocityIn(m_velocity_of_last_note);
   }
 
-
-
 }
+
+#else // ENABLE_VELOCITY_EDIT_PAGE
+
+namespace
+{
+  PSTRING(PSTR_velocity_edit_disabled_1, "Velocity curve edit was");
+  PSTRING(PSTR_velocity_edit_disabled_2, "disabled to save program");
+  PSTRING(PSTR_velocity_edit_disabled_3, "space.");
+}
+
+PageVelocityEdit::PageVelocityEdit(): Page()
+{
+}
+
+void PageVelocityEdit::OnStart(uint8_t which_map)
+{
+  m_which = which_map;
+  SetNumberOfLines(3);
+}
+
+const char* PageVelocityEdit::GetTitle()
+{
+  return GetPString(PSTR_velocity_curve_edit_title);
+}
+
+Page::LineResult PageVelocityEdit::Line(LineFunction func, uint8_t line, uint8_t field)
+{
+  if (func==DO_LEFT || func==DO_RIGHT)
+    Pages::SetNextPage(PAGE_VELOCITY_SELECT, m_which);
+
+  const char* p;
+  if (line == 0)
+    p = PSTR_velocity_edit_disabled_1;
+  else if (line == 1)
+    p = PSTR_velocity_edit_disabled_2;
+  else
+    p = PSTR_velocity_edit_disabled_3;
+  return Page::LineResult{1, GetPString(p), Screen::inversion_none, false};
+}
+
+#endif // ENABLE_VELOCITY_EDIT_PAGE

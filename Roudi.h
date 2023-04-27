@@ -31,6 +31,12 @@
 // Should be off on release.
 //#define ENABLE_MONITOR_RAW
 
+// The velocity edit page uses quit some program space (about 1350 bytes).
+// Since it is seldom used, it is possible to disable it.
+#define ENABLE_VELOCITY_EDIT_PAGE
+// It is also possible to simplify the graphics and save about 270 bytes
+//#define ENABLE_VELOCITY_EDIT_PAGE_SIMPLE_GRAPHICS
+
 // --- Uhm ---
 
 // Ask main loop to redraw the current active Page
