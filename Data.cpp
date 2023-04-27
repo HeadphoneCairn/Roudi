@@ -525,6 +525,9 @@ namespace EE
   static void InitSettings()
   {
     GetSettingsDefault(g_settings_values);
+#ifdef ENABLE_AUTHORS_CONFIGURATION
+    g_settings_values.velocity_curve = 1;
+#endif
     EE::SetSettings();
   }
 
