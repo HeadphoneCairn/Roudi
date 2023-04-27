@@ -26,10 +26,12 @@
 // Should be OFF on release.
 #define ENABLE_WRITE_BEEP
 
-// When eeprom is initialized, writes favorite channels names.
+// When eeprom is initialized, writes the author's personal configuration:
+// - channel names
+// - velocity curves
 // Should be OFF on release.
-// Uses about **150** bytes of program space.
-#define ENABLE_DEFAULT_CHANNEL_NAMES
+// Uses about **180** bytes of program space.
+#define ENABLE_AUTHORS_CONFIGURATION
 
 // Add the raw unfiltered input messages to the monitor.
 // Should be OFF on release.

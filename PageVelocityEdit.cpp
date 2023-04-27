@@ -85,7 +85,7 @@ PageVelocityEdit::PageVelocityEdit(): Page()
 {
 }
 
-void PageVelocityEdit::OnStart(uint8_t which_map)
+void PageVelocityEdit::OnStart(uint8_t which_curve)
 {
   // Init members
   SetNumberOfLines(7, 0);
@@ -93,8 +93,9 @@ void PageVelocityEdit::OnStart(uint8_t which_map)
   m_velocity_of_last_note = 0;
 
   // Read the velocity map
-  m_which = which_map;
-  EE::GetVelocityMap(m_which, m_velocity_map);
+  m_which_curve = which_curve;
+  EE::GetVelocityMap(m_which_curve, m_velocity_map);
+  SetVelocityMap(m_velocity_map);
 
   // Attach listener
   MidiProcessing::SetMidiInListener({ListenIn, this});  
@@ -168,10 +169,10 @@ bool PageVelocityEdit::OnUpDown(UpDownAction action)
     }
     redraw = (m_velocity_map[m_position] != old_value);    
   } else if (m_position == 17) { // ACCEPT
-    EE::SetVelocityMap(m_which, m_velocity_map);
-    Pages::SetNextPage(PAGE_VELOCITY_SELECT, m_which);
+    EE::SetVelocityMap(m_which_curve, m_velocity_map);
+    Pages::SetNextPage(PAGE_VELOCITY_SELECT, m_which_curve);
   } else if (m_position == 18) { // CANCEL
-    Pages::SetNextPage(PAGE_VELOCITY_SELECT, m_which);
+    Pages::SetNextPage(PAGE_VELOCITY_SELECT, m_which_curve);
   } else if (m_position == 19) { // RESET
     EE::GetVelocityMap(0, m_velocity_map);
     redraw = true;
@@ -187,7 +188,7 @@ void PageVelocityEdit::Draw(uint8_t from, uint8_t to)
 // So, it is a bit slow, but still OK.
 {
   Page::Draw(from, to);
-  const char* curve_name = GetVelocityCurveName(m_which);
+  const char* curve_name = GetVelocityCurveName(m_which_curve);
   Screen::Print(Screen::CanvasScrollbar, 6, 19 - strlen(curve_name), curve_name, Screen::LineLeave, Screen::inversion_none);
 
   // --- Draw the curve ---
@@ -248,9 +249,9 @@ PageVelocityEdit::PageVelocityEdit(): Page()
 {
 }
 
-void PageVelocityEdit::OnStart(uint8_t which_map)
+void PageVelocityEdit::OnStart(uint8_t which_curve)
 {
-  m_which = which_map;
+  m_which_curve = which_curve;
   SetNumberOfLines(3);
 }
 
@@ -262,7 +263,7 @@ const char* PageVelocityEdit::GetTitle()
 Page::LineResult PageVelocityEdit::Line(LineFunction func, uint8_t line, uint8_t field)
 {
   if (func==DO_LEFT || func==DO_RIGHT)
-    Pages::SetNextPage(PAGE_VELOCITY_SELECT, m_which);
+    Pages::SetNextPage(PAGE_VELOCITY_SELECT, m_which_curve);
 
   const char* p;
   if (line == 0)

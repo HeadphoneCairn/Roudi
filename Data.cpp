@@ -1,6 +1,6 @@
 #include "Data.h"
 #include "Debug.h"
-#include "Roudi.h" // for #define ENABLE_WRITE_BEEP and ENABLE_DEFAULT_CHANNEL_NAMES
+#include "Roudi.h" // for #define ENABLE_WRITE_BEEP and ENABLE_AUTHORS_CONFIGURATION
 
 #include <string.h>
 #include <stdlib.h>
@@ -319,7 +319,7 @@ namespace EE
 
   struct EE_Header
   {
-    uint16_t magic_number = 0xAC0F;
+    uint16_t magic_number = 0xAC11;
     uint8_t version = 1;
   };
 
@@ -535,51 +535,31 @@ namespace EE
     SetMidiMonSettings(default_values);
   }
 
-#ifdef ENABLE_DEFAULT_CHANNEL_NAMES
+#ifdef ENABLE_AUTHORS_CONFIGURATION
   PSTRING(PSTR_channel_piano,   "Piano");
-  PSTRING(PSTR_channel_wave,    "Waldorf Wave");
-  PSTRING(PSTR_channel_erebus,  "Erebus");
   PSTRING(PSTR_channel_typhon,  "Typhon");
-  PSTRING(PSTR_channel_ipad,    "iPad");
+  PSTRING(PSTR_channel_erebus,  "Erebus");
   PSTRING(PSTR_channel_prophet, "Prophet 6");
-  PSTRING(PSTR_channel_moog,    "Moog Matriarch");
+  PSTRING(PSTR_channel_volca,   "Volca Drums");
+  PSTRING(PSTR_channel_ipad,    "iPad");
+  PSTRING(PSTR_channel_pc,      "PC");
 #endif
 
   static void InitChannels()
   {
     for (uint8_t i = 0; i < NumberOfChannels; i++)
       EE::SetChannelName(i, GetPString(PSTR_empty));
-#ifdef ENABLE_DEFAULT_CHANNEL_NAMES
+#ifdef ENABLE_AUTHORS_CONFIGURATION
     EE::SetChannelName(0, GetPString(PSTR_channel_piano));
-    EE::SetChannelName(1, GetPString(PSTR_channel_wave));
     EE::SetChannelName(2, GetPString(PSTR_channel_typhon));
     EE::SetChannelName(3, GetPString(PSTR_channel_erebus));
-    EE::SetChannelName(4, GetPString(PSTR_channel_moog));
-    EE::SetChannelName(9, GetPString(PSTR_channel_ipad));
-    EE::SetChannelName(10, GetPString(PSTR_channel_prophet));
+    EE::SetChannelName(4, GetPString(PSTR_channel_prophet));
+    EE::SetChannelName(5, GetPString(PSTR_channel_volca));
+    EE::SetChannelName(6, GetPString(PSTR_channel_ipad));
+    EE::SetChannelName(9, GetPString(PSTR_channel_pc));
 #endif
   }
 
-//#define USE_NORMAL_VELOCITY_MAP_INIT
-#ifdef USE_NORMAL_VELOCITY_MAP_INIT
-  // Normal code: uses 248 bytes program storage
-  const PROGMEM uint8_t velocity_map_linear[17] = {
-      1,
-      7,  15,  23,  31, 
-     39,  47,  55,  63,
-     71,  79,  87,  95, 
-    103, 111, 119, 127 
-  };
-
-  static void InitVelocityMaps()
-  {
-    uint8_t default_velocity_map[17];
-    memcpy_P(default_velocity_map, velocity_map_linear, 17);
-    for (uint8_t i = 0; i < GetNumberOfVelocityCurves(); i++)
-      SetVelocityMap(i, default_velocity_map);
-  }
-#else
-  // Ugly hacked code: uses 90 bytes program storage
   const char velocity_map_linear[17] PROGMEM = {
       1,
       7,  15,  23,  31, 
@@ -587,13 +567,29 @@ namespace EE
      71,  79,  87,  95, 
     103, 111, 119, 127 
   };
+
+#ifdef ENABLE_AUTHORS_CONFIGURATION
+  const char velocity_map_mypiano_at_medium_touch[17] PROGMEM = {
+      1,
+      1,   1,   2,  14, 
+     28,  41,  51,  63,
+     73,  84,  96,  108, 
+    121, 127, 127,  127 
+  };
+#endif
+
   static void InitVelocityMaps()
+  // Ugly hacked code to save 90 bytes of program space.
+  // Normal way would be to use const PROGMEM uint8_t velocity_map_linear[17] = { ... } with memcpy_P.
   {
     strncpy_P(progmem_string_buffer, velocity_map_linear, 17);
     for (uint8_t i = 0; i < GetNumberOfVelocityCurves(); i++)
       SetVelocityMap(i, (VelocityMap&) progmem_string_buffer);
-  }
+#ifdef ENABLE_AUTHORS_CONFIGURATION
+    strncpy_P(progmem_string_buffer, velocity_map_mypiano_at_medium_touch, 17);
+    SetVelocityMap(1, (VelocityMap&) progmem_string_buffer);
 #endif
+  }
 
   void Init()
   {
