@@ -186,7 +186,8 @@ bool PageVelocityEdit::OnUpDown(UpDownAction action)
 void PageVelocityEdit::Draw(uint8_t from, uint8_t to)
 {
   Page::Draw(from, to);
-  Screen::Print(Screen::CanvasScrollbar, 6, 13, GetVelocityCurveName(m_which), Screen::LineLeave, Screen::inversion_none);
+  const char* curve_name = GetVelocityCurveName(m_which);
+  Screen::Print(Screen::CanvasScrollbar, 6, 19 - strlen(curve_name), curve_name, Screen::LineLeave, Screen::inversion_none);
 
   // --- Draw the curve ---
   for (uint8_t i = 0; i < 17; i++) {

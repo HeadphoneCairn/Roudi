@@ -26,11 +26,7 @@ PageVelocitySelect::PageVelocitySelect(): Page()
 
 void PageVelocitySelect::OnStart(uint8_t which_curve)
 {
-  SetNumberOfLines(6, which_curve);
-}
-
-void PageVelocitySelect::OnStop()
-{
+  SetNumberOfLines(GetNumberOfVelocityCurves() + 2, which_curve);
 }
 
 const char* PageVelocitySelect::GetTitle()
@@ -43,7 +39,7 @@ Page::LineResult PageVelocitySelect::Line(LineFunction func, uint8_t line, uint8
   const char* p; 
   if (line == 0) {
     p = GetVelocityCurveName(0);
-  } else if (line < 4) {
+  } else if (line < GetNumberOfVelocityCurves()) {
     if (func==DO_LEFT || func==DO_RIGHT)
       Pages::SetNextPage(PAGE_VELOCITY_EDIT, line);
 #ifdef ADD_ELLIPSIS
@@ -51,7 +47,7 @@ Page::LineResult PageVelocitySelect::Line(LineFunction func, uint8_t line, uint8
 #else
       p = GetVelocityCurveName(line);
 #endif
-  } else if (line == 5) {
+  } else if (line == GetNumberOfVelocityCurves() + 1) {
     if (func==DO_LEFT || func==DO_RIGHT)
       Pages::SetNextPage(PAGE_SETTINGS);
     p = GetPString(PSTR_done);
@@ -60,19 +56,4 @@ Page::LineResult PageVelocitySelect::Line(LineFunction func, uint8_t line, uint8
   }
 
   return Page::LineResult{1, p, Screen::inversion_all, false};
-}
-
-
-
-void PageVelocitySelect::SetMidiConfiguration(uint8_t selected_line)
-{
-  MidiProcessing::Configuration next_config;
-  next_config.m_input_channel = EE::Settings().input_channel;
-  if (selected_line < NumberOfChannels) {
-    next_config.m_nbr_output_channels = 1;
-    next_config.m_output_channel[0].m_channel = selected_line;
-  } else {
-    next_config.m_nbr_output_channels = 0;
-  }
-  MidiProcessing::SetNextConfiguration(next_config);
 }

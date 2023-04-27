@@ -478,13 +478,13 @@ namespace EE
 
   void __attribute__ ((noinline)) SetVelocityMap(uint8_t which, const VelocityMap& velocity_map)
   {
-    if (which < 4)
+    if (which < GetNumberOfVelocityCurves())
       EEPROM_PUT(start_of_velocity_maps + static_cast<uint16_t>(which) * sizeof(VelocityMap), velocity_map);
   }
 
   void __attribute__ ((noinline)) GetVelocityMap(uint8_t which, VelocityMap& velocity_map)
   {
-    if (which >= 4)
+    if (which >= GetNumberOfVelocityCurves())
       which = 0; // Fall back to default
     EEPROM_GET(start_of_velocity_maps + static_cast<uint16_t>(which) * sizeof(VelocityMap), velocity_map);
   }
@@ -566,7 +566,7 @@ namespace EE
   {
     uint8_t default_velocity_map[17];
     memcpy_P(default_velocity_map, velocity_map_linear, 17);
-    for (uint8_t i = 0; i < 4; i++)
+    for (uint8_t i = 0; i < GetNumberOfVelocityCurves(); i++)
       SetVelocityMap(i, default_velocity_map);
   }
 #else
@@ -581,7 +581,7 @@ namespace EE
   static void InitVelocityMaps()
   {
     strncpy_P(progmem_string_buffer, velocity_map_linear, 17);
-    for (uint8_t i = 0; i < 4; i++)
+    for (uint8_t i = 0; i < GetNumberOfVelocityCurves(); i++)
       SetVelocityMap(i, (VelocityMap&) progmem_string_buffer);
   }
 #endif
