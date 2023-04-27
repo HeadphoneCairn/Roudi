@@ -31,10 +31,6 @@
 // Should be off on release.
 //#define ENABLE_MONITOR_RAW
 
-// Special mode to dump a velocity curve to the MIDI out.
-// Use only for verifying the velocity maps.
-//#define ENABLE_DUMP_VELOCITY_CURVE
-
 // --- Uhm ---
 
 // Ask main loop to redraw the current active Page

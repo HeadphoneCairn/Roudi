@@ -218,29 +218,6 @@ namespace MidiProcessing
 
   //==============================================================================
   // 
-  //                     V E L O C I T Y   C U R V E S
-  //
-  //==============================================================================
-
-
-#ifdef ENABLE_DUMP_VELOCITY_CURVE
-  void DumpVelocityCurve(VelocityCurve curve)
-  {
-    SetVelocityCurve(curve);
-    for (uint8_t v_in = 0; v_in < 128; v_in++) {
-      uint8_t v_out = MapVelocity(v_in);
-      midi_event_t note_off_event;
-      note_off_event.m_event = 0x8; // Note off 
-      note_off_event.m_data[0] = 0x80; // Note off on channel 1
-      note_off_event.m_data[1] = v_in; // Selected note represents our input velocity
-      note_off_event.m_data[2] = v_out; // Velocity represents our out velocity
-      WriteEventToOutput(note_off_event); // Send the note off event
-    }
-  }
-#endif
-
-  //==============================================================================
-  // 
   //                      M I D I   P R O C E S S I N G
   //
   //==============================================================================

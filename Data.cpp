@@ -81,6 +81,15 @@ uint8_t VelocityMidiToVelocityValue(uint8_t velocity_value)
 }
 
 // --- Velocity Curves and Maps ---
+/*
+  To be clear about the terminology
+  - A velocity curve is a complete mapping between all possible input velocity (1..127) and their expected output velocity.
+    It is defined as the linear interpolation of a velocity map.
+  - A velocity map is a list of 17 values that contains the output velocities for the following input velocities:
+      1, 7, 15, 23, 31, 39, 47, 55, 63, 71, 79, 87, 95, 103, 111, 119, 127
+  Remark: Velocity 0 is a special case. A NOTE ON with velocity 0 actually means NOTE OFF.
+*/
+
 static VelocityMap g_velocity_map;
 
 PSTRING(PSTR_velocity_default, "linear");
