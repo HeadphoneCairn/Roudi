@@ -56,5 +56,5 @@ namespace Pages
 
   // Debug info
   uint16_t GetBiggestPageUsage();
-  const char* GetPageUsage();
+  const char* GetPageUsage(uint8_t part);
 }

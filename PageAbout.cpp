@@ -61,7 +61,7 @@ PSTRING(PSTR_about_min_stack,    " min stack mem: %d bytes");
 PSTRING(PSTR_about_heap_frag_ok, " heap fragments: %d");
 PSTRING(PSTR_about_heap_frag_nok," heap fragments: %d !!!");
 PSTRING(PSTR_about_biggest_page, " biggest page: %d bytes");
-PSTRING(PSTR_about_sizeof,       " %s");
+PSTRING(PSTR_about_sizeof,       "   %s");
 #endif
 
 
@@ -76,7 +76,7 @@ void PageAbout::OnStart(uint8_t)
 {
   SetNumberOfLines(PTAB_about_text_size 
 #ifdef ENABLE_MEMORY_STATUS
-  + 6
+  + 7
 #endif
   , m_selected_line, 0, m_first_line);
   SetMidiConfiguration(); // TODO
@@ -110,8 +110,10 @@ Page::LineResult PageAbout::Line(LineFunction func, uint8_t line, uint8_t field)
             getNumberOfHeapFragments());
   else if (line == PTAB_about_text_size + 4)
     snprintf(Screen::buffer, sizeof(Screen::buffer), GetPString(PSTR_about_biggest_page), Pages::GetBiggestPageUsage());
+  else if (line == PTAB_about_text_size + 5)
+    snprintf(Screen::buffer, sizeof(Screen::buffer), GetPString(PSTR_about_sizeof), Pages::GetPageUsage(0));
   else
-    snprintf(Screen::buffer, sizeof(Screen::buffer), GetPString(PSTR_about_sizeof), Pages::GetPageUsage());
+    snprintf(Screen::buffer, sizeof(Screen::buffer), GetPString(PSTR_about_sizeof), Pages::GetPageUsage(1));
   return {1, Screen::buffer, Screen::inversion_all, false};
 #else
   return DefaultLine(func);

@@ -235,26 +235,39 @@ namespace Pages
   uint16_t GetBiggestPageUsage()
   {
     return
-      max(sizeof(PageSingle), 
-      max(sizeof(PageSingleName), 
+      max(sizeof(PageAbout),
+      max(sizeof(PageMonitor),
+      max(sizeof(PageMonitorSettings),
       max(sizeof(PageMulti), 
       max(sizeof(PageMultiName), 
-      max(sizeof(PageMonitor),
+      max(sizeof(PageMultiRemove),
       max(sizeof(PageSettings),
-      max(sizeof(PageAbout),
-      max(sizeof(PageMultiRemove), sizeof(PageVelocityEdit)))))))));
-
+      max(sizeof(PageSingle), 
+      max(sizeof(PageSingleName), 
+      max(sizeof(PageVelocityEdit), sizeof(PageVelocitySelect)))))))))));
   }
 
-  PSTRING(PSTR_page_usage, "%d %d %d %d %d %d %d %d %d");
-  const char* GetPageUsage()
+  PSTRING(PSTR_page_usage, "%d %d %d %d %d %d");
+  const char* GetPageUsage(uint8_t part)
   {
-    snprintf(data_scratch, sizeof(data_scratch), GetPString(PSTR_page_usage),
-             sizeof(PageSingle), sizeof(PageSingleName),
-             sizeof(PageMulti), sizeof(PageMultiName),
-             sizeof(PageMonitor), sizeof(PageSettings), 
-             sizeof(PageAbout), sizeof(PageMultiRemove),
-             sizeof(PageVelocityEdit));
+    if (part==0)
+      snprintf(data_scratch, sizeof(data_scratch), GetPString(PSTR_page_usage),
+        sizeof(PageAbout),
+        sizeof(PageMonitor),
+        sizeof(PageMonitorSettings),
+        sizeof(PageMulti), 
+        sizeof(PageMultiName), 
+        sizeof(PageMultiRemove)
+      );
+    else
+      snprintf(data_scratch, sizeof(data_scratch), GetPString(PSTR_page_usage),
+        sizeof(PageSettings),
+        sizeof(PageSingle), 
+        sizeof(PageSingleName), 
+        sizeof(PageVelocityEdit), 
+        sizeof(PageVelocitySelect),
+        -1
+      );
     return data_scratch;
   }
 

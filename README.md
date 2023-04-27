@@ -18,6 +18,11 @@ Disclaimer: Due to the limitations of the midiboy, Roudi is also somewhat limite
 
 - Initial release
 
+## version 1.1
+
+- Added page to edit velocity curves.
+
+
 # Usage
 
 ## Keys
