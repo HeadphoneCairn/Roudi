@@ -304,7 +304,7 @@ namespace MidiProcessing
   It returns eather false or true:
   - false: Not enough bytes have been treated to construct a complete midi_event_t. Please send more bytes.
   - true: The midi_event_t is ready, please treat the midi_event_t.
-  To do this, it keep state!
+  To do this, it keeps state!
 
   A midi_event_t consists of the following parts:
   - m_event: the type of message as interpreted by g_decoder.process() from the bytes of the MIDI stream
@@ -335,6 +335,28 @@ namespace MidiProcessing
     0x6: ??, F7, 00
     0x7: ??, ??, F7
   Note that the in between these midi_events_t, system real time messages (0xF) may arrive!
+  
+  A word about running status, a method used by MIDI to reduce the number of bytes sent.
+  Normally MIDI sends a command (=status) byte + several data bytes. If the next command is the same,
+  MIDI allows the sending of just more data bytes. e.g. sending several NOTE ONs sequentially
+  Note that NOTE ON with velocity 0 should be interpreted as NOTE OFF, which is especially useful 
+  during running status. e.g. :
+      90 3C 64  // NOTE 3C ON with velocity 64
+      90 3D 65
+      90 3E 5F
+      80 3C 40  // NOTE 3C OF with release velocity 40
+      80 3D 40
+      80 3E 40
+  Can be replaced by:
+      90 3C 64
+         3D 65
+         3E 5F
+         3C 00
+         3D 00
+         3E 00
+  So 13 bytes instead of 18.
+  g_decoder.process() supports the running status concept. Note however that it just returns an
+  event for each bunch of data bytes, so you get a complete event for the 3E 00 above. 
   */
 
   // Fix for g_decoder.process() and 1 byte system common

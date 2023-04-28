@@ -84,7 +84,7 @@ Press and release A+B to switch to the level one pages.
 ### MONITOR page
 
 ### MONITOR SETTINGS page
-
+  
 ## Concepts and Notes
 
 - All changes you make are saved automatically.
