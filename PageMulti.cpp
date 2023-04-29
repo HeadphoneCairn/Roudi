@@ -2,9 +2,13 @@
 
 #include "Debug.h"
 #include "Data.h"
+#include "MidiFilter.h"
 #include "MidiProcessing.h"
 #include "Pages.h"
 #include "Utils.h"
+#include "Roudi.h" // For SetRedrawNext
+
+#include <midi_serialization.h> // for midi_event_t
 
 namespace 
 {
@@ -76,6 +80,19 @@ namespace
   PSTRING(PSTR_remove, "> Remove ...");
   PSTRING(PSTR_move_left, "> Move left or right");
   PSTRING(PSTR_new, "> New");
+
+  void ListenIn(const midi_event_t& event, void* data)
+  {
+    PageMulti* page_multi = static_cast<PageMulti*>(data);
+
+    // If we have a note on on the active input channel, we store its velocity in m_velocity_of_last_note
+    if (event.m_event == 0x9 && event.m_data[2] !=0 && MidiFilter::IsActiveInputChannel(event))
+    {
+      page_multi->m_last_note = event.m_data[1];
+      SetRedrawNext();
+    }
+  }
+
 }
 
 
@@ -91,11 +108,18 @@ void PageMulti::OnStart(uint8_t which_multi)
   EE::GetMulti(m_which, m_values);
   SetNumberOfLines(17, m_values.selected_line, m_values.selected_field, m_values.first_line);
   SetMidiConfiguration();
+
+  // Attach listener
+  m_last_note = 0xFF;
+  MidiProcessing::SetMidiInListener({ListenIn, this});  
 }
 
 void PageMulti::OnStop()
 {
-  SaveIfModified();  
+  // Detach listener
+  MidiProcessing::SetMidiInListener({nullptr, nullptr});
+
+//  SaveIfModified();  
 }
 
 void PageMulti::OnTimeout()
@@ -107,6 +131,21 @@ const char* PageMulti::GetTitle()
 {
   sprintf(Screen::buffer, GetPString(PSTR_multi_title_format), m_which + 1, m_values.name);
   return Screen::buffer;
+}
+
+void PageMulti::Draw(uint8_t from, uint8_t to)
+{
+  if (m_last_note != 0xFF) {
+    // A note was played on the keyboard.
+    // If the "Split at" was selected, we update it.
+    if (m_values.mode == SPLIT_MODE && GetSelectedLine() == 1 && m_values.split_note != m_last_note) {
+      m_values.split_note = m_last_note;
+      //Update config???
+      Page::Draw(from, to);
+    }
+    m_last_note = 0xFF;
+  } else
+    Page::Draw(from, to);
 }
 
 Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)

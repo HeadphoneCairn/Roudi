@@ -16,7 +16,7 @@ protected:
   virtual bool OnUpDown(UpDownAction action);
   virtual void OnStart(uint8_t which_map = 0xFF) override;
   virtual void OnStop() override;
-  virtual void Draw(uint8_t from = 0, uint8_t to = 7) override;
+  virtual void Draw(uint8_t from, uint8_t to) override;
 private:
   uint8_t m_which_curve; // number of this velocity curve, 0 not allowed, that one is fixed 
   uint8_t m_position;
