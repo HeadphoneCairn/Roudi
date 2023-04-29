@@ -109,17 +109,14 @@ void PageMulti::OnStart(uint8_t which_multi)
   SetNumberOfLines(17, m_values.selected_line, m_values.selected_field, m_values.first_line);
   SetMidiConfiguration();
 
-  // Attach listener
   m_last_note = 0xFF;
   MidiProcessing::SetMidiInListener({ListenIn, this});  
 }
 
 void PageMulti::OnStop()
 {
-  // Detach listener
   MidiProcessing::SetMidiInListener({nullptr, nullptr});
-
-//  SaveIfModified();  
+  SaveIfModified();  
 }
 
 void PageMulti::OnTimeout()
@@ -140,7 +137,7 @@ void PageMulti::Draw(uint8_t from, uint8_t to)
     // If the "Split at" was selected, we update it.
     if (m_values.mode == SPLIT_MODE && GetSelectedLine() == 1 && m_values.split_note != m_last_note) {
       m_values.split_note = m_last_note;
-      //Update config???
+      SetMidiConfiguration();
       Page::Draw(from, to);
     }
     m_last_note = 0xFF;
