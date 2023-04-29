@@ -277,13 +277,13 @@ namespace MidiProcessing
     if (!g_panic)
       return;
  
-    midi_event_t note_off_event;
-    note_off_event.m_event = 0xb; // Control change
-    note_off_event.m_data[1] = 0x78; // All Sound Off
-    note_off_event.m_data[2] = 0x00; // unused
+    midi_event_t sound_off_event;
+    sound_off_event.m_event = 0xb; // Control change
+    sound_off_event.m_data[1] = 0x78; // All Sound Off
+    sound_off_event.m_data[2] = 0x00; // unused
     for (uint8_t i = 0xb0; i < 0xc0; i++) {
-      note_off_event.m_data[0] = i; // Control change on correct channel
-      WriteEventToOutput(note_off_event); // Send the note off event
+      sound_off_event.m_data[0] = i; // Control change on correct channel
+      WriteEventToOutput(sound_off_event); // Send the All Sound Off event
       }
 
     g_panic = false;
