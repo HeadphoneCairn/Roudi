@@ -141,8 +141,9 @@ void PageMulti::Draw(uint8_t from, uint8_t to)
       Page::Draw(from, to);
     }
     m_last_note = 0xFF;
-  } else
+  } else {
     Page::Draw(from, to);
+  }
 }
 
 Page::LineResult PageMulti::Line(LineFunction func, uint8_t line, uint8_t field)
@@ -268,8 +269,8 @@ void PageMulti::SetMidiConfiguration()
     next_config.m_output_channel[num].m_transpose = OctaveValueToOctaveDelta(channel_values.octave) * 12;
   }
   if (active_mode == SPLIT_MODE) {
-    // In SPLIT_MODE, the top channel will be at the right side of the keyboard [split_note, 127]
-    // and the bottom channel will be at the left side of the keyboard [0, split_note - 1]. 
+    // In SPLIT_MODE, the first channel will be at the left side of the keyboard [0, split_note - 1]
+    // and the second channel will be at the right side of the keyboard [split_note, 127]. 
     const uint8_t split_note = max(1, m_values.split_note); // split_node must be at least 1
     next_config.m_output_channel[0].m_maximum_note = split_note - 1;
     next_config.m_output_channel[1].m_minimum_note = split_note;
