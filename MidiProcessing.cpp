@@ -7,7 +7,9 @@
 #include "Roudi.h"
 
 #include "DinMidiboy.h"
+#ifdef ENABLE_MIDI_OUTPUT_BUFFER
 #include <fifo.h>
+#endif
 #include <midi_serialization.h>
 
 namespace
@@ -21,9 +23,11 @@ namespace
   MidiListener g_midi_in_listener = {nullptr, nullptr};
   MidiListener g_midi_out_listener = {nullptr, nullptr};
   
+#ifdef ENABLE_MIDI_OUTPUT_BUFFER
   typedef TFifo<midi_event_t, uint8_t, 128> fifo_t; // uses 512 bytes of RAM: 4 x 128
 
   fifo_t g_output_queue;
+#endif
   MidiToUsb g_decoder;
 
   class State
@@ -61,7 +65,11 @@ namespace
       g_midi_out_listener.call_back(event, g_midi_out_listener.data);
   }
 
-  void ProcessChannel(uint8_t channel, midi_event_t event, fifo_t& output_queue)
+  void ProcessChannel(uint8_t channel, midi_event_t event
+#ifdef ENABLE_MIDI_OUTPUT_BUFFER
+    , fifo_t& output_queue
+#endif
+    )
   // This function takes an input event, transforms it and sends it to an output channel
   {
     // -- Init ---
@@ -122,26 +130,46 @@ namespace
     }
 
     // --- Push the reformatted event
+  #ifdef ENABLE_MIDI_OUTPUT_BUFFER
     output_queue.push(event);
+  #else
+    WriteEventToOutput(event);
+  #endif
   }
 
-  void ProcessInputEvent(midi_event_t& event, fifo_t& output_queue)
+  void ProcessInputEvent(midi_event_t& event
+#ifdef ENABLE_MIDI_OUTPUT_BUFFER
+  , fifo_t& output_queue
+#endif
+  )
   {
     if (event.m_event >= 0x8 && event.m_event <= 0xe) {
       // --- Event for a specific channel ---
       const uint8_t channel = event.m_data[0] & 0x0f;
       if (channel == configuration.m_input_channel) { // input channel
         for (uint8_t i = 0; i < configuration.m_nbr_output_channels; i++)
-          ProcessChannel(i, event, output_queue);
+          ProcessChannel(i, event
+#ifdef ENABLE_MIDI_OUTPUT_BUFFER      
+          , output_queue
+#endif
+          );
       } else { // other channel
         if (!EE::Settings().block_other) // Should really also be in the Configuration, as should velocity_curve?????
+#ifdef ENABLE_MIDI_OUTPUT_BUFFER  
           output_queue.push(event); // pass if not blocked in settings
+#else
+          WriteEventToOutput(event);
+#endif
       }
     } else {
       // --- Event for all channels ---
       if (!MidiFilter::AllowMessage(configuration.m_default_filter, event))
         return;
+#ifdef ENABLE_MIDI_OUTPUT_BUFFER
       output_queue.push(event); // just pass for the moment, later possible filtering
+#else
+      WriteEventToOutput(event);
+#endif
     }
   }
 
@@ -380,22 +408,32 @@ namespace MidiProcessing
 
   void TreatInput()
   {
-    while (g_output_queue.hasSpaceFor(Configuration::m_max_number_of_output_channels /*number of involved output channels*/) && DinMidiboy.dinMidi().available())
+    while (
+#ifdef ENABLE_MIDI_OUTPUT_BUFFER      
+      g_output_queue.hasSpaceFor(Configuration::m_max_number_of_output_channels /*number of involved output channels*/) && 
+#endif
+      DinMidiboy.dinMidi().available())
     {
       midi_event_t event;
       if (FIX_g_decoder_process(DinMidiboy.dinMidi().read(), event)) {
-        ProcessInputEvent(event, g_output_queue);
+        ProcessInputEvent(event
+#ifdef ENABLE_MIDI_OUTPUT_BUFFER      
+        , g_output_queue
+#endif
+        );
         if (g_midi_in_listener.call_back)
           g_midi_in_listener.call_back(event, g_midi_in_listener.data);
       }
     }
   }
-  
+
+#ifdef ENABLE_MIDI_OUTPUT_BUFFER
   void WriteToOutput()
   {
     midi_event_t event;
     while (g_output_queue.pop(event))
       WriteEventToOutput(event);
   }
+#endif
 
 }

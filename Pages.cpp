@@ -37,7 +37,7 @@
 namespace 
 {
   PageID  g_current_lower_id = PAGE_SINGLE;
-  PageID  g_current_upper_id = PAGE_SETTINGS;
+  PageID  g_current_upper_id = PAGE_MONITOR;
   Page*   g_current_page     = nullptr;
   bool    g_current_lower    = true;
   uint8_t g_current_multi   = 0;

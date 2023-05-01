@@ -50,7 +50,7 @@ void loop()
   // --- Get button and midi messages ---
   DinMidiboy.think();
 
-  // --- Parse input midi messages and write result to output queue ---
+  // --- Parse input midi messages and write result to output ---
   MidiProcessing::TreatInput();
 
   // --- Treat buttons ---
@@ -119,8 +119,10 @@ void loop()
     g_last_button_press = 0;
   }
 
+#ifdef ENABLE_MIDI_OUTPUT_BUFFER
   // --- Write output queue to midi ---
   MidiProcessing::WriteToOutput();
+#endif
 
   // --- Send Panic if needed ---
   MidiProcessing::SendPanicIfNeeded();

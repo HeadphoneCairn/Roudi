@@ -46,6 +46,12 @@
 // Saves about **270** bytes of program space.
 //#define ENABLE_VELOCITY_EDIT_PAGE_SIMPLE_GRAPHICS
 
+// For some reason that I cannot remember, I have an output buffer for the
+// midi messages. I don't think it is needed, but before I remove it 
+// permanently, I would like to do some more testing.
+// Uses **512** bytes of RAM!
+//#define ENABLE_MIDI_OUTPUT_BUFFER
+
 // --- Uhm ---
 
 // Ask main loop to redraw the current active Page
