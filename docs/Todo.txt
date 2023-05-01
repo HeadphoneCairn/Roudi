@@ -32,8 +32,8 @@ x De SaveOnlyIfModified moet eigenlijk gewoon in de data.cpp komen. Dat hoort ni
   voor Single en Multi's.
   (Zou in theorie zelfs in EEPROM_PUT kunnen komen. Altijd eerst lezen om te zien of het
   wel veranderd is.)
-- Reactivate timeout = 5 * 1000
-- I think I actually can do a new of the pages. If I were to allocate something
+x Reactivate timeout = 5 * 1000
+x I think I actually can do a new of the pages. If I were to allocate something
   inside the page I would need to free it before freeing the page. I think
   in this way, the heap does not get fragmented. To research online.
   This thought could have made life much easier when creating the UI. :-(
@@ -161,3 +161,11 @@ x Add rounding to MapVelocity?
 - Add case and stand stls to repository
 - Why do I have a MIDI output queue when I could just directly write tot the output?
   It would free up 512 bytes of RAM!
+  -> Made ENABLE_MIDI_OUTPUT_BUFFER define
+- Update documentation / readme
+- How do you make screenshots
+- Find a license to use for publication
+- Check midi in to out speed. Should velocity mapping become a lookup table now that I have more RAM?
+- Check Arduino CLI bundled with Arduino Extension for VS Code
+- Find some more program storage space. Sometimes preventing functions to be inlined, helps.
+- Save the selected page to EEPROM upon timeout or save

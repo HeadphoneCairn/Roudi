@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Arduino.h> // for uint8_t
+#include "Roudi.h"
 
 enum PageID
 {
@@ -49,7 +50,13 @@ namespace Pages
 
   // Timeout
   void Timeout();
-  const unsigned long timeout = 900 * 1000; // in ms, OnTimeout is called on the active page when no button has been pushed for this time 
+  const unsigned long timeout =  // in ms, OnTimeout is called on the active page when no button has been pushed for this time 
+#ifdef ENABLE_LONG_AUTOSAVE_TIMEOUT
+    /* 15 minutes */ 900L
+#else
+    /* 5 seconds */ 5L
+#endif
+    * 1000L;
 
   // Redraw the current page
   void Redraw();

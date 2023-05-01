@@ -114,7 +114,7 @@ void loop()
   }
 
   // Check for timeout since last button press
-  if (g_last_button_press && (millis() - g_last_button_press > Pages::timeout)) {
+  if (g_last_button_press && ((millis() - g_last_button_press) > Pages::timeout)) {
     Pages::Timeout();
     g_last_button_press = 0;
   }
