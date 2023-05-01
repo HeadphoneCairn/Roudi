@@ -119,18 +119,18 @@ void loop()
     g_last_button_press = 0;
   }
 
+  // --- Write output queue to midi ---
+  MidiProcessing::WriteToOutput();
+
   // --- Send Panic if needed ---
   MidiProcessing::SendPanicIfNeeded();
 
   // --- Change the midi configuration if needed ---
   MidiProcessing::ActivateNextConfigurationIfAvailable();
 
-  // --- Write to midi ---
-  MidiProcessing::WriteToOutput();
-
   // --- Redraw page if needed ---
   // This is used for the MIDI Monitor to update its page when new MIDI
-  // messages have arrived.
+  // messages have arrived. (Also in PageVelocity and PageMulti.)
   // It is done after the treatment of the input and output MIDI queue
   // so that when many message arrive at the "same" time, we update only
   // once.
