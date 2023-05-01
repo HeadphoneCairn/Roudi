@@ -21,6 +21,7 @@ Disclaimer: Due to the limitations of the midiboy, Roudi is also somewhat limite
 ## version 1.1
 
 - Added page to edit velocity curves.
+- The split note can now be set using the keyboard in an Multi
 
 
 # Usage

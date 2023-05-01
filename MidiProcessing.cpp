@@ -181,10 +181,12 @@ namespace
   // So we now just send a NOTE off for each note that is on.
   // (I thought of just sending a note off for 0-127, but the piano keyboard can require
   //  more than one note off for the same note.)
+#ifdef ENABLE_MIDI_OUTPUT_BUFFER
   //
   // WARNING: Writes directly to MIDI out, so should only be called after the output queue has
   //          been emptied, using WriteToOutput() !!!
   //          TODO: Maybe call WriteToOutput here?
+#endif
   {    
     // For each channel, send note offs to all notes that are on 
     midi_event_t note_off_event;
@@ -305,8 +307,10 @@ namespace MidiProcessing
   }
 
   void SendPanicIfNeeded()
+#ifdef ENABLE_MIDI_OUTPUT_BUFFER
   // WARNING: Writes directly to MIDI out, so should only be called after the output queue has
   //          been emptied, using WriteToOutput() !!!
+#endif
   {
     if (!g_panic)
       return;

@@ -255,7 +255,7 @@ x note instead of key number!!!
 x type of CC: mod/volume/bank select/...
 x all F.. thingies
 - sysex, how to show
-- running status ???
+x running status ??? Works out of the box
 x implement settings and filters
 */
 

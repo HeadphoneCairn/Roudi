@@ -57,7 +57,7 @@ x rotate values if beyond end ? No, prefer no rotation.
   - Add const to member functions if necessary. And to their parameters.
   - Consider i_, o_, m_
 - Settings:
-  - velocity curve
+  x velocity curve
   - filters: program change
   x screen brightness
 x Need thorough test of MIDI monitor with all kinds of messages, including sysex
@@ -78,13 +78,11 @@ x Can I replace Combiline by just a function like BoolLine ??
   For simplicity and memory and code savings?
   Hmmm, but what about DoubleCombiline than?
 x MIDI monitor, "IO to show line" must be completely selectable
-- Program storage space:
-  - Debugging functions uses about 1000 bytes
-  - My logo uses about 1000 bytes
-  - Remove Pages::GetPageUsage
-  - Switch back to static allocation of pages instead of dynamic saves 600 bytes
-  - Remove hardcode channel names from Data.cpp (SET_DEFAULT_CHANNEL_NAMES)
-  - You can win some by moving sprintf formats from PSTRING to "", but you loose dynamic memory.  
+x Program storage space:
+  x Debugging functions uses about 1000 bytes
+  x My logo uses about 1000 bytes
+  x Remove Pages::GetPageUsage
+  x Remove hardcoded channel names from Data.cpp (SET_DEFAULT_CHANNEL_NAMES)
 - Should I block incoming messages on the channels of the output channels
   hmm: 5 -> 5, cannot block 5
        5 -> 5, 6: block 6???
@@ -134,7 +132,8 @@ x I still want abcdefgh...ABCD for the name editor instead of a-zA-Z...
   => Did it. Used 54 extra bytes though ...
 - Consider adding the RAW MIDI as an option in the midi monitor menu.
 x Test with buffer of 2 => Had to use !full on output queue instead of hasSpaceFor
-- Check TFifo for bugs. Looks like hasSpaceFor doesn't work well for small 1 or 2 element buffers.
+x Check TFifo for bugs. Looks like hasSpaceFor doesn't work well for small 1 or 2 element buffers.
+  => I'm not using it anymore.
 - Need some kind of version number on About screen
   => Made a simple define for it. Not the best solution, but OK.
   - Better also have build date or something
@@ -159,13 +158,18 @@ x create proper exponential velocity curve and improve logarithmic
   veiligbeid inbouwen: niet over 127!!! of onder 0
 x Add rounding to MapVelocity?
 - Add case and stand stls to repository
-- Why do I have a MIDI output queue when I could just directly write tot the output?
+x Why do I have a MIDI output queue when I could just directly write tot the output?
   It would free up 512 bytes of RAM!
   -> Made ENABLE_MIDI_OUTPUT_BUFFER define
 - Update documentation / readme
-- How do you make screenshots
+- How do you make screenshots?
 - Find a license to use for publication
 - Check midi in to out speed. Should velocity mapping become a lookup table now that I have more RAM?
 - Check Arduino CLI bundled with Arduino Extension for VS Code
-- Find some more program storage space. Sometimes preventing functions to be inlined, helps.
+- Find some more program storage space.
+  - Sometimes preventing functions to be inlined, helps.
+  - Switch back to static allocation of pages instead of dynamic saves 600 bytes
+  - You can win some by moving sprintf formats from PSTRING to "", but you loose dynamic memory.  
 - Save the selected page to EEPROM upon timeout or save
+- Show SysEx in Monitor?
+- What should I do with Notes.txt?
