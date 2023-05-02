@@ -157,7 +157,7 @@ x create proper exponential velocity curve and improve logarithmic
   onderzoek vreemde input nummer 0, 4, ... en interpolatie
   veiligbeid inbouwen: niet over 127!!! of onder 0
 x Add rounding to MapVelocity?
-- Add case and stand stls to repository
+x Add case and stand stls to repository
 x Why do I have a MIDI output queue when I could just directly write tot the output?
   It would free up 512 bytes of RAM!
   -> Made ENABLE_MIDI_OUTPUT_BUFFER define
@@ -174,4 +174,4 @@ x Why do I have a MIDI output queue when I could just directly write tot the out
 - Show SysEx in Monitor?
 x What should I do with Notes.txt? Keep my ramblings.
 - Have values cycle? 
-- Clean up bitmaps folder
+x Clean up bitmaps folder

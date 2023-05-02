@@ -127,14 +127,19 @@ Filters: program change overrides cc filter for CC0
 
 Memory usage
 
+# Cases
+
+If you'd like to have a case for Midiboy and have access to a 3D printer, you can use one of the stls available on [Thingiverse](https://www.thingiverse.com/thing:4878526) or in the **cases** folder of this repository. There is a basic and a more advanced case. The repo also contains some stls to print out a stand to tilt the device
+
+  ![Nice case](bitmaps/case.png)
 
 # Credits and License
 
-- Roudi written by Headphone Cairn Software.
+- Roudi was written by Headphone Cairn Software.
 
   ![Headphone Cairn Logo](bitmaps/Headphone%20Cairn%20Small.png)
 
 - MIDI libraries and more by [Blokas](https://blokas.io/).
-- An stl for a case for the midiboy is available on [Thingiverse](https://www.thingiverse.com/thing:4878526).
+- Stls for two types of cases for the midiboy are available   
+  They are also available in the , including a stand to tilt the device.
 
-Created by Headphone Cairn Software for the [Blokas midiboy](https://blokas.io/midiboy/).
