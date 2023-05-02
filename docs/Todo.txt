@@ -172,4 +172,6 @@ x Why do I have a MIDI output queue when I could just directly write tot the out
   - You can win some by moving sprintf formats from PSTRING to "", but you loose dynamic memory.  
 - Save the selected page to EEPROM upon timeout or save
 - Show SysEx in Monitor?
-- What should I do with Notes.txt?
+x What should I do with Notes.txt? Keep my ramblings.
+- Have values cycle? 
+- Clean up bitmaps folder
