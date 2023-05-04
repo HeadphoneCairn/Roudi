@@ -137,17 +137,15 @@ Memory usage
 
 If you'd like to have a case for Midiboy and have access to a 3D printer, you can use one of the stls available in the **cases** folder of this repository.  
 They are also available on [Thingiverse](https://www.thingiverse.com/thing:4878526).  
-There is a basic (named A) and a more advanced case (named B).  
+There is a basic (named A) and a more advanced case (named B, as seen in the image a the top of this document).  
 Note that the repo also contains some stls to print out a stand to tilt the device.
 
  
 # Credits and License
 
-- Roudi was written by Headphone Cairn Software.
+- Roudi was written by Headphone Cairn Software. 
 
   ![Headphone Cairn Logo](images/Headphone%20Cairn%20Small.png)
 
 - MIDI libraries and more by [Blokas](https://blokas.io/).
-- Stls for two types of cases for the midiboy are available   
-  They are also available in the , including a stand to tilt the device.
 
