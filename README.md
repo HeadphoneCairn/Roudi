@@ -32,10 +32,7 @@ Lowlights:
 - Added page to edit velocity curves.
 - The split note can now be set using the keyboard in an MULTI.
 
-
-# Usage
-
-## Keys
+# Keys
 
 - **left**, **right**: Modify values.
 - **up**, **down**: Switch between fields and/or scroll up and down.
@@ -43,27 +40,27 @@ Lowlights:
 - **B**: Go to next page.
 - combined **A + B** press: Switch to second level pages and back. Roudi is based on two levels of pages, the first level is for normal activity (playing music, SINGLE, MULTI, ...), while the second level is for monitoring and setting up Roudi (MONITOR, SETTINGS)
 
-## First Use
+# First Use
 
 Roudi listens on a single input channel and converts its messages to output messages on other channels. It is probably best to start with setting that *Input channel*. When you switch on Roudi, you'll see the SINGLE page. Press and release A+B to switch to the second level of pages and press B until you are in the SETTINGS page. Now, set the *Input channel* to the output channel of the master keyboard connected to the midiboy.
 
-## Level One Pages
+# Level One Pages
 
 These pages are used when you want to play music.  
 Press and release A+B to switch to the level two pages.
 
-### SINGLE page
+## SINGLE page
 
 Use this page if you just want to directly play a single instrument.
 
-  **picture**
+  ![SINGLE](screenshots/SINGLE_x2.png)
 
 - Use **up** and **down** to select output channel.
 - Use **left** or **right** to switch to the naming of the channel. In CHANNEL name you can supply a new name for the channel, or save the name to another channel by changing the channel number. 
   
   ![CHANNEL NAME](screenshots/CHANNEL_NAME_x2.png)
 
-### MULTI page
+## MULTI page
 
 Use this page if you want to combine several instruments into a layer or a split. (Currently we only support two instruments.)  
 MULTI also allows you to play a single instrument, like in SINGLE, but with additional functionality such as transposition, ... 
@@ -71,17 +68,17 @@ MULTI also allows you to play a single instrument, like in SINGLE, but with addi
 - If you select the same channel twice in LAYER of SPLIT mode, only the left channel will be used.
 - The pitch bend, mod wheel, ... on/off overrides the same filters in the SETTINGS.
 
-### ABOUT page
+## ABOUT page
 
 - Some information about Roudi
 - On this page, the input channel is blocked. This is the same as "None" on the SINGLE page.
 
-## Level Two Pages
+# Level Two Pages
 
 These pages are used when you want to monitor the MIDI messages or setup Roudi.  
 Press and release A+B to switch to the level one pages.
 
-### SETTINGS page
+## SETTINGS page
 
 - Block other channels: 
 
@@ -101,11 +98,11 @@ Press and release A+B to switch to the level one pages.
 
 - Screen brightness: Self explanatory.
 
-### MONITOR page
+## MONITOR page
 
-### MONITOR SETTINGS page
+## MONITOR SETTINGS page
   
-## Concepts and Notes
+# Concepts and Notes
 
 - All changes you make are saved automatically.
 - The MIDI configuration active on the level on page remains active in the level two page. So, e.g. if you are on a MULTI and you switch to the MONITOR, you'll see the output of the MULTI routing.
@@ -120,9 +117,11 @@ Press and release A+B to switch to the level one pages.
 
 # TODO
 
-Filters: program change overrides cc filter for CC0
-         mod wheel overrides cc filter for CC1
+Filters: 
+- program change overrides cc filter for CC0
+- mod wheel overrides cc filter for CC1
 
+Allow mode to map mod wheel to aftertouch
 
 
 # Programming stuff:
