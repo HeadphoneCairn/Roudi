@@ -2,7 +2,10 @@
 
 Roudi is a **ROU**ter for mi**DI** messages, created for the [Blokas midiboy](https://blokas.io/midiboy/).
 
-I made this to make it easier to use my digital piano as a master keyboard, without having to go through a computer.  
+ ![Nice case](images/case.png)
+
+I made this to make it easier to use my digital piano as a master keyboard.  
+Without having to go through a computer.  
 
 Highlights:
 - Easily switch the output channel. Name the channels.
@@ -58,7 +61,7 @@ Use this page if you just want to directly play a single instrument.
 - Use **up** and **down** to select output channel.
 - Use **left** or **right** to switch to the naming of the channel. In CHANNEL name you can supply a new name for the channel, or save the name to another channel by changing the channel number. 
   
-  ![CHANNEL NAME](bitmaps/CHANNEL%20NAME_x2.png)
+  ![CHANNEL NAME](screenshots/CHANNEL_NAME_x2.png)
 
 ### MULTI page
 
@@ -89,9 +92,12 @@ Press and release A+B to switch to the level one pages.
   - **logar**ithmic: output has higher velocity than input
   - **custom**: personalised velocity curve
 
+  ![VELOCITY CURVE EDIT](screenshots/VELOCITY_CURVE_EDIT_x2.png)
+
+
   Graphical representation: 
 
-  ![Velocity curves](bitmaps/VelocityCurves.png)
+  ![Velocity curves](images/VelocityCurves.png)
 
 - Screen brightness: Self explanatory.
 
@@ -129,15 +135,17 @@ Memory usage
 
 # Cases
 
-If you'd like to have a case for Midiboy and have access to a 3D printer, you can use one of the stls available on [Thingiverse](https://www.thingiverse.com/thing:4878526) or in the **cases** folder of this repository. There is a basic and a more advanced case. The repo also contains some stls to print out a stand to tilt the device
+If you'd like to have a case for Midiboy and have access to a 3D printer, you can use one of the stls available in the **cases** folder of this repository.  
+They are also available on [Thingiverse](https://www.thingiverse.com/thing:4878526).  
+There is a basic (named A) and a more advanced case (named B).  
+Note that the repo also contains some stls to print out a stand to tilt the device.
 
-  ![Nice case](bitmaps/case.png)
-
+ 
 # Credits and License
 
 - Roudi was written by Headphone Cairn Software.
 
-  ![Headphone Cairn Logo](bitmaps/Headphone%20Cairn%20Small.png)
+  ![Headphone Cairn Logo](images/Headphone%20Cairn%20Small.png)
 
 - MIDI libraries and more by [Blokas](https://blokas.io/).
 - Stls for two types of cases for the midiboy are available   
