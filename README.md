@@ -53,12 +53,12 @@ Press and release A+B to switch to the level two pages.
 
 Use this page if you just want to directly play a single instrument.
 
-**picture**
+  **picture**
 
 - Use **up** and **down** to select output channel.
 - Use **left** or **right** to switch to the naming of the channel. In CHANNEL name you can supply a new name for the channel, or save the name to another channel by changing the channel number. 
   
-  **picture**
+  ![CHANNEL NAME](bitmaps/CHANNEL%20NAME_x2.png)
 
 ### MULTI page
 
