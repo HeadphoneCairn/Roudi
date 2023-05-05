@@ -4,7 +4,7 @@ Roudi is a **ROU**ter for mi**DI** messages, created for the [Blokas midiboy](ht
 
  ![Nice case](images/case.png)
 
-I made this to make it easier to use my digital piano as a master keyboard.  
+I wrote this to make it easier to use my digital piano as a master keyboard.  
 Without having to go through a computer.  
 
 Highlights:
@@ -32,22 +32,45 @@ Lowlights:
 - Added page to edit velocity curves.
 - The split note can now be set using the keyboard in an MULTI.
 
-# Keys
 
-- **left**, **right**: Modify values.
-- **up**, **down**: Switch between fields and/or scroll up and down.
-- **A**: Go to previous page.
-- **B**: Go to next page.
-- combined **A + B** press: Switch to second level pages and back. Roudi is based on two levels of pages, the first level is for normal activity (playing music, SINGLE, MULTI, ...), while the second level is for monitoring and setting up Roudi (MONITOR, SETTINGS)
+# Button Bindings
 
-# First Use
+Roudi is based on *pages*. These are screens that do stuff. Use 
+- **A** to go to the previous page.
+- **B** to go to the next page.
 
-Roudi listens on a single input channel and converts its messages to output messages on other channels. It is probably best to start with setting that *Input channel*. When you switch on Roudi, you'll see the SINGLE page. Press and release A+B to switch to the second level of pages and press B until you are in the SETTINGS page. Now, set the *Input channel* to the output channel of the master keyboard connected to the midiboy.
+Roudi has two types of pages: 
+  1. *Play pages*: pages for playing music (SINGLE, MULTI, ...) 
+  2. *Utility pages*: pages for monitoring and setting up Roudi (SETTINGS, MONITOR, ...)
 
-# Level One Pages
+You can switch between the two types by pushing (and quickly releasing) **A + B** combined.  
+
+Inside the pages, you can use:
+- **left** and **right** to modify values.
+- **up** and **down** to switch between fields and/or scroll up and down.
+
+
+# Getting Started
+
+Roudi listens on a single input channel and converts its messages to output messages on other channels.  
+It is probably best to start with setting that *Input channel**. To do this:
+
+1. Connect the DIN MIDI output of your master keyboard to the MIDI IN of your Midiboy.  
+2. Connect the MIDI OUT of your Midiboy to your synths, MIDI thru box, ...
+3. Switch on the Midiboy. You'll see the SINGLE page:  
+  ![SINGLE init](screenshots/SINGLE_init_x2.png)
+
+4. Press and release **A+B** to switch to the utlitity pages.
+5. Press **B** until you are in the SETTINGS page:  
+  ![SETTINGS init](screenshots/SETTINGS_init_x2.png)
+
+6. Using the **left** or **right** buttons, set the *Input channel* to the output channel of your connected master keyboard.
+7. There is no need to save anything. The setting is instantly activated. 
+
+# Play Pages
 
 These pages are used when you want to play music.  
-Press and release A+B to switch to the level two pages.
+Press and release A+B to switch to the utility pages.
 
 ## SINGLE page
 
@@ -65,6 +88,8 @@ Use this page if you just want to directly play a single instrument.
 Use this page if you want to combine several instruments into a layer or a split. (Currently we only support two instruments.)  
 MULTI also allows you to play a single instrument, like in SINGLE, but with additional functionality such as transposition, ... 
 
+  ![MULTI](screenshots/MULTI_x2.png)
+
 - If you select the same channel twice in LAYER of SPLIT mode, only the left channel will be used.
 - The pitch bend, mod wheel, ... on/off overrides the same filters in the SETTINGS.
 
@@ -73,10 +98,11 @@ MULTI also allows you to play a single instrument, like in SINGLE, but with addi
 - Some information about Roudi
 - On this page, the input channel is blocked. This is the same as "None" on the SINGLE page.
 
-# Level Two Pages
+# Utility Pages
 
 These pages are used when you want to monitor the MIDI messages or setup Roudi.  
-Press and release A+B to switch to the level one pages.
+NOTE: When you are in a utility page, the MIDI routing defined by the play page from which you switched stays active.
+Press and release A+B to switch back to the play pages.
 
 ## SETTINGS page
 
