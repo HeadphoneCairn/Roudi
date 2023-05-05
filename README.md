@@ -33,23 +33,6 @@ Lowlights:
 - The split note can now be set using the keyboard in an MULTI.
 
 
-# Button Bindings
-
-Roudi is based on *pages*. These are screens that do stuff. Use 
-- **A** to go to the previous page.
-- **B** to go to the next page.
-
-Roudi has two types of pages: 
-  1. *Play pages*: pages for playing music (SINGLE, MULTI, ...) 
-  2. *Utility pages*: pages for monitoring and setting up Roudi (SETTINGS, MONITOR, ...)
-
-You can switch between the two types by pushing (and quickly releasing) **A + B** combined.  
-
-Inside the pages, you can use:
-- **left** and **right** to modify values.
-- **up** and **down** to switch between fields and/or scroll up and down.
-
-
 # Getting Started
 
 Roudi listens on a single input channel and converts its messages to output messages on other channels.  
@@ -60,12 +43,32 @@ It is probably best to start with setting that *Input channel**. To do this:
 3. Switch on the Midiboy. You'll see the SINGLE page:  
   ![SINGLE init](screenshots/SINGLE_init_x2.png)
 
-4. Press and release **A+B** to switch to the utlitity pages.
+4. Press and release **A+B** to switch to the utility pages.
 5. Press **B** until you are in the SETTINGS page:  
   ![SETTINGS init](screenshots/SETTINGS_init_x2.png)
 
 6. Using the **left** or **right** buttons, set the *Input channel* to the output channel of your connected master keyboard.
-7. There is no need to save anything. The setting is instantly activated. 
+7. There is no need to save anything. The setting is instantly activated.
+8. Switch back to the SINGLE page by pressing **A+B**.
+9. You can now switch the output channel using the **up** and **down** buttons.
+
+
+# Button Bindings
+
+Roudi is based on *pages*. These are screens that do stuff. Use 
+- **A** to go to the previous page.
+- **B** to go to the next page.
+
+Roudi has two types of pages: 
+  1. *Play pages*: pages for playing music ([SINGLE](#single-page), [MULTI](#multi-page), ...) 
+  2. *Utility pages*: pages for monitoring and setting up Roudi ([SETTINGS](#settings-page), [MONITOR](#monitor-page), ...)
+
+You can switch between the two types by pushing (and quickly releasing) **A + B** combined.  
+
+Inside the pages, you can use:
+- **left** and **right** to modify values.
+- **up** and **down** to switch between fields and/or scroll up and down.
+
 
 # Play Pages
 
