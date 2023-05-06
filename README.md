@@ -81,7 +81,11 @@ Use this page if you just want to directly play a single instrument.
 
 ![SINGLE](screenshots/SINGLE_x2.png)
 
-Use **up** and **down** to select the output channel.
+- Use **up** and **down** to move up and down through the list. Selecting a channel will route the output to that channel.
+- A special value **none** is available that blocks the input channel. This is useful if you just want to play the built-in sound generator of your master keyboard without sending MIDI to another synth.
+- At the bottom, there is a **> Panic!** entry which can be used like a MIDI Panic Button by pushing **left** or **right** on it. If it any time notes get stuck on your equipment, using panic should silence them. This is implemented by sending an *All Sound Off* message to all 16 output channels.  
+Sadly, not all synthesizers have a full MIDI implementation and might ignore the *All Sound Off* message.
+
 
 You can give a name to the channel by pushing either **left** or **right**. You'll see the following page pop up:
 
