@@ -75,6 +75,7 @@ Inside the pages, you can use:
 These pages are used when you want to play music.  
 Press and release A+B to switch to the utility pages.
 
+
 # SINGLE page
 
 Use this page if you just want to directly play a single instrument.
@@ -83,7 +84,7 @@ Use this page if you just want to directly play a single instrument.
 
 - Use **up** and **down** to move up and down through the list. Selecting a channel will route the output to that channel.
 - A special value **none** is available that blocks the input channel. This is useful if you just want to play the built-in sound generator of your master keyboard without sending MIDI to another synth.
-- At the bottom, there is a **> Panic!** entry which can be used like a MIDI Panic Button by pushing **left** or **right** on it. If it any time notes get stuck on your equipment, using panic should silence them.
+- At the bottom, there is a **> Panic!** entry which can be used like a MIDI Panic Button by pushing **left** or **right** on it. If at any time notes get stuck on your equipment, using panic should silence them.
 - When you have selected one of the 16 channels you can change its name by pushing either **left** or **right**. You'll see the following page pop up:
 
   ![CHANNEL NAME](screenshots/CHANNEL_NAME_x2.png)
@@ -93,7 +94,8 @@ Use this page if you just want to directly play a single instrument.
   - To save the name, push **up** or **down** on the **v**.  
   - To cancel the naming, push **up** or **down** on the **X**.  
   - An interesting feature is that you can change the channel to which you want to save the name. Do this by pushing **up** and **down** on the **ch??** field. This is particularly useful if you are moving a synth to a new channel.
-  
+
+
 # MULTI page
 
 Use this page if you want to combine two instruments/sounds at the same time.  
@@ -111,36 +113,39 @@ As an added benefit, you can save several MULTIs, up to 12 to be exact. This can
 - **Split at**: Only available when **Mode** is set to _split_, this defines the key on the keyboard where the higher notes start. You can set it by selecting it and changing the value with the **left** and **right** buttons or by pressing a key on the keyboard.
   NOTE: you cannot play properly when you have selected **Split At**, because Roudi will be constantly updating the value 
 - **Left**: The channel known as the left channel.
-- **Right**: The channel known as the right channel.
+- **Right**: The channel known as the right channel. (If you select the same right channel as the left channel when in _layer_ of _split_ mode, only the left channel will be used.)
 - The next fields are all double. The value to the left concerns the left channel, the other one the right channel. 
   - **Octave**: Transpose the channel up or down by the specified amount of octaves. (Sorry, no semitones.)
-  - **Pitch bend**: Enable or disable routing pitch bend to the channel.
-  - **Mod wheel**: Enable or disable routing mod wheel to the channel.
-  - **Control change**: Enable or disable routing control changed messages to the channel. (Sorry, no fine granular control.)
+  - **Pitch bend**: Enable or disable routing pitch bend to the channel. Overrides the pitch bend filter in the [SETTINGS](#settings-page).
+  - **Mod wheel**: Enable or disable routing mod wheel to the channel. Overrides the mod wheel filter in the [SETTINGS](#settings-page).
+  - **Control change**: Enable or disable routing control changed messages to the channel. Overrides the cc filter in the [SETTINGS](#settings-page). (Sorry, no fine granular control.)
   - **Min velocity**, **Max velocity**: Specify the velocity interval of the notes that should be routed to the output channels. This is mostly used when **Mode** is set to _layer_, because it allows you to sent "silent" notes to one channel and "louder" notes to the other channel.
 - More to the bottom you'll notice some specific commands that can be activated by pressing **left** or **right** button om them.
   - **New**: Create an new MULTI called "MULTI" and swith to it.
   - **Move left or right**: Is used to change the order of your MULTIes. Press the **left** or **right** button to move the current MULTI up or down in the list. You'll notice its number changes.
-  - **Save as ...**: Pops up a new menu that allows you to (a) name the MULTI, (b) copy it to an existing MULTI, (c) copy it to a new MULTI.  
-    See [SINGLE](#single-page) on how to edit and save the name. (b) and (c) are achieved by chaing the **mul** value. If you have a total of four MULTIs, there will be a mul05 value that you can use to save to new slot.
+  - **Save as ...**: Pops up a new menu that allows you to (a) name the MULTI, (b) copy it to an existing MULTI or (c) copy it to a new MULTI.
 
+    ![SAVE MULTI AS](screenshots/SAVE_MULTI_AS_x2.png)
 
+    See [SINGLE](#single-page) on how to edit and save the name. MULTIs cannot contain lowercase characters. 
+    (b) and (c) are achieved by changing the **mul** value. If you have a total of four MULTIs, there will be a mul05 value that you can use to save to new slot.
+  - **Remove ...**: Pops up a conformation dialogue to allow you to remove the current MULTI. (Note that you cannot remove the last remaining MULTI.)
+- At the bottom, there is a **> Panic!** entry which can be used like a MIDI Panic Button by pushing **left** or **right** on it. If at any time notes get stuck on your equipment, using panic should silence them.
 
-
-
-- If you select the same channel twice in LAYER of SPLIT mode, only the left channel will be used.
-- The pitch bend, mod wheel, ... on/off overrides the same filters in the SETTINGS.
 
 # ABOUT page
 
-- Some information about Roudi
-- On this page, the input channel is blocked. This is the same as "None" on the SINGLE page.
+Some information about Roudi.  
+And some very basic help.  
+On this page, the input channel is blocked. This is the same as "None" on the SINGLE page.
+
 
 # Utility Pages
 
 These pages are used when you want to monitor the MIDI messages or setup Roudi.  
 NOTE: When you are in a utility page, the MIDI routing defined by the play page from which you switched stays active.
 Press and release A+B to switch back to the play pages.
+
 
 # SETTINGS page
 
