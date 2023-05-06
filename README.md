@@ -79,12 +79,20 @@ Press and release A+B to switch to the utility pages.
 
 Use this page if you just want to directly play a single instrument.
 
-  ![SINGLE](screenshots/SINGLE_x2.png)
+![SINGLE](screenshots/SINGLE_x2.png)
 
-- Use **up** and **down** to select output channel.
-- Use **left** or **right** to switch to the naming of the channel. In CHANNEL name you can supply a new name for the channel, or save the name to another channel by changing the channel number. 
+Use **up** and **down** to select the output channel.
+
+You can give a name to the channel by pushing either **left** or **right**. You'll see the following page pop up:
+
+![CHANNEL NAME](screenshots/CHANNEL_NAME_x2.png)
+
+Use **left** and **right** to move the cursor.  
+Use **up** and **down** on the text field to cycle through possible characters.  
+To save the name, push **up** or **down** on the **v**.  
+To cancel the naming, push **up** or **down** on the **X**.  
+An interesting feature is that you can change the channel to which you want to save the name. Do this by pushing **up** and **down** on the **ch??** field. This is particularly useful if you are moving a synth to a new channel.
   
-  ![CHANNEL NAME](screenshots/CHANNEL_NAME_x2.png)
 
 ## MULTI page
 
