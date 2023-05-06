@@ -4,6 +4,7 @@
 #include "Data.h"
 #include "MidiProcessing.h"
 #include "Pages.h"
+#include "Utils.h"
 
 namespace
 {
@@ -43,7 +44,11 @@ Page::LineResult PageSingle::Line(LineFunction func, uint8_t line, uint8_t field
   if (line <= NumberOfChannels) {
     const char* text = nullptr;
     if (func == GET_TEXT) {
-      text = (line < NumberOfChannels) ? EE::GetChannelNameFormatted(line, true) : GetPString(PSTR_none);
+      if (line < NumberOfChannels) {
+        strcpy(Screen::buffer, EE::GetChannelNameFormatted(line)); 
+        text = AddEllipsis(Screen::buffer);
+      } else
+        text = GetPString(PSTR_none);
     } else if (func == DO_LEFT || func == DO_RIGHT) {
       if (line < NumberOfChannels)
         Pages::SetNextPage(PAGE_SINGLE_NAME, line);

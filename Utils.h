@@ -63,6 +63,9 @@ private:
 // Pad string 'text' with 'len' * 'c' characters
 void PadRight(char* text, uint8_t len, char c = ' '); 
 
+// Resize the string to the width of the screen by padding with spaces and adding ... at the end 
+char* AddEllipsis(char* text);
+
 // --- Simple Circular Buffer ---
 // Very simple circular buffer.
 // Note that if IndexType is uint8_t, N should be <= 128

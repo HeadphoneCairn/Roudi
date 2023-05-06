@@ -6,20 +6,6 @@
 #include "Pages.h"
 #include "Utils.h"
 
-namespace
-{
-  #define ADD_ELLIPSIS // uses 44 more bytes of program space
-  #ifdef ADD_ELLIPSIS
-  const char* GetVelocityCurveNameWithEllipsis(int which)
-  {
-    strcpy(Screen::buffer, GetVelocityCurveName(which));
-    PadRight(Screen::buffer, 22 - strlen(Screen::buffer));
-    PadRight(Screen::buffer, 3, '.');
-    return Screen::buffer;
-  }
-  #endif
-}
-
 PageVelocitySelect::PageVelocitySelect(): Page()
 {
 }
@@ -42,11 +28,8 @@ Page::LineResult PageVelocitySelect::Line(LineFunction func, uint8_t line, uint8
   } else if (line < GetNumberOfVelocityCurves()) {
     if (func==DO_LEFT || func==DO_RIGHT)
       Pages::SetNextPage(PAGE_VELOCITY_EDIT, line);
-#ifdef ADD_ELLIPSIS
-      p = GetVelocityCurveNameWithEllipsis(line);
-#else
-      p = GetVelocityCurveName(line);
-#endif
+      strcpy(Screen::buffer, GetVelocityCurveName(line)); 
+      p = AddEllipsis(Screen::buffer);
   } else if (line == GetNumberOfVelocityCurves() + 1) {
     if (func==DO_LEFT || func==DO_RIGHT)
       Pages::SetNextPage(PAGE_SETTINGS);

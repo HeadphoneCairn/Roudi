@@ -265,3 +265,10 @@ void PadRight(char* text, uint8_t len, char c)
   memset(text, c, len);
   text[len]=0;
 }
+
+char* AddEllipsis(char* text)
+{
+  PadRight(text, Screen::buffer_len - 3 - strlen(text));
+  PadRight(text, 3, '.');
+  return(text);
+}
