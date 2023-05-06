@@ -75,7 +75,7 @@ Inside the pages, you can use:
 These pages are used when you want to play music.  
 Press and release A+B to switch to the utility pages.
 
-## SINGLE page
+# SINGLE page
 
 Use this page if you just want to directly play a single instrument.
 
@@ -83,32 +83,55 @@ Use this page if you just want to directly play a single instrument.
 
 - Use **up** and **down** to move up and down through the list. Selecting a channel will route the output to that channel.
 - A special value **none** is available that blocks the input channel. This is useful if you just want to play the built-in sound generator of your master keyboard without sending MIDI to another synth.
-- At the bottom, there is a **> Panic!** entry which can be used like a MIDI Panic Button by pushing **left** or **right** on it. If it any time notes get stuck on your equipment, using panic should silence them. This is implemented by sending an *All Sound Off* message to all 16 output channels.  
-Sadly, not all synthesizers have a full MIDI implementation and might ignore the *All Sound Off* message.
+- At the bottom, there is a **> Panic!** entry which can be used like a MIDI Panic Button by pushing **left** or **right** on it. If it any time notes get stuck on your equipment, using panic should silence them.
+- When you have selected one of the 16 channels you can change its name by pushing either **left** or **right**. You'll see the following page pop up:
 
+  ![CHANNEL NAME](screenshots/CHANNEL_NAME_x2.png)
 
-You can give a name to the channel by pushing either **left** or **right**. You'll see the following page pop up:
-
-![CHANNEL NAME](screenshots/CHANNEL_NAME_x2.png)
-
-Use **left** and **right** to move the cursor.  
-Use **up** and **down** on the text field to cycle through possible characters.  
-To save the name, push **up** or **down** on the **v**.  
-To cancel the naming, push **up** or **down** on the **X**.  
-An interesting feature is that you can change the channel to which you want to save the name. Do this by pushing **up** and **down** on the **ch??** field. This is particularly useful if you are moving a synth to a new channel.
+  - Use **left** and **right** to move the cursor.  
+  - Use **up** and **down** on the text field to cycle through possible characters. You can use spaces (keep on pushing **up**). The name ends at the underscore (keep on pushing **down**). 
+  - To save the name, push **up** or **down** on the **v**.  
+  - To cancel the naming, push **up** or **down** on the **X**.  
+  - An interesting feature is that you can change the channel to which you want to save the name. Do this by pushing **up** and **down** on the **ch??** field. This is particularly useful if you are moving a synth to a new channel.
   
+# MULTI page
 
-## MULTI page
-
-Use this page if you want to combine several instruments into a layer or a split. (Currently we only support two instruments.)  
-MULTI also allows you to play a single instrument, like in SINGLE, but with additional functionality such as transposition, ... 
+Use this page if you want to combine two instruments/sounds at the same time.  
+You can also use it to have more control over a single instrument.  
+As an added benefit, you can save several MULTIs, up to 12 to be exact. This can be useful as you might want to recall specific setup now and then. Every new MULTI becomes a new page. As with the other pages, you use the **A** and **B** buttons to switch between them. All MULTIes have a name and a number.
 
   ![MULTI](screenshots/MULTI_x2.png)
+
+- Use **up** and **down** to jump between fields. **left** and **right** to change values.
+- **Mode**:
+  - _split_ splits the keyboard in two, the lower notes going to the **Left** channel, the higher to the **Right**.
+  - _layer_ sends all notes to both **Left** and **Right** channel.
+  - _left_ sends only to the **Left** channel.
+  - _right_ sends only to the **Right** channel.
+- **Split at**: Only available when **Mode** is set to _split_, this defines the key on the keyboard where the higher notes start. You can set it by selecting it and changing the value with the **left** and **right** buttons or by pressing a key on the keyboard.
+  NOTE: you cannot play properly when you have selected **Split At**, because Roudi will be constantly updating the value 
+- **Left**: The channel known as the left channel.
+- **Right**: The channel known as the right channel.
+- The next fields are all double. The value to the left concerns the left channel, the other one the right channel. 
+  - **Octave**: Transpose the channel up or down by the specified amount of octaves. (Sorry, no semitones.)
+  - **Pitch bend**: Enable or disable routing pitch bend to the channel.
+  - **Mod wheel**: Enable or disable routing mod wheel to the channel.
+  - **Control change**: Enable or disable routing control changed messages to the channel. (Sorry, no fine granular control.)
+  - **Min velocity**, **Max velocity**: Specify the velocity interval of the notes that should be routed to the output channels. This is mostly used when **Mode** is set to _layer_, because it allows you to sent "silent" notes to one channel and "louder" notes to the other channel.
+- More to the bottom you'll notice some specific commands that can be activated by pressing **left** or **right** button om them.
+  - **New**: Create an new MULTI called "MULTI" and swith to it.
+  - **Move left or right**: Is used to change the order of your MULTIes. Press the **left** or **right** button to move the current MULTI up or down in the list. You'll notice its number changes.
+  - **Save as ...**: Pops up a new menu that allows you to (a) name the MULTI, (b) copy it to an existing MULTI, (c) copy it to a new MULTI.  
+    See [SINGLE](#single-page) on how to edit and save the name. (b) and (c) are achieved by chaing the **mul** value. If you have a total of four MULTIs, there will be a mul05 value that you can use to save to new slot.
+
+
+
+
 
 - If you select the same channel twice in LAYER of SPLIT mode, only the left channel will be used.
 - The pitch bend, mod wheel, ... on/off overrides the same filters in the SETTINGS.
 
-## ABOUT page
+# ABOUT page
 
 - Some information about Roudi
 - On this page, the input channel is blocked. This is the same as "None" on the SINGLE page.
@@ -119,7 +142,7 @@ These pages are used when you want to monitor the MIDI messages or setup Roudi.
 NOTE: When you are in a utility page, the MIDI routing defined by the play page from which you switched stays active.
 Press and release A+B to switch back to the play pages.
 
-## SETTINGS page
+# SETTINGS page
 
 - Block other channels: 
 
@@ -139,13 +162,13 @@ Press and release A+B to switch back to the play pages.
 
 - Screen brightness: Self explanatory.
 
-## MONITOR page
+# MONITOR page
 
-## MONITOR SETTINGS page
+# MONITOR SETTINGS page
   
 # Concepts and Notes
 
-- All changes you make are saved automatically.
+- All changes you make are saved automatically. Most of the time, this is really great. Sometimes it is annoying, but this design choice was made to keep things easy and clear.
 - The MIDI configuration active on the level on page remains active in the level two page. So, e.g. if you are on a MULTI and you switch to the MONITOR, you'll see the output of the MULTI routing.
 - There are two conventions for numbering notes in MIDI:
   1. MIDI note 60 = C3 
@@ -153,7 +176,7 @@ Press and release A+B to switch back to the play pages.
   We chose the second convention. 
 - If you change the MIDI channels of your MIDI instruments, its Roudi channel name will no longer correspond. The easiest way to correct is, is to go into the old name in SINGLE and save it to the new channel number.
 - Every time you change the midi configuration such as: select a channel in single or multi, change octave, velocity, setting, ... note offs are sent to all active MIDI channels. So, basically when you change stuff, any note you are holding down an your keyboard will be terminated.
-
+- Panic  is implemented by sending an *All Sound Off* message to all 16 output channels. Sadly, not all synthesizers have a full MIDI implementation and might ignore the *All Sound Off* message.
 
 
 # TODO
