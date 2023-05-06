@@ -177,7 +177,7 @@ namespace EE
   // channel name: Piano
   void SetChannelName(uint8_t channel_value, const char* channel_name);
   const char* GetChannelName(uint8_t channel_value);
-  const char* GetChannelNameFormatted(uint8_t channel_value);
+  const char* GetChannelNameFormatted(uint8_t channel_value, bool ellipsis = false);
 
   // --- Midi Monitor Settings ---
   void SetMidiMonSettings(const MidiMonSettingsValues& values);

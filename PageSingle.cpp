@@ -43,7 +43,7 @@ Page::LineResult PageSingle::Line(LineFunction func, uint8_t line, uint8_t field
   if (line <= NumberOfChannels) {
     const char* text = nullptr;
     if (func == GET_TEXT) {
-      text = (line < NumberOfChannels) ? EE::GetChannelNameFormatted(line) : GetPString(PSTR_none);
+      text = (line < NumberOfChannels) ? EE::GetChannelNameFormatted(line, true) : GetPString(PSTR_none);
     } else if (func == DO_LEFT || func == DO_RIGHT) {
       if (line < NumberOfChannels)
         Pages::SetNextPage(PAGE_SINGLE_NAME, line);

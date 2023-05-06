@@ -151,7 +151,6 @@ x Change order in Multi to
   > Move left or right
   > Save as ...
   > Remove ...
-- pitch bend to aftertouch: integrate in pitch bend setting? on / off / after-touch(pressure)
 x at startup select correct curve (just like we now use correct brightness)
 x create proper exponential velocity curve and improve logarithmic
   onderzoek vreemde input nummer 0, 4, ... en interpolatie
@@ -176,3 +175,5 @@ x Why do I have a MIDI output queue when I could just directly write tot the out
 x What should I do with Notes.txt? Keep my ramblings.
 - Have values cycle? 
 x Clean up bitmaps folder
+- Map pitch bend to aftertouch: integrate in pitch bend setting? on / off / after-touch(pressure)
+x Add ... to SINGLE channel names

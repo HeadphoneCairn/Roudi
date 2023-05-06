@@ -1,6 +1,7 @@
 #include "Data.h"
 #include "Debug.h"
 #include "Roudi.h" // for #define ENABLE_WRITE_BEEP and ENABLE_AUTHORS_CONFIGURATION
+#include "Utils.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -462,12 +463,13 @@ namespace EE
   }
 
   PSTRING(PSTR_channel_formatted, "%02d. %s");
-  const char* GetChannelNameFormatted(uint8_t channel_value)
+  PSTRING(PSTR_channel_formatted_ellipsis, "%02d. %-17s ...");
+  const char* GetChannelNameFormatted(uint8_t channel_value, bool ellipsis)
   // Returns the name of the channel with a prefixed number 
   {
     char channel_name[MaxNameLength + 1];
     strcpy(channel_name, EE::GetChannelName(channel_value));
-    sprintf(data_scratch, GetPString(PSTR_channel_formatted), channel_value + 1, channel_name);
+    sprintf(data_scratch, GetPString(ellipsis ? PSTR_channel_formatted_ellipsis : PSTR_channel_formatted), channel_value + 1, channel_name);
     return data_scratch;
   }
 
