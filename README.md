@@ -118,7 +118,7 @@ As an added benefit, you can save several MULTIs, up to 12 to be exact. This can
   - **Octave**: Transpose the channel up or down by the specified amount of octaves. (Sorry, no semitones.)
   - **Pitch bend**: Enable or disable routing pitch bend to the channel. Overrides the pitch bend filter in the [SETTINGS](#settings-page).
   - **Mod wheel**: Enable or disable routing mod wheel to the channel. Overrides the mod wheel filter in the [SETTINGS](#settings-page).
-  - **Control change**: Enable or disable routing control changed messages to the channel. Overrides the cc filter in the [SETTINGS](#settings-page). (Sorry, no fine granular control.)
+  - **Control change**: Enable or disable routing control change messages to the channel. (Sorry, there is no fine granular control.) Overrides the cc filter in the [SETTINGS](#settings-page).
   - **Min velocity**, **Max velocity**: Specify the velocity interval of the notes that should be routed to the output channels. This is mostly used when **Mode** is set to _layer_, because it allows you to sent "silent" notes to one channel and "louder" notes to the other channel.
 - More to the bottom you'll notice some specific commands that can be activated by pressing **left** or **right** button om them.
   - **New**: Create an new MULTI called "MULTI" and swith to it.
@@ -128,7 +128,7 @@ As an added benefit, you can save several MULTIs, up to 12 to be exact. This can
     ![SAVE MULTI AS](screenshots/SAVE_MULTI_AS_x2.png)
 
     See [SINGLE](#single-page) on how to edit and save the name. MULTIs cannot contain lowercase characters. 
-    (b) and (c) are achieved by changing the **mul** value. If you have a total of four MULTIs, there will be a mul05 value that you can use to save to new slot.
+    (b) and (c) are achieved by changing the **mul??** value. If you have a total of four MULTIs, there will be a mul05 value that you can use to save to new slot.
   - **Remove ...**: Pops up a conformation dialogue to allow you to remove the current MULTI. (Note that you cannot remove the last remaining MULTI.)
 - At the bottom, there is a **> Panic!** entry which can be used like a MIDI Panic Button by pushing **left** or **right** on it. If at any time notes get stuck on your equipment, using panic should silence them.
 
@@ -149,6 +149,22 @@ Press and release A+B to switch back to the play pages.
 
 # SETTINGS page
 
+Configure Roudi.
+
+Changes are immediately active and saved.
+
+- **Input channel**: Specify the input channel that will be routed to the output. This is typically the output MIDI channel of you master keyboard connected to the MIDI IN of Midiboy.
+- **Block other input channels**: Specify whether you want to have Roudi block all input channels not set in **Input channel**.    
+  In both cases, messages on the **Input channel** are routed according to the active SINGLE or MULTI.
+  - If set to _no_, incoming MIDI messages on other channels are passed to the output channel with the same number. 
+  - If set to _yes_, incoming MIDI messages on other channels are discarded.
+ - **Velocity curve**: Specify the velocity curve to use. Since keyboards, synthesizers and software have their specific velocity behavour, it is useful to have a mapping between velocity input and output. By default this is a _linear_ mapping: notes with velocity _n_ are also output with velocity _n_. Next to _linear_, three user defined velocity curves are available. 
+ - **Velocity curve edit**: You can modify the user defined velocity curves by pushing **left** or **right**. This pops up a new menu.
+
+   Choose one of the _user 1/2/3_ curves to edit by pushing **left** or **right** on them. (You cannot modify _linear_.) This pops up the VELOCITY CURVE EDIT menu:
+ 
+   ![VELOCITY CURVE EDIT](screenshots/VELOCITY_CURVE_EDIT_x2.png)
+
 - Block other channels: 
 
 - Velocity curve. This allows you to change influence the output velocity. It can be useful if your keyboard is not as (or too) responsive as you would like. Note that the velocity mapping is applied **before** the velocity filter in MULTI.
@@ -158,7 +174,6 @@ Press and release A+B to switch back to the play pages.
   - **logar**ithmic: output has higher velocity than input
   - **custom**: personalised velocity curve
 
-  ![VELOCITY CURVE EDIT](screenshots/VELOCITY_CURVE_EDIT_x2.png)
 
 
   Graphical representation: 
