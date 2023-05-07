@@ -42,19 +42,19 @@ namespace MidiFilter
       case 0xE: return filter.pitch_bend;
       default:
         switch(event.m_data[0]) {
-          case 0xF1:
-          case 0xF8:
+          case 0xF1: // MIDI Time Code 1/4 Frame 
+          case 0xF8: // Timing clock (MIDI clock)
             return filter.time_sync;
-          case 0xF2:
-          case 0xF3:
-          case 0xFA:
-          case 0xFB:
-          case 0xFC:
+          case 0xF2: // Song Position Pointer
+          case 0xF3: // Song Select
+          case 0xFA: // Start
+          case 0xFB: // Continue
+          case 0xFC: // Stop
             return filter.transport;
-          case 0xFE:
+          case 0xFE: // Active Sensing
             return filter.active_sensing;
-          case 0xF6:
-          case 0xFF:
+          case 0xF6: // Tune Request
+          case 0xFF: // System Reset
             return filter.other;
           default:
             return true;

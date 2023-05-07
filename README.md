@@ -60,8 +60,8 @@ Roudi is based on *pages*. These are screens that do stuff. Use
 - **B** to go to the next page.
 
 Roudi has two types of pages: 
-  1. *Play pages*: pages for playing music ([SINGLE](#single-page), [MULTI](#multi-page), ...) 
-  2. *Utility pages*: pages for monitoring and setting up Roudi ([SETTINGS](#settings-page), [MONITOR](#monitor-page), ...)
+  1. [*Play pages*](#play-pages): pages for playing music ([SINGLE](#single-page), [MULTI](#multi-page), ...) 
+  2. [*Utility pages*](#utility-pages): pages for monitoring and setting up Roudi ([SETTINGS](#settings-page), [MONITOR](#monitor-page), ...)
 
 You can switch between the two types by pushing (and quickly releasing) **A + B** combined.  
 
@@ -151,6 +151,8 @@ Press and release A+B to switch back to the play pages.
 
 Configure Roudi.
 
+![SETTINGS](screenshots/SETTINGS_x2.png)
+
 Changes are immediately active and saved.
 
 - **Input channel**: Select the input channel that will be routed to the output. This is typically the output MIDI channel of you master keyboard connected to the MIDI IN of Midiboy.
@@ -158,45 +160,48 @@ Changes are immediately active and saved.
   In both cases, messages on the **Input channel** are routed according to the active SINGLE or MULTI.
   - If set to _no_, incoming MIDI messages on other channels are passed to the output channel with the same number. 
   - If set to _yes_, incoming MIDI messages on other channels are discarded.
- - **Velocity curve**: Select the velocity curve to use. By default this is a _linear_ mapping: notes with velocity _n_ are also output with velocity _n_. Next to _linear_, three user defined velocity curves are available. 
- - **Velocity curve edit**: You can edit the user defined velocity curves by pushing **left** or **right**. This pops up a new menu.  
-   Choose one of the _user 1/2/3_ curves to edit by pushing **left** or **right** on them. (You cannot modify _linear_.)  
-   This pops up the VELOCITY CURVE EDIT menu:
-   
-   ![VELOCITY CURVE EDIT](screenshots/VELOCITY_CURVE_EDIT_x2_annotated.png)
+- **Velocity curve**: Select the velocity curve to use. By default this is a _linear_ mapping: notes with velocity _n_ are also output with velocity _n_. Next to _linear_, three user defined velocity curves are available. 
+- **Velocity curve edit**: You can edit the user defined velocity curves by pushing **left** or **right**. This pops up a new menu.  
+  Choose one of the _user 1/2/3_ curves to edit by pushing **left** or **right** on them. (You cannot modify _linear_.)  
+  This pops up the VELOCITY CURVE EDIT menu:
+  
+  ![VELOCITY CURVE EDIT](screenshots/VELOCITY_CURVE_EDIT_x2_annotated.png)
 
-   It has the following elements:
-   1. The name of the curve you are editing.
-   2. X axis representing the input velocity.
-   3. Y axis representing the output velocity.
-   4. The curve representing the mapping from input to output velocity.
-   5. The cursor used to modify the curve. Use **left** and **right** to move to another X position.  
-      Use **up** and **down** to move the curve up and down at that position,...
-   6. .. you'll see the (x, y) value of that position, meaning if you would strike a key at velocity x it will be sent to the output at velocity y.
-   7. The page is interactive in a way that when you strike a key, its input velocity will be drawn with a vertical dotted line ...
-   8. ... and the input velocity and output velocity is shown at the right.
-   9. If you move the cursor further to the right you can use **up** or **down** to
-      - save the curve and exit when on 'v' 
-      - exit without saving (=cancel) when on 'X'
-      - reset the curve to linear, when on '/'
+  It has the following elements:
+  1. The name of the curve you are editing.
+  2. X axis representing the input velocity.
+  3. Y axis representing the output velocity.
+  4. The curve representing the mapping from input to output velocity.
+  5. The cursor used to modify the curve. Use **left** and **right** to move to another X position.  
+    Use **up** and **down** to move the curve up and down at that position,...
+  6. .. you'll see the (x, y) value of that position, meaning if you would strike a key at velocity x it will be sent to the output at velocity y.
+  7. The page is interactive in a way that when you strike a key, its input velocity will be drawn with a vertical dotted line ...
+  8. ... and the input velocity and output velocity is shown at the right.
+  9. If you move the cursor further to the right you can use **up** or **down** to
+    - save the curve and exit when on 'v' 
+    - exit without saving (=cancel) when on 'X'
+    - reset the curve to linear, when on '/'
+- **Screen brightness**: By default, Roudi uses full brightness, but you can lower this if so required.
+- **Input channel filter**: Controls whether to send particular types of MIDI messages to the output:
+  - _pass_means that they are send to the output
+  - _block_ means that they are NOT send to the output
+
+  The following messages can be filtered
+  - **Note on/off**: played notes
+  - **Pitch bend**: pitch bend wheel
+  - **Channel pressure**: also called channel aftertouch
+  - **Key pressure**: also called polyphonic aftertouch
+  - **Program change**: controls the program change (Not the bank change, which is implemented through CC#0!)
+  - **Mod wheel**: modulation wheel (this is actually implemented through CC#1)
+  - **All other CC**: continuous control change messages, except for CC#1
+  - **Time sync**: MIDI clock (F8) and MIDI time code frame (F1)
+  - **Transport**: start (FA), continue (FB), stop (FC), song position (F2) and song select (F3)
+  - **System exclusive**: system exclusive messages (F0 and F7)
+  - **Active sensing**: I'm still alive message (FE)
+  - **Other**: Tune request (F0) and system reset (FF)
 
 
-- Block other channels: 
 
-- Velocity curve. This allows you to change influence the output velocity. It can be useful if your keyboard is not as (or too) responsive as you would like. Note that the velocity mapping is applied **before** the velocity filter in MULTI.
-  There are currently four velocity curves available 
-  - **linear**: output is the same as input velocity 
-  - **expon**ential: output has lower velocity than input
-  - **logar**ithmic: output has higher velocity than input
-  - **custom**: personalised velocity curve
-
-
-
-  Graphical representation: 
-
-  ![Velocity curves](images/VelocityCurves.png)
-
-- Screen brightness: Self explanatory.
 
 # MONITOR page
 
