@@ -191,7 +191,7 @@ Changes are immediately active and saved.
   - **Pitch bend**: pitch bend wheel
   - **Channel pressure**: also called channel aftertouch
   - **Key pressure**: also called polyphonic aftertouch
-  - **Program change**: controls the program change (Not the bank change, which is implemented through CC#0!)
+  - **Program change**: controls the program change (but not the bank change, which is implemented through CC#0!)
   - **Mod wheel**: modulation wheel (this is actually implemented through CC#1)
   - **All other CC**: continuous control change messages, except for CC#1
   - **Time sync**: MIDI clock (F8) and MIDI time code frame (F1)
@@ -200,10 +200,33 @@ Changes are immediately active and saved.
   - **Active sensing**: I'm still alive message (FE)
   - **Other**: Tune request (F0) and system reset (FF)
 
-
-
-
 # MONITOR page
+
+Display incoming and outgoing MIDI messages. A very useful tool for debugging your MIDI setup.
+
+![MONITOR](screenshots/MONITOR_x2.png)
+
+Each line is either an incoming or outgoing MIDI message. They contain the following elements:
+- 'i' for input message or 'o' for output message
+- Channel number
+- Name and value of the MIDI message 
+  In case of control change messages, CC number is translated into its typical use.
+
+A lot of information can be extracted from the monitor:
+> In the image above, you see that an A4 is played on channel 1 at velocity 76.  
+> This is routed to two output channels: 3 and 4. This is because a MULTI is being used in layer mode.  
+> The velocity mapping being used is not linear as the output velocities are 80.  
+> You can also see that the note sent to channel 4 is transposed an octave up.  
+> The note offs have their own velocity, the release velocity. This is atypical since most keyboards do not measure this value.
+
+
+
+
+You can scroll through the lines using **up** and **down**.  
+Note that due to memory limitations, it is impossible to store a huge number of messages.
+
+System exlusive is currently not displayed.
+
 
 # MONITOR SETTINGS page
   
@@ -227,6 +250,8 @@ Filters:
 - mod wheel overrides cc filter for CC1
 
 Allow mode to map mod wheel to aftertouch
+
+Increase number of stored messages in MIDI monitor. currenlty 64
 
 
 # Programming stuff

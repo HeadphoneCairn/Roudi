@@ -420,13 +420,13 @@ namespace MidiProcessing
     {
       midi_event_t event;
       if (FIX_g_decoder_process(DinMidiboy.dinMidi().read(), event)) {
+        if (g_midi_in_listener.call_back)
+          g_midi_in_listener.call_back(event, g_midi_in_listener.data);
         ProcessInputEvent(event
 #ifdef ENABLE_MIDI_OUTPUT_BUFFER      
         , g_output_queue
 #endif
         );
-        if (g_midi_in_listener.call_back)
-          g_midi_in_listener.call_back(event, g_midi_in_listener.data);
       }
     }
   }
