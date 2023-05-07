@@ -153,17 +153,33 @@ Configure Roudi.
 
 Changes are immediately active and saved.
 
-- **Input channel**: Specify the input channel that will be routed to the output. This is typically the output MIDI channel of you master keyboard connected to the MIDI IN of Midiboy.
+- **Input channel**: Select the input channel that will be routed to the output. This is typically the output MIDI channel of you master keyboard connected to the MIDI IN of Midiboy.
 - **Block other input channels**: Specify whether you want to have Roudi block all input channels not set in **Input channel**.    
   In both cases, messages on the **Input channel** are routed according to the active SINGLE or MULTI.
   - If set to _no_, incoming MIDI messages on other channels are passed to the output channel with the same number. 
   - If set to _yes_, incoming MIDI messages on other channels are discarded.
- - **Velocity curve**: Specify the velocity curve to use. Since keyboards, synthesizers and software have their specific velocity behavour, it is useful to have a mapping between velocity input and output. By default this is a _linear_ mapping: notes with velocity _n_ are also output with velocity _n_. Next to _linear_, three user defined velocity curves are available. 
- - **Velocity curve edit**: You can modify the user defined velocity curves by pushing **left** or **right**. This pops up a new menu.
+ - **Velocity curve**: Select the velocity curve to use. By default this is a _linear_ mapping: notes with velocity _n_ are also output with velocity _n_. Next to _linear_, three user defined velocity curves are available. 
+ - **Velocity curve edit**: You can edit the user defined velocity curves by pushing **left** or **right**. This pops up a new menu.  
+   Choose one of the _user 1/2/3_ curves to edit by pushing **left** or **right** on them. (You cannot modify _linear_.)  
+   This pops up the VELOCITY CURVE EDIT menu:
+   
+   ![VELOCITY CURVE EDIT](screenshots/VELOCITY_CURVE_EDIT_x2_annotated.png)
 
-   Choose one of the _user 1/2/3_ curves to edit by pushing **left** or **right** on them. (You cannot modify _linear_.) This pops up the VELOCITY CURVE EDIT menu:
- 
-   ![VELOCITY CURVE EDIT](screenshots/VELOCITY_CURVE_EDIT_x2.png)
+   It has the following elements:
+   1. The name of the curve you are editing.
+   2. X axis representing the input velocity.
+   3. Y axis representing the output velocity.
+   4. The curve representing the mapping from input to output velocity.
+   5. The cursor used to modify the curve. Use **left** and **right** to move to another X position.  
+      Use **up** and **down** to move the curve up and down at that position,...
+   6. .. you'll see the (x, y) value of that position, meaning if you would strike a key at velocity x it will be sent to the output at velocity y.
+   7. The page is interactive in a way that when you strike a key, its input velocity will be drawn with a vertical dotted line ...
+   8. ... and the input velocity and output velocity is shown at the right.
+   9. If you move the cursor further to the right you can use **up** or **down** to
+      - save the curve and exit when on 'v' 
+      - exit without saving (=cancel) when on 'X'
+      - reset the curve to linear, when on '/'
+
 
 - Block other channels: 
 
@@ -208,7 +224,7 @@ Filters:
 Allow mode to map mod wheel to aftertouch
 
 
-# Programming stuff:
+# Programming stuff
 
 #define ENABLE_RAW exist in Debug.cpp
 #define ENABLE_DEBUG exists in PageMonitor.cpp
