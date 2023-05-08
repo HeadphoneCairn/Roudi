@@ -166,20 +166,20 @@ x How do you make screenshots?
   Check for copyright on logo and name
 - Check midi in to out speed. Should velocity mapping become a lookup table now that I have more RAM?
 - Check Arduino CLI bundled with Arduino Extension for VS Code
-- Find some more program storage space.
-  - Sometimes preventing functions to be inlined, helps.
-  - Switch back to static allocation of pages instead of dynamic saves 600 bytes
-  - You can win some by moving sprintf formats from PSTRING to "", but you loose dynamic memory.  
 - Save the selected page to EEPROM upon timeout or save
 - Show SysEx in Monitor?
 x What should I do with Notes.txt? Keep my ramblings.
-- Have values cycle? 
 x Clean up bitmaps folder
 - Map pitch bend to aftertouch: integrate in pitch bend setting? on / off / after-touch(pressure)
 x Add ... to SINGLE channel names
   => In menus with prefixed with >, the .. must be directly after the menu name, e.g. > Save as ...
      In lists, the ... is right aligned width of the screen.
-- Move Monitor Settings to pop up menu.
+x Move Monitor Settings to pop up menu.
+  => No. In the end this is not better.
 
 === Endless TODO ===
 - Update documentation / readme
+- Find some more program storage space.
+  - Sometimes preventing functions to be inlined, helps.
+  - Switch back to static allocation of pages instead of dynamic saves 600 bytes
+  - You can win some by moving sprintf formats from PSTRING to "", but you loose dynamic memory.  
