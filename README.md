@@ -244,7 +244,7 @@ To be clear, these messages are still received/sent, just not displayed in the m
   - _routed_ channels: only displays the input messages of the **Input channel** (set in the [SETTINGS](#settings-page) page) and the output messages of the output channel(s) to which the input channel is currently routed 
 - **IO to show**: Select whether to show both input and output messages, only input messages or only output messages.
 - **Messages**: Select which particular messages are displayed. If you press **left** or **right** here, _hide_ and _show_ are toggled for all message types at once.
-  - **Note on**: played notes
+  - **Note on**: struck notes
   - **Note off**: released notes
   - **Pitch bend**: pitch bend wheel
   - **Channel pressure**: also called channel aftertouch
@@ -258,37 +258,18 @@ To be clear, these messages are still received/sent, just not displayed in the m
   - **Other**: Tune request (F0) and system reset (FF)
 
 
-# Concepts and Notes
+# Some General Concepts
 
 - All changes you make are saved automatically. Most of the time, this is really great. Sometimes it is annoying, but this design choice was made to keep things easy and clear.
-- The MIDI configuration active on the level on page remains active in the level two page. So, e.g. if you are on a MULTI and you switch to the MONITOR, you'll see the output of the MULTI routing.
+- The MIDI configuration active on the play page remains active on the utility page. So, e.g. if you are on a MULTI and you switch to the MONITOR, you'll see the output of the MULTI routing.
 - There are two conventions for numbering notes in MIDI:
-  1. MIDI note 60 = C3 
-  2. MIDI note 60 = C4 = middle C = 261.63Hz, MIDI note 69 = A4 = 440.00Hz
-  We chose the second convention. 
+  1. MIDI note 60 = C3
+  2. MIDI note 60 = C4 = middle C = 261.63Hz, MIDI note 69 = A4 = 440.00Hz  
+  We chose this convention. 
 - If you change the MIDI channels of your MIDI instruments, its Roudi channel name will no longer correspond. The easiest way to correct is, is to go into the old name in SINGLE and save it to the new channel number.
-- Every time you change the midi configuration such as: select a channel in single or multi, change octave, velocity, setting, ... note offs are sent to all active MIDI channels. So, basically when you change stuff, any note you are holding down an your keyboard will be terminated.
-- Panic  is implemented by sending an *All Sound Off* message to all 16 output channels. Sadly, not all synthesizers have a full MIDI implementation and might ignore the *All Sound Off* message.
+- Every time you change the midi configuration, for instance by selecting a channel in single or multi, change octave, velocity, setting, ... note offs are sent to all active MIDI channels. So, basically when you change stuff, any note you are holding on your keyboard will be terminated.
+- Panic is implemented by sending an *All Sound Off* message to all 16 output channels. Sadly, not all synthesizers have a full MIDI implementation and might ignore the *All Sound Off* message.
 
-
-# TODO
-
-Filters: 
-- program change overrides cc filter for CC0
-- mod wheel overrides cc filter for CC1
-
-Allow mode to map mod wheel to aftertouch
-
-Increase number of stored messages in MIDI monitor. currenlty 64
-
-
-# Programming stuff
-
-#define ENABLE_RAW exist in Debug.cpp
-#define ENABLE_DEBUG exists in PageMonitor.cpp
-#define SET_DEFAULT_CHANNEL_NAMES exists in Data.cpp
-
-Memory usage
 
 # Cases
 
@@ -296,6 +277,36 @@ If you'd like to have a case for Midiboy and have access to a 3D printer, you ca
 They are also available on [Thingiverse](https://www.thingiverse.com/thing:4878526).  
 There is a basic (named A) and a more advanced case (named B, as seen in the image a the top of this document).  
 Note that the repo also contains some stls to print out a stand to tilt the device.
+
+# Programming stuff
+
+Entry into the program is through **Roudi.ino**.
+
+## Building
+
+You need to setup your environment as discussed by Blokas in:
+- https://blokas.io/midiboy/software/1/
+- https://blokas.io/midiboy/upload/1/
+
+## Debugging and configuration DEFINEs
+
+**Roudi.h** contains several DEFINEs that can be enabled or disabled to control Roudi's configuration.  
+They are mostly concerned with memory usage, debugging and default values.
+
+## Memory Usage
+
+The microcontroller used in Midiboy only has 2 KB of RAM and 32 KB of program space.  
+I tried to work around these limits as much as possible. In some parts of the sources, this resulted in some weird and not so pretty code.  
+Recently, I was able to free some RAM.  
+However most of the program space has been used up.  
+This makes it difficult to add new features in the future.
+
+## TODO
+
+- The filter for program change should include the bank change (which is implemented as CC0).
+- Increase the number of stored messages in the MIDI monitor? (Currently 64)
+
+There is a more technical todo list in docs/Todo.txt
 
  
 # Credits and License
@@ -305,4 +316,3 @@ Note that the repo also contains some stls to print out a stand to tilt the devi
   ![Headphone Cairn Logo](images/Headphone%20Cairn%20Small.png)
 
 - MIDI libraries and more by [Blokas](https://blokas.io/).
-

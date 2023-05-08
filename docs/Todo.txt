@@ -159,9 +159,9 @@ x Add rounding to MapVelocity?
 x Add case and stand stls to repository
 x Why do I have a MIDI output queue when I could just directly write tot the output?
   It would free up 512 bytes of RAM!
-  -> Made ENABLE_MIDI_OUTPUT_BUFFER define
-- Update documentation / readme
-- How do you make screenshots?
+  => Made ENABLE_MIDI_OUTPUT_BUFFER define
+x How do you make screenshots?
+  => Made crappy script that converts picture taken with camera to screenshot.
 - Find a license to use for publication. Check license file in repo.
   Check for copyright on logo and name
 - Check midi in to out speed. Should velocity mapping become a lookup table now that I have more RAM?
@@ -179,3 +179,7 @@ x Clean up bitmaps folder
 x Add ... to SINGLE channel names
   => In menus with prefixed with >, the .. must be directly after the menu name, e.g. > Save as ...
      In lists, the ... is right aligned width of the screen.
+- Move Monitor Settings to pop up menu.
+
+=== Endless TODO ===
+- Update documentation / readme
