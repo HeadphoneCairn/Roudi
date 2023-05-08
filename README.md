@@ -29,9 +29,11 @@ Lowlights:
 ## version 1.1
 
 - First public release.
-- Added page to edit velocity curves.
-- The split note can now be set using the keyboard in an MULTI.
-
+- Added a page to edit velocity curves in SETTINGS.
+- MULTI:
+  - The split note can now be set using the keyboard.
+  - Pitch bend can now be mapped to channel aftertouch, by setting the "Pitch bend" value to "at".  
+    This is useful if your master keyboard does not send aftertouch.
 
 # Getting Started
 
@@ -116,9 +118,9 @@ As an added benefit, you can save several MULTIs, up to 12 to be exact. This can
 - **Right**: The channel known as the right channel. (If you select the same right channel as the left channel when in _layer_ of _split_ mode, only the left channel will be used.)
 - The next fields are all double. The value to the left concerns the left channel, the other one the right channel. 
   - **Octave**: Transpose the channel up or down by the specified amount of octaves. (Sorry, no semitones.)
-  - **Pitch bend**: Enable or disable routing pitch bend to the channel. Overrides the pitch bend filter in the [SETTINGS](#settings-page).
-  - **Mod wheel**: Enable or disable routing mod wheel to the channel. Overrides the mod wheel filter in the [SETTINGS](#settings-page).
-  - **Control change**: Enable or disable routing control change messages to the channel. (Sorry, there is no fine granular control.) Overrides the cc filter in the [SETTINGS](#settings-page).
+  - **Pitch bend**: Enable (_on_) or disable (_off_) routing pitch bend to the channel. Or map pitch bend to channel aftertouch (_at_). The latter is useful when your master keyboard does not send aftertouch, but you want to check the aftertouch functionality of a MIDI device. (Overrides the pitch bend filter in the [SETTINGS](#settings-page).)
+  - **Mod wheel**: Enable (_on_) or disable (_off_) routing mod wheel to the channel. (Overrides the mod wheel filter in the [SETTINGS](#settings-page).)
+  - **Control change**: Enable (_on_) or disable (_off_) routing control change messages to the channel. (Overrides the cc filter in the [SETTINGS](#settings-page).)
   - **Min velocity**, **Max velocity**: Specify the velocity interval of the notes that should be routed to the output channels. This is mostly used when **Mode** is set to _layer_, because it allows you to sent "silent" notes to one channel and "louder" notes to the other channel.
 - More to the bottom you'll notice some specific commands that can be activated by pressing **left** or **right** button om them.
   - **New**: Create an new MULTI called "MULTI" and swith to it.
@@ -301,11 +303,12 @@ Recently, I was able to free some RAM.
 However most of the program space has been used up.  
 This makes it difficult to add new features in the future.
 
-## TODO
+## Ideas and Todos
 
 - The filter for program change should include the bank change (which is implemented as CC0).
 - Increase the number of stored messages in the MIDI monitor? (Currently 64)
-- Have values cycle? 
+- Have values cycle?
+- More extended CC filtering and mapping. => Don't have enought memory for that, I'm afraid. 
 
 There is a more technical todo list in docs/Todo.txt
 

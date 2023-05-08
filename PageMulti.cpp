@@ -41,6 +41,10 @@ namespace
   PTABLE(PSTR_on_off, PSTR_on_off_off, PSTR_on_off_on);
   PTABLE_GETTER(GetOnOff, PSTR_on_off);
 
+  PSTRING(PSTR_on_off_after_at, "at");
+  PTABLE(PSTR_on_off_after, PSTR_on_off_off, PSTR_on_off_on, PSTR_on_off_after_at);
+  PTABLE_GETTER(GetOnOffAfter, PSTR_on_off_after);
+
   PSTRING(PSTR_multi_split, "Split at");
   const char* GetSplit(uint8_t i_value, uint8_t& o_number_of_values)
   {
@@ -166,7 +170,7 @@ Page::LineResult PageMulti::ActualLine(LineFunction func, uint8_t line, uint8_t 
     case 2: return SingleLine(func, PSTR_multi_channel_left, m_values.channel[0].channel, GetChannelName);
     case 3: return SingleLine(func, PSTR_multi_channel_right, m_values.channel[1].channel, GetChannelName);
     case 4: return DoubleLine(func, field, PSTR_multi_octave, 5, m_values.channel[0].octave, GetOctave, m_values.channel[1].octave, GetOctave);
-    case 5: return DoubleLine(func, field, PSTR_multi_pitch_bend, 5, m_values.channel[0].pitch_bend, GetOnOff, m_values.channel[1].pitch_bend, GetOnOff);
+    case 5: return DoubleLine(func, field, PSTR_multi_pitch_bend, 5, m_values.channel[0].pitch_bend, GetOnOffAfter, m_values.channel[1].pitch_bend, GetOnOffAfter);
     case 6: return DoubleLine(func, field, PSTR_multi_mod_wheel, 5, m_values.channel[0].mod_wheel, GetOnOff, m_values.channel[1].mod_wheel, GetOnOff);
     case 7: return DoubleLine(func, field, PSTR_multi_cc, 5, m_values.channel[0].control_change, GetOnOff, m_values.channel[1].control_change, GetOnOff);
     case 8: return DoubleLine(func, field, PSTR_multi_min_velocity, 5, m_values.channel[0].min_velocity, GetVelocity, m_values.channel[1].min_velocity, GetVelocity);
@@ -262,10 +266,11 @@ void PageMulti::SetMidiConfiguration()
     next_config.m_output_channel[num].m_minimum_note = 0; 
     next_config.m_output_channel[num].m_maximum_note = 127;
     next_config.m_output_channel[num].m_minimum_velocity = VelocityValueToVelocityMidi(channel_values.min_velocity);
-    next_config.m_output_channel[num].m_maximum_velocity = VelocityValueToVelocityMidi(channel_values.max_velocity);    
+    next_config.m_output_channel[num].m_maximum_velocity = VelocityValueToVelocityMidi(channel_values.max_velocity);        
     next_config.m_output_channel[num].m_allow_pitch_bend = channel_values.pitch_bend;
     next_config.m_output_channel[num].m_allow_modulation = channel_values.mod_wheel;
     next_config.m_output_channel[num].m_allow_control_change = channel_values.control_change;
+    next_config.m_output_channel[num].m_map_pitch_bend_to_aftertouch = channel_values.pitch_bend == 2;
     next_config.m_output_channel[num].m_transpose = OctaveValueToOctaveDelta(channel_values.octave) * 12;
   }
   if (active_mode == SPLIT_MODE) {

@@ -127,6 +127,16 @@ namespace
           return; // The note is not ON, so we don't send an OFF
         output_channel_active_note_on_count.Decrement(transposed_note); // Decrement number of active notes for this note
       }
+    } else if (event.m_event == 0xE && output_channel.m_map_pitch_bend_to_aftertouch) { // Map pitch bend to channel pressure
+      event.m_event = 0xD;
+      event.m_data[0] = 0xD0 | (event.m_data[0] & 0x0F);
+      if (event.m_data[2] == 64)
+        event.m_data[1] = 0;
+      else if (event.m_data[2] > 64)
+        event.m_data[1] = (event.m_data[2] - 64) * 2 + 1;
+      else // < 64
+        event.m_data[1] = (64 - event.m_data[2]) * 2 - 1;
+      event.m_data[2] = 0;
     }
 
     // --- Push the reformatted event
@@ -232,6 +242,7 @@ namespace MidiProcessing
     m_allow_pitch_bend = true;
     m_allow_modulation = true;
     m_allow_control_change = true;
+    m_map_pitch_bend_to_aftertouch = false;
     m_transpose = 0;
   }
 

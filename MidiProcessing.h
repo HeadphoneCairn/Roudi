@@ -27,6 +27,7 @@ namespace MidiProcessing
     bool m_allow_pitch_bend;                // if m_override_default_filter=true, whether to transmit pitch bend 
     bool m_allow_modulation;                // if m_override_default_filter=true, whether to transmit mod wheel
     bool m_allow_control_change;            // if m_override_default_filter=true, whether to transmit control change (CC's)
+    bool m_map_pitch_bend_to_aftertouch;    // will convert pitch bend (if enabled) to aftertouch
     int8_t m_transpose;                     // [-128, 127], transpose notes before transmitting
   };
 

@@ -85,7 +85,7 @@ struct ChannelValues
   uint8_t octave;
   uint8_t min_velocity;     // stored as 0 - 21, shown as 0 - 127, interpreted as i*6
   uint8_t max_velocity;     // stored as 0 - 21, shown as 0 - 127, interpreted as i*6
-  uint8_t pitch_bend;       // 0: off, 1: on
+  uint8_t pitch_bend;       // 0: off, 1: on, 2: map to aftertouch
   uint8_t mod_wheel;        // 0: off, 1: on
   uint8_t control_change;   // 0: off, 1: on
 };

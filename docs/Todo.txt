@@ -170,7 +170,7 @@ x How do you make screenshots?
 - Show SysEx in Monitor?
 x What should I do with Notes.txt? Keep my ramblings.
 x Clean up bitmaps folder
-- Map pitch bend to aftertouch: integrate in pitch bend setting? on / off / after-touch(pressure)
+x Map pitch bend to aftertouch: integrate in pitch bend setting? on / off / after-touch(pressure)
 x Add ... to SINGLE channel names
   => In menus with prefixed with >, the .. must be directly after the menu name, e.g. > Save as ...
      In lists, the ... is right aligned width of the screen.
