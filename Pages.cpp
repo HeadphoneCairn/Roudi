@@ -168,9 +168,9 @@ namespace Pages
       }
     } else {
       switch (g_current_upper_id) {
-        case PAGE_MONITOR: page_to_show = PAGE_MONITOR_SETTINGS; break;
-        case PAGE_SETTINGS: page_to_show = PAGE_MONITOR; break;
-        case PAGE_MONITOR_SETTINGS: page_to_show = PAGE_SETTINGS; break;
+        case PAGE_MONITOR: page_to_show = PAGE_SETTINGS; break;
+        case PAGE_SETTINGS: page_to_show = PAGE_MONITOR_SETTINGS; break;
+        case PAGE_MONITOR_SETTINGS: page_to_show = PAGE_MONITOR; break;
       }
     }
   
@@ -203,9 +203,9 @@ namespace Pages
       }
     } else {
       switch (g_current_upper_id) {
-        case PAGE_MONITOR: page_to_show = PAGE_SETTINGS; break;
-        case PAGE_SETTINGS: page_to_show = PAGE_MONITOR_SETTINGS; break;
-        case PAGE_MONITOR_SETTINGS: page_to_show = PAGE_MONITOR; break;
+        case PAGE_MONITOR: page_to_show = PAGE_MONITOR_SETTINGS; break;
+        case PAGE_MONITOR_SETTINGS: page_to_show = PAGE_SETTINGS; break;
+        case PAGE_SETTINGS: page_to_show = PAGE_MONITOR; break;
       }
     }
 
