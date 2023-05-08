@@ -162,7 +162,7 @@ x Why do I have a MIDI output queue when I could just directly write tot the out
   -> Made ENABLE_MIDI_OUTPUT_BUFFER define
 - Update documentation / readme
 - How do you make screenshots?
-- Find a license to use for publication
+- Find a license to use for publication. Check license file in repo.
   Check for copyright on logo and name
 - Check midi in to out speed. Should velocity mapping become a lookup table now that I have more RAM?
 - Check Arduino CLI bundled with Arduino Extension for VS Code

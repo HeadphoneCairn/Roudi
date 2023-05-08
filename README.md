@@ -212,7 +212,7 @@ Each line is either an incoming or outgoing MIDI message. They contain the follo
 - name and value of the MIDI message  
   In case of control change messages, the CC number is translated into its typical use.
 
-A lot of information can be extracted from the monitor, as shown in the image above:
+A lot of information can be deduced from the monitor, as shown in the image above:
 
 > You'll see that an A4 is played on channel 1 at velocity 76.  
 > This is routed to two output channels: 3 and 4. This is because a MULTI is being used in layer mode.  
@@ -223,17 +223,41 @@ A lot of information can be extracted from the monitor, as shown in the image ab
 > After the played note, a control change message #7 with value 84 is sent to both output channels.  
 > CC#7 by default controls the volume of a connected device. If the devices on channel 3 and 4 support this CC, they'll change their volume.
 
-You can scroll through the lines using **up** and **down**.  
-Note that due to memory limitations, it is impossible to store a huge number of messages.
+You can scroll through the messages using **up** and **down**.  
+Note that due to memory limitations, it is impossible to store a huge number of messages.  
+Every time you switch away from this page, the buffer is cleared.
 
-System exlusive is currently not displayed.
-
+System exclusive is currently not displayed.
 
 # MONITOR SETTINGS page
   
+Configure the MIDI [MONITOR](#monitor-page) page.
+
+![MONITOR SETTINGS](screenshots/MONITOR_SETTINGS_x2.png)
+
+MIDI devices can generate enormous amounts of messages in a short time. To make it easier for you to focus on the interesting ones, this page allows filtering out the unwanted ones.  
+To be clear, these messages are still received/sent, just not displayed in the monitor.  
+(Note that you can truly filter output messages in the [SETTINGS](#settings-page) page.) 
+
+- **Channels to show**: Select whether you want to display
+  - _all_ channels: displays the messages of all 16 input and output channels
+  - _routed_ channels: only displays the input messages of the **Input channel** (set in the [SETTINGS](#settings-page) page) and the output messages of the output channel(s) to which the input channel is currently routed 
+- **IO to show**: Select whether to show both input and output messages, only input messages or only output messages.
+- **Messages**: Select which particular messages are displayed. If you press **left** or **right** here, _hide_ and _show_ are toggled for all message types at once.
+  - **Note on**: played notes
+  - **Note off**: released notes
+  - **Pitch bend**: pitch bend wheel
+  - **Channel pressure**: also called channel aftertouch
+  - **Key pressure**: also called polyphonic aftertouch
+  - **Program change**: program change (but not the bank change, which is implemented through CC#0!)
+  - **Control change**: continuous control change messages, including modulation wheel
+  - **Time sync**: MIDI clock (F8) and MIDI time code frame (F1)
+  - **Transport**: start (FA), continue (FB), stop (FC), song position (F2) and song select (F3)
+  - **System exclusive**: system exclusive messages (F0 and F7)
+  - **Active sensing**: I'm still alive message (FE)
+  - **Other**: Tune request (F0) and system reset (FF)
 
 
-  
 # Concepts and Notes
 
 - All changes you make are saved automatically. Most of the time, this is really great. Sometimes it is annoying, but this design choice was made to keep things easy and clear.
