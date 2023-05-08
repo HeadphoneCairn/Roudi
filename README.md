@@ -305,6 +305,7 @@ This makes it difficult to add new features in the future.
 
 - The filter for program change should include the bank change (which is implemented as CC0).
 - Increase the number of stored messages in the MIDI monitor? (Currently 64)
+- Have values cycle? 
 
 There is a more technical todo list in docs/Todo.txt
 
