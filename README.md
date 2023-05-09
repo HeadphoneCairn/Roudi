@@ -1,8 +1,9 @@
-# Roudi
+![Nice case](images/Roudi.png)
 
+  
+  
+  
 Roudi is a **ROU**ter for mi**DI** messages, created for the [Blokas midiboy](https://blokas.io/midiboy/).
-
- ![Nice case](images/case.png)
 
 I wrote this to make it easier to use my digital piano as a master keyboard.  
 Without having to go through a computer.  
@@ -279,6 +280,8 @@ If you'd like to have a case for Midiboy and have access to a 3D printer, you ca
 They are also available on [Thingiverse](https://www.thingiverse.com/thing:4878526).  
 There is a basic (named A) and a more advanced case (named B, as seen in the image a the top of this document).  
 Note that the repo also contains some stls to print out a stand to tilt the device.
+
+ ![Nice case](images/case.png)
 
 # Programming stuff
 
