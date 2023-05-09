@@ -6,9 +6,9 @@
 #define ROUDI_VERSION  "    version 1.1 beta"
 #define ROUDI_DATE     "       2019-2023"
 
-// Enables showing of Headphone Cairn logo at startup. 
+// Enables showing of Roudi logo at startup. 
 // Should be ON on release.
-// Uses about **1038** bytes of program space.
+// Uses about **522** bytes of program space.
 //#define ENABLE_LOGO
 
 // Enables showing the memory status in the About Page

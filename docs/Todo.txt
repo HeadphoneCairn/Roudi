@@ -176,6 +176,8 @@ x Add ... to SINGLE channel names
      In lists, the ... is right aligned width of the screen.
 x Move Monitor Settings to pop up menu.
   => No. In the end this is not better.
+- Could call SINGLE SIMPLE and MULTI ADVANCED. And in ADVANCED, I could,
+  actually remove the fields for left and right that are not used, like the split point is removed.
 
 === Endless TODO ===
 - Update documentation / readme
