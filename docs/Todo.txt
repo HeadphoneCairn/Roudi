@@ -58,7 +58,7 @@ x rotate values if beyond end ? No, prefer no rotation.
   - Consider i_, o_, m_
 - Settings:
   x velocity curve
-  - filters: program change
+  x filters: program change
   x screen brightness
 x Need thorough test of MIDI monitor with all kinds of messages, including sysex
 - None in Single wilt zeggen: blokkeer alles komende van input Channel
@@ -131,12 +131,14 @@ x Panic! as menu option in Single and Multi, sends to all 16 channels both Notes
 x I still want abcdefgh...ABCD for the name editor instead of a-zA-Z...
   => Did it. Used 54 extra bytes though ...
 - Consider adding the RAW MIDI as an option in the midi monitor menu.
+  => Easy to do, but don't have enough program space left.
 x Test with buffer of 2 => Had to use !full on output queue instead of hasSpaceFor
 x Check TFifo for bugs. Looks like hasSpaceFor doesn't work well for small 1 or 2 element buffers.
   => I'm not using it anymore.
-- Need some kind of version number on About screen
+x Need some kind of version number on About screen
   => Made a simple define for it. Not the best solution, but OK.
   - Better also have build date or something
+    => Impossible without scripting and that wouldn't be portable.
 x Multi:
   x Remove ...
   x Move left
@@ -144,7 +146,7 @@ x Multi:
 x Share "Panic!" string  
 x " %02d. %s " in multi!
   Using "%s" in sprintf uses more dynamic memory, but less program storage!
-- It' probably more logical to move the creation of a new multi from SetMulti into NewMulti
+- It's probably more logical to move the creation of a new multi from SetMulti into NewMulti
 x Rename PageNameMulti to PageMultiName and PageNameChannel to PageSingleName
 x Change order in Multi to
   > New
@@ -162,12 +164,7 @@ x Why do I have a MIDI output queue when I could just directly write tot the out
   => Made ENABLE_MIDI_OUTPUT_BUFFER define
 x How do you make screenshots?
   => Made crappy script that converts picture taken with camera to screenshot.
-- Find a license to use for publication. Check license file in repo.
-  Check for copyright on logo and name
-- Check midi in to out speed. Should velocity mapping become a lookup table now that I have more RAM?
-- Check Arduino CLI bundled with Arduino Extension for VS Code
-- Save the selected page to EEPROM upon timeout or save
-- Show SysEx in Monitor?
+x Save the selected page to EEPROM upon timeout or save
 x What should I do with Notes.txt? Keep my ramblings.
 x Clean up bitmaps folder
 x Map pitch bend to aftertouch: integrate in pitch bend setting? on / off / after-touch(pressure)
@@ -178,11 +175,14 @@ x Move Monitor Settings to pop up menu.
   => No. In the end this is not better.
 x In MULTI, I could actually remove the fields for left and right that are not used, like the split point is removed.
   => Tried it. Not necessarily better. Not worth extra program space use.
-- Could call SINGLE SIMPLE and MULTI ADVANCED.
-- Release 1.1. Set all defines good and make branch for it.
-
-=== Endless TODO ===
-- Update documentation / readme
+x Increase the number of stored messages in the MIDI monitor? (Currently 64)
+  => Increased to 128
+x Update documentation / readme
+- Check Arduino CLI bundled with Arduino Extension for VS Code
+- Find a license to use for publication. Check license file in repo.
+  Check for copyright on logo and name
+- Create release 1.1. Set all defines good and make branch for it. Tag it in master.
+- Check midi in to out speed. Should velocity mapping become a lookup table now that I have more RAM?
 - Find some more program storage space.
   - Sometimes preventing functions to be inlined, helps.
   - Switch back to static allocation of pages instead of dynamic saves 600 bytes

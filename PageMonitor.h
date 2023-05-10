@@ -15,7 +15,7 @@ public: // For the listening interface
     midi_event_t event;
     uint8_t input:1;
   };
-  static const uint8_t m_num_messages = 64;
+  static const uint8_t m_num_messages = 128; // Used to be 64, but was able to free more memory.
   TCircularBuffer<midi_msg_t, uint8_t, m_num_messages> m_messages;
   MidiMonSettingsValues m_settings;
 protected:

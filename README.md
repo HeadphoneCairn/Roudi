@@ -309,10 +309,11 @@ This makes it difficult to add new features in the future.
 
 ## Ideas and Todos
 
+- Have values on pages cycle?
 - The filter for program change should include the bank change (which is implemented as CC0).
-- Increase the number of stored messages in the MIDI monitor? (Currently 64)
-- Have values cycle?
 - More extended CC filtering and mapping. => Don't have enought memory for that, I'm afraid. 
+- Rename SINGLE to SIMPLE and MULTI to ADVANCED?
+- Show SysEx in Monitor?
 
 There is a more technical todo list in docs/Todo.txt
 
