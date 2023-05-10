@@ -72,6 +72,13 @@ const char* GetNumber(uint8_t value);
 const uint8_t NumberOfChannels = 16;
 const uint8_t MaxNameLength = 14; // Max number of characters in channel name or preset name, not including the /0
 
+struct CurrentPageValues
+{
+  uint8_t id;
+  uint8_t data;
+};
+void GetCurrentPageDefault(CurrentPageValues& values);
+
 struct SingleValues
 {
   uint8_t first_line;  // used to recall original position of "cursor"
@@ -153,6 +160,10 @@ namespace EE
   // --- Init ---
   // Initialize EEPROM if first usage
   void Init();
+
+  // --- Current Page ---
+  void SetCurrentPage(const CurrentPageValues& values);
+  void GetCurrentPage(CurrentPageValues& values);
 
   // --- Single ---
   void SetSingle(const SingleValues& values);

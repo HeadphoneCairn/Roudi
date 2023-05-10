@@ -1,6 +1,7 @@
 #include "Data.h"
 #include "Debug.h"
 #include "Roudi.h" // for #define ENABLE_WRITE_BEEP and ENABLE_AUTHORS_CONFIGURATION
+#include "Pages.h" // didn't want to include it, but kind of need it for PAGE_SINGLE
 #include "Utils.h"
 
 #include <string.h>
@@ -188,6 +189,12 @@ const char* GetNumber(uint8_t value)
 //
 //==============================================================================
 
+void GetCurrentPageDefault(CurrentPageValues& values)
+{
+  values.id = PAGE_SINGLE; // Use SINGLE page at first startup 
+  values.data = 0;
+}
+
 void GetSingleDefault(SingleValues& values)
 {
   memset(&values, 0, sizeof(values)); // sizeof of a reference gives the size of the referenced, so ok!
@@ -242,14 +249,15 @@ namespace EE
   /*
   EEPROM has 1024 bytes:
 
-  0000-0007: Header (8 bytes)
-  0008-0071: Settings: 4 bytes + 13 bytes (64 bytes)
-  0072-0091: Midi Monitor Settings: 2 + 13 bytes (20 bytes)
-  0092-0159: Velocity maps: 4 x 17 bytes (68 bytes)
-  0160-0399: Channel names: 16 x (14 chars + zero) (240 bytes)
-  0400-0407: Single: 1 byte for selected line (=channel), 1 for first line (8 bytes)
-  0408-0411: Multi header: only number of multis for the moment (4 bytes)
-  0412-0867: Multi x 12 (456 bytes)
+  0000-0007: Header (6 bytes)
+  0008-0009: Current page (2 bytes)
+  0010-0073: Settings: 4 bytes + 13 bytes (64 bytes)
+  0074-0093: Midi Monitor Settings: 2 + 13 bytes (20 bytes)
+  0094-0161: Velocity maps: 4 x 17 bytes (68 bytes)
+  0162-0401: Channel names: 16 x (14 chars + zero) (240 bytes)
+  0402-0409: Single: 1 byte for selected line (=channel), 1 for first line (8 bytes)
+  0410-0413: Multi header: only number of multis for the moment (4 bytes)
+  0414-0869: Multi x 12 (456 bytes)
                3 bytes for selected line, selected field, first line
               15 bytes (14 + zero) for the name 
               10 bytes (2 x 5) for channel settings
@@ -261,13 +269,14 @@ namespace EE
   */
 
   static const uint16_t start_of_header = 0;
-  static const uint16_t start_of_settings = 8;
-  static const uint16_t start_of_midimon_settings = 72;
-  static const uint16_t start_of_velocity_maps = 92;
-  static const uint16_t start_of_channel_names = 160;
-  static const uint16_t start_of_single = 400;
-  static const uint16_t start_of_multi_header = 408;
-  static const uint16_t start_of_multis = 412;
+  static const uint16_t start_of_current_page = 8;
+  static const uint16_t start_of_settings = 10;
+  static const uint16_t start_of_midimon_settings = 74;
+  static const uint16_t start_of_velocity_maps = 94;
+  static const uint16_t start_of_channel_names = 162;
+  static const uint16_t start_of_single = 402;
+  static const uint16_t start_of_multi_header = 410;
+  static const uint16_t start_of_multis = 414;
   static const uint16_t multi_size = 38; // currently, we use 38 bytes for a multi
   static const uint8_t  max_multis = 12; // currently, we have a max of 12 multis
   
@@ -316,13 +325,28 @@ namespace EE
   }
 #endif
 
+
   // ===== H E A D E R =========================================================
 
   struct EE_Header
   {
-    uint16_t magic_number = 0xAC11;
+    uint16_t magic_number = 0xAC21;
     uint8_t version = 1;
   };
+
+
+  // ===== C U R R E N T   P A G E =============================================
+
+  void SetCurrentPage(const CurrentPageValues& values)
+  {
+    EEPROM_PUT(start_of_current_page, values);
+  }
+
+  void GetCurrentPage(CurrentPageValues& values)
+  {
+    EEPROM_GET(start_of_current_page, values);
+  }
+
 
   // ===== S I N G L E =========================================================
 
@@ -335,6 +359,7 @@ namespace EE
   {
     EEPROM_GET(start_of_single, values);
   }
+
 
   // ===== M U L T I ===========================================================
 
@@ -504,9 +529,16 @@ namespace EE
   static void InitHeader()
   {
     EE_Header header;
-    EEPROM_PUT(start_of_header, header);   
+    EEPROM_PUT(start_of_header, header);
   }
 
+  void InitCurrentPage()
+  {
+    CurrentPageValues default_values;
+    GetCurrentPageDefault(default_values);
+    SetCurrentPage(default_values);
+  }
+  
   void InitSingle()
   {
     SingleValues default_values;
@@ -603,6 +635,7 @@ namespace EE
     EE_Header header;
     if (stored_magic_number != header.magic_number) {
       InitHeader();
+      InitCurrentPage();
       InitSingle();
       InitMulti();
       InitSettings();

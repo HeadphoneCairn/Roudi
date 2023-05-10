@@ -24,7 +24,7 @@
 // We automatically save a page/menu after a certain period of inactivity (=not pushing buttons).
 // To prevent writing to EEPROM too much during development, this timeout is quite high.
 // Should be OFF on release.
-#define ENABLE_LONG_AUTOSAVE_TIMEOUT
+//#define ENABLE_LONG_AUTOSAVE_TIMEOUT
 
 // Beeps every time that the eeprom is written to.
 // Only works when ENABLE_DEBUG is on!

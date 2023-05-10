@@ -108,7 +108,9 @@ namespace Pages
   void Start()
   {
     Screen::SetBrightness(static_cast<Screen::Brightness>(EE::Settings().brightness));
-    ShowPage(g_current_lower_id);
+    CurrentPageValues current_page;
+    EE::GetCurrentPage(current_page);
+    ShowPage(static_cast<PageID>(current_page.id), current_page.data);
   }
 
   void SetNextPage(PageID page_id, uint8_t data)

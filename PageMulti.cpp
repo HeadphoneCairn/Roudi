@@ -107,8 +107,8 @@ PageMulti::PageMulti():
 }
 
 void PageMulti::OnStart(uint8_t which_multi)
-{
-  m_which = which_multi;
+{ 
+  m_which = (which_multi < EE::GetNumberOfMultis()) ? which_multi : EE::GetNumberOfMultis() - 1; // safety check
   EE::GetMulti(m_which, m_values);
   SetNumberOfLines(17, m_values.selected_line, m_values.selected_field, m_values.first_line);
   SetMidiConfiguration();
@@ -209,6 +209,9 @@ void PageMulti::SaveIfModified()
 
   // Save values
   EE::SetMulti(m_which, m_values); // (will only save if values have changed)
+
+  // Save this MULTI as current page
+  EE::SetCurrentPage({PAGE_MULTI, m_which});
 }
 
 void PageMulti::SaveAs()
