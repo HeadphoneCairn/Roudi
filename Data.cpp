@@ -330,7 +330,7 @@ namespace EE
 
   struct EE_Header
   {
-    uint16_t magic_number = 0xAC21;
+    uint16_t magic_number = 0xAC23;
     uint8_t version = 1;
   };
 

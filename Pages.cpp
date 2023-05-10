@@ -80,7 +80,9 @@ namespace Pages
                               if (data == 0xFF)
                                 data = g_current_multi; 
                               else 
-                                g_current_multi = data; 
+                                g_current_multi = data;
+                              if (g_current_multi >= EE::GetNumberOfMultis())
+                                g_current_multi = data = EE::GetNumberOfMultis() - 1;
                               break;
       case PAGE_ABOUT:        g_current_page = new PageAbout; break;
       case PAGE_MONITOR:      g_current_page = new PageMonitor; break;
@@ -225,7 +227,11 @@ namespace Pages
 
   void Timeout()
   {
-    // TODO Save the selected page to EEPROM
+    // Save the selected page to EEPROM, if it has changed.
+    if (g_current_lower)
+      EE::SetCurrentPage({static_cast<uint8_t>(g_current_lower_id), g_current_multi});
+ 
+    // Send timeout to page
     g_current_page->Timeout();
   }
 

@@ -71,9 +71,6 @@ void PageSingle::SaveIfModified()
   
   // Save values
   EE::SetSingle(values); // (will only save if values have changed)
-
-  // Save SINGLE as current page
-  EE::SetCurrentPage({PAGE_SINGLE, 0xFF});
 }
 
 void PageSingle::SetMidiConfiguration(uint8_t selected_line)
