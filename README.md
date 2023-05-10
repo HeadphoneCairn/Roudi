@@ -1,8 +1,6 @@
-# Roudi
+![ROUDI](screenshots/ROUDI_x2.png)
 
 Roudi is a **ROU**ter for mi**DI** messages, created for the [Blokas midiboy](https://blokas.io/midiboy/).
-
- ![Nice case](images/case.png)
 
 I wrote this to make it easier to use my digital piano as a master keyboard.  
 Without having to go through a computer.  
@@ -34,6 +32,7 @@ Lowlights:
   - The split note can now be set using the keyboard.
   - Pitch bend can now be mapped to channel aftertouch, by setting the "Pitch bend" value to "at".  
     This is useful if your master keyboard does not send aftertouch.
+
 
 # Getting Started
 
@@ -202,6 +201,7 @@ Changes are immediately active and saved.
   - **Active sensing**: I'm still alive message (FE)
   - **Other**: Tune request (F0) and system reset (FF)
 
+
 # MONITOR page
 
 Display incoming and outgoing MIDI messages. A very useful tool for debugging your MIDI setup.
@@ -230,6 +230,7 @@ Note that due to memory limitations, it is impossible to store a huge number of 
 Every time you switch away from this page, the buffer is cleared.
 
 System exclusive is currently not displayed.
+
 
 # MONITOR SETTINGS page
   
@@ -277,8 +278,11 @@ To be clear, these messages are still received/sent, just not displayed in the m
 
 If you'd like to have a case for Midiboy and have access to a 3D printer, you can use one of the stls available in the **cases** folder of this repository.  
 They are also available on [Thingiverse](https://www.thingiverse.com/thing:4878526).  
-There is a basic (named A) and a more advanced case (named B, as seen in the image a the top of this document).  
+There is a basic (named A) and a more advanced case (named B, as seen in the image below).  
 Note that the repo also contains some stls to print out a stand to tilt the device.
+
+![Nice case](images/case.png)
+
 
 # Programming stuff
 
