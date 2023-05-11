@@ -14,6 +14,7 @@
  */
 
 
+
 #pragma once
 
 #include "Page.h"
@@ -39,20 +40,4 @@ private:
   VelocityMap m_velocity_map;
 };
 
-#else // ENABLE_VELOCITY_EDIT_PAGE
-
-class PageVelocityEdit: public Page
-{
-public:
-  PageVelocityEdit();
-protected:
-  virtual const char* GetTitle() override;
-  virtual LineResult Line(LineFunction func, uint8_t line, uint8_t field) override;
-  virtual void OnStart(uint8_t which_map = 0xFF) override;
-private:
-  uint8_t m_which_curve; 
-};
-
 #endif // ENABLE_VELOCITY_EDIT_PAGE
-
-

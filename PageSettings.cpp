@@ -21,6 +21,7 @@
 #include "MidiFilter.h"
 #include "MidiProcessing.h"
 #include "Pages.h"
+#include "Roudi.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -50,7 +51,11 @@ namespace
     return GetVelocityCurveName(i_value);
   }
 
+#ifdef ENABLE_VELOCITY_EDIT_PAGE
   PSTRING(PSTR_velocity_curve_edit, "Velocity curve edit   ...");
+#else
+  PSTRING(PSTR_velocity_curve_edit, "Velocity curve edit   N/A");
+#endif
 
   PSTRING(PSTR_brightness, "Screen brightness");
   PSTRING(PSTR_brightness_0, "low");
@@ -111,8 +116,10 @@ Page::LineResult PageSettings::ActualLine(LineFunction func, uint8_t line, uint8
     case  1: return SingleLine(func, PSTR_block_other, settings.block_other, GetBlockOther);
     case  2: return SingleLine(func, PSTR_velocity_curve, settings.velocity_curve, GetVelocityCurve);
     case  3: {
+#ifdef ENABLE_VELOCITY_EDIT_PAGE
               if (func == DO_LEFT || func == DO_RIGHT)
                 Pages::SetNextPage(PAGE_VELOCITY_SELECT, settings.velocity_curve);
+#endif
               return TextLine(func, PSTR_velocity_curve_edit);
              }
     case  4: { 

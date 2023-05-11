@@ -252,43 +252,4 @@ void PageVelocityEdit::Draw(uint8_t from, uint8_t to)
 
 }
 
-#else // ENABLE_VELOCITY_EDIT_PAGE
-
-namespace
-{
-  PSTRING(PSTR_velocity_edit_disabled_1, "Velocity curve edit was");
-  PSTRING(PSTR_velocity_edit_disabled_2, "disabled to save program");
-  PSTRING(PSTR_velocity_edit_disabled_3, "space.");
-}
-
-PageVelocityEdit::PageVelocityEdit(): Page()
-{
-}
-
-void PageVelocityEdit::OnStart(uint8_t which_curve)
-{
-  m_which_curve = which_curve;
-  SetNumberOfLines(3);
-}
-
-const char* PageVelocityEdit::GetTitle()
-{
-  return GetPString(PSTR_velocity_curve_edit_title);
-}
-
-Page::LineResult PageVelocityEdit::Line(LineFunction func, uint8_t line, uint8_t field)
-{
-  if (func==DO_LEFT || func==DO_RIGHT)
-    Pages::SetNextPage(PAGE_VELOCITY_SELECT, m_which_curve);
-
-  const char* p;
-  if (line == 0)
-    p = PSTR_velocity_edit_disabled_1;
-  else if (line == 1)
-    p = PSTR_velocity_edit_disabled_2;
-  else
-    p = PSTR_velocity_edit_disabled_3;
-  return Page::LineResult{1, GetPString(p), Screen::inversion_none, false};
-}
-
 #endif // ENABLE_VELOCITY_EDIT_PAGE

@@ -20,7 +20,10 @@
 #include "Data.h"
 #include "MidiProcessing.h"
 #include "Pages.h"
+#include "Roudi.h"
 #include "Utils.h"
+
+#ifdef ENABLE_VELOCITY_EDIT_PAGE
 
 PageVelocitySelect::PageVelocitySelect(): Page()
 {
@@ -56,3 +59,5 @@ Page::LineResult PageVelocitySelect::Line(LineFunction func, uint8_t line, uint8
 
   return Page::LineResult{1, p, Screen::inversion_all, false};
 }
+
+#endif // ENABLE_VELOCITY_EDIT_PAGE

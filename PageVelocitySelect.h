@@ -17,6 +17,9 @@
 #pragma once
 
 #include "Page.h"
+#include "Roudi.h"
+
+#ifdef ENABLE_VELOCITY_EDIT_PAGE
 
 class PageVelocitySelect: public Page
 {
@@ -28,4 +31,4 @@ protected:
   virtual void OnStart(uint8_t which_curve) override;
 };
 
-
+#endif // ENABLE_VELOCITY_EDIT_PAGE

@@ -19,7 +19,7 @@
 // --- Some global defines that can be used to configure Roudi ---
 
 // Version shown on About Page
-#define ROUDI_VERSION  "    version 1.1 beta"
+#define ROUDI_VERSION  "  version 1.1.0 beta"
 #define ROUDI_DATE     "       2019-2023"
 
 // Enables showing of Roudi logo at startup. 
@@ -59,9 +59,9 @@
 // Uses about **200** bytes of program space.
 //#define ENABLE_MONITOR_RAW
 
-// The velocity edit page uses quit some program space.
+// The velocity edit page uses quite some program space.
 // Since it is seldom used, it is possible to disable it.
-// Uses about **1350** bytes of program space.
+// Uses about **1850** bytes of program space.
 #define ENABLE_VELOCITY_EDIT_PAGE
 // It is also possible to simplify the graphics and save space.
 // Saves about **270** bytes of program space.

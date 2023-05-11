@@ -45,7 +45,7 @@
 
   Upper level:
     1.0  PageMonitor
-    1.1. PageSettings ------> PageVelocitySelect ------> PageVelocityEdit
+    1.1. PageSettings [-----> PageVelocitySelect ------> PageVelocityEdit]       # Velocity Edit can be disabled in Roudi.h
     1.2. PageMonitorSettings
 */
 
@@ -107,8 +107,10 @@ namespace Pages
       case PAGE_SINGLE_NAME:  g_current_page = new PageSingleName; break;
       case PAGE_MULTI_NAME:   g_current_page = new PageMultiName; break;
       case PAGE_MULTI_REMOVE: g_current_page = new PageMultiRemove; break;
+#ifdef ENABLE_VELOCITY_EDIT_PAGE
       case PAGE_VELOCITY_SELECT: g_current_page = new PageVelocitySelect; break;
       case PAGE_VELOCITY_EDIT:g_current_page = new PageVelocityEdit; break;
+#endif
       default:                g_current_page = new PageSingle; break;
     }
     g_current_page->Start(data);
@@ -267,8 +269,13 @@ namespace Pages
       max(sizeof(PageMultiRemove),
       max(sizeof(PageSettings),
       max(sizeof(PageSingle), 
-      max(sizeof(PageSingleName), 
-      max(sizeof(PageVelocityEdit), sizeof(PageVelocitySelect)))))))))));
+      max(sizeof(PageSingleName),
+#ifdef ENABLE_VELOCITY_EDIT_PAGE
+      max(sizeof(PageVelocityEdit), sizeof(PageVelocitySelect))
+#else
+      max(0,                        0)
+#endif
+      )))))))));
   }
 
   PSTRING(PSTR_page_usage, "%d %d %d %d %d %d");
@@ -288,8 +295,13 @@ namespace Pages
         sizeof(PageSettings),
         sizeof(PageSingle), 
         sizeof(PageSingleName), 
+#ifdef ENABLE_VELOCITY_EDIT_PAGE
         sizeof(PageVelocityEdit), 
         sizeof(PageVelocitySelect),
+#else
+        0,
+        0,
+#endif
         -1
       );
     return data_scratch;
