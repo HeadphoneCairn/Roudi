@@ -111,11 +111,9 @@ Page::LineResult PageSettings::ActualLine(LineFunction func, uint8_t line, uint8
     case  1: return SingleLine(func, PSTR_block_other, settings.block_other, GetBlockOther);
     case  2: return SingleLine(func, PSTR_velocity_curve, settings.velocity_curve, GetVelocityCurve);
     case  3: {
-              if (func == DO_LEFT || func == DO_RIGHT) {
+              if (func == DO_LEFT || func == DO_RIGHT)
                 Pages::SetNextPage(PAGE_VELOCITY_SELECT, settings.velocity_curve);
-                return DefaultLine(func);
-              } else
-                return TextLine(func, PSTR_velocity_curve_edit);
+              return TextLine(func, PSTR_velocity_curve_edit);
              }
     case  4: { 
               uint8_t previous_brightness = settings.brightness;
