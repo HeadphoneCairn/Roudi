@@ -320,7 +320,7 @@ There is a more technical todo list in docs/Todo.txt
  
 # Credits and License
 
-- Roudi was written by Headphone Cairn Software. 
+- Roudi software and Headphone Cairn logo are (C) Headphone Cairn Software.
 
   ![Headphone Cairn Logo](images/Headphone%20Cairn%20Small.png)
 

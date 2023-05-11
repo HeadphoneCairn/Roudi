@@ -181,7 +181,8 @@ x Update documentation / readme
 - Remove more of enable velocity curve editor to free up memory.
 - Check Arduino CLI bundled with Arduino Extension for VS Code
 - Find a license to use for publication. Check license file in repo.
-  Check for copyright on logo and name
+  => GPLv2 it will be. Added header to all source files.
+  - Check for copyright on logo and name
 - Create release 1.1. Set all defines good and make branch for it. Tag it in master.
 - Check midi in to out speed. Should velocity mapping become a lookup table now that I have more RAM?
 - Find some more program storage space.
