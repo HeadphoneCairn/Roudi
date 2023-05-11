@@ -178,6 +178,7 @@ x In MULTI, I could actually remove the fields for left and right that are not u
 x Increase the number of stored messages in the MIDI monitor? (Currently 64)
   => Increased to 128
 x Update documentation / readme
+- Remove more of enable velocity curve editor to free up memory.
 - Check Arduino CLI bundled with Arduino Extension for VS Code
 - Find a license to use for publication. Check license file in repo.
   Check for copyright on logo and name
