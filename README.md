@@ -9,13 +9,15 @@ Highlights:
 - Easily switch the output channel. Name the channels.
 - Setup splits and layers.
 - Filter out unwanted MIDI messages.
-- Includes a MIDI monitor.
+- Map pitchbend to aftertouch.
 - Setup a velocity curve for your master keyboard.
 - Auto save of settings.
+- Includes a MIDI monitor.
 
 Lowlights:
 - Only DIN MIDI, no USB MIDI.
-- Due to the limitations of the midiboy, Roudi is somewhat limited in functionality and ease of use. Because most of the program storage space has been used, it will be quite hard to add extra functionality.
+- Due to the limitations of the midiboy, Roudi is somewhat limited in functionality and ease of use.  
+  Because most of the program storage space has been used, it will be quite hard to add extra functionality.
 
 
 # Changelog
