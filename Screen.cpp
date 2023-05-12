@@ -151,7 +151,7 @@ namespace Screen
     DinMidiboy.clearScreen();
     uint8_t number_blocks = min(8, i_number_blocks);
     uint8_t horizontal_size = min(128, i_horizontal_size);
-    uint8_t vertical_pos = (8 - number_blocks) / 2;
+    uint8_t vertical_pos = (9 - number_blocks) / 2;
     uint8_t horizontal_pos = (128 - horizontal_size) / 2; 
     for (uint8_t block = 0; block < number_blocks; ++block) {
       DinMidiboy.setDrawPosition(horizontal_pos, 7 - (vertical_pos + block));
