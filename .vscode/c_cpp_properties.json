@@ -54,7 +54,7 @@
             "cppStandard": "c++11",
             "defines": [
                 "F_CPU=20000000L",
-                "ARDUINO=10819",
+                "ARDUINO=10607",
                 "ARDUINO_AVR_MIDIBOY",
                 "ARDUINO_ARCH_AVR",
                 "USB_CFG_IOPORTNAME=D",
