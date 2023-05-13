@@ -296,6 +296,9 @@ You need to setup your environment as discussed by Blokas in:
 - https://blokas.io/midiboy/software/1/
 - https://blokas.io/midiboy/upload/1/
 
+I use Microsoft VS Code as my editor.  
+It has an Arduino extension that you can configure to run with its bundled Arduino CLI. 
+
 ## Debugging and configuration DEFINEs
 
 **Roudi.h** contains several DEFINEs that can be enabled or disabled to control Roudi's configuration.  
