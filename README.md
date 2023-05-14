@@ -325,8 +325,5 @@ There is a more technical todo list in docs/Todo.txt
  
 # Credits and License
 
-- Roudi software and Headphone Cairn logo are (C) Headphone Cairn Software.
-
-  ![Headphone Cairn Logo](images/Headphone%20Cairn%20Small.png)
-
+- Roudi by Headphone Cairn Software.
 - MIDI libraries and more by [Blokas](https://blokas.io/).
