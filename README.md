@@ -30,6 +30,7 @@ Lowlights:
 
 - First public release.
 - Added a page to edit velocity curves in SETTINGS.
+- Autosave of last used play page. 
 - MULTI:
   - The split note can now be set using the keyboard.
   - Pitch bend can now be mapped to channel aftertouch, by setting the "Pitch bend" value to "at".  

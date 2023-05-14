@@ -26,9 +26,9 @@
 
 PSTRING(PSTR_page_about, " ABOUT ROUDI "); 
 
-//                      1234567890123456789012345
+// alignment           "0123456789     9876543210"
 PSTRING(PSTR_about_00, "");
-PSTRING(PSTR_about_01, "         Roudi");
+PSTRING(PSTR_about_01, "          Roudi");
 PSTRING(PSTR_about_02, "ROUter for miDI messages");
 PSTRING(PSTR_about_03, ROUDI_VERSION);
 PSTRING(PSTR_about_04, ROUDI_DATE);
@@ -45,10 +45,6 @@ PSTRING(PSTR_about_14, " up, down: switch fields");
 PSTRING(PSTR_about_15, " left, right: modify");
 PSTRING(PSTR_about_16, "");
 
-/*
-To add:
-- Everything is saved automatically.
-*/
 
 PTABLE(PTAB_about_text,
        PSTR_about_00,
