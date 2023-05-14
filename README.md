@@ -317,7 +317,7 @@ This makes it difficult to add new features in the future.
 
 - Have values on pages cycle?
 - The filter for program change should include the bank change (which is implemented as CC0).
-- More extended CC filtering and mapping. => Don't have enought memory for that, I'm afraid. 
+- More extended CC filtering and mapping. => Don't have enough memory for that, I'm afraid. 
 - Rename SINGLE to SIMPLE and MULTI to ADVANCED?
 - Show SysEx in Monitor?
 
@@ -328,3 +328,4 @@ There is a more technical todo list in docs/Todo.txt
 
 - Roudi by Headphone Cairn Software.
 - MIDI libraries and more by [Blokas](https://blokas.io/).
+- Released under GNU GENERAL PUBLIC LICENSE Version 2.
