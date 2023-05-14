@@ -24,7 +24,7 @@
 
 // Enables showing of Roudi logo at startup. 
 // Should be ON on release.
-// Uses about **522** bytes of program space.
+// Uses about **526** bytes of program space.
 //#define ENABLE_LOGO
 
 // Enables showing the memory status in the About Page
