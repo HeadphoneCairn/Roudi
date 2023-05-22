@@ -225,14 +225,13 @@ A lot of information can be deduced from the monitor, as shown in the image abov
 > You'll see that an A4 is played on channel 1 at velocity 76.  
 > This is routed to two output channels: 3 and 4. This is because a MULTI is being used in layer mode.  
 > The velocity mapping being used is not linear as the output velocities are 80.  
-> You can also see that the note sent to channel 4 is transposed an octave up.  
+> You can also see that the note sent to channel 4 is transposed up an octave.  
 > The note offs have their own velocity, the release velocity. This is atypical since most keyboards do not measure this value.
 >
 > After the played note, a control change message #7 with value 84 is sent to both output channels.  
 > CC#7 by default controls the volume of a connected device. If the devices on channel 3 and 4 support this CC, they'll change their volume.
 
 You can scroll through the messages using **up** and **down**.  
-Note that due to memory limitations, it is impossible to store a huge number of messages.  
 Every time you switch away from this page, the buffer is cleared.
 
 System exclusive is currently not displayed.
@@ -244,7 +243,7 @@ Configure the MIDI [MONITOR](#monitor-page) page.
 
 ![MONITOR SETTINGS](screenshots/MONITOR_SETTINGS_x2.png)
 
-MIDI devices can generate enormous amounts of messages in a short time. To make it easier for you to focus on the interesting ones, this page allows filtering out the unwanted ones.  
+MIDI devices can generate enormous amounts of messages in a short time. To make it easier to focus on the interesting ones, this page allows filtering out the unwanted ones.  
 To be clear, these messages are still received/sent, just not displayed in the monitor.  
 (Note that you can truly filter output messages in the [SETTINGS](#settings-page) page.) 
 
@@ -276,7 +275,7 @@ To be clear, these messages are still received/sent, just not displayed in the m
   2. MIDI note 60 = C4 = middle C = 261.63Hz, MIDI note 69 = A4 = 440.00Hz  
   We chose this convention. 
 - If you change the MIDI channels of your MIDI instruments, its Roudi channel name will no longer correspond. The easiest way to correct is, is to go into the old name in SINGLE and save it to the new channel number.
-- Every time you change the midi configuration, for instance by selecting a channel in single or multi, change octave, velocity, setting, ... note offs are sent to all active MIDI channels. So, basically when you change stuff, any note you are holding on your keyboard will be terminated.
+- Every time you change the midi configuration, for instance by selecting a channel in single or multi, changing octave, velocity, setting, ... note offs are sent to all active MIDI channels. So, basically when you change stuff, any note you are holding on your keyboard will be terminated.
 - Panic is implemented by sending an *All Sound Off* message to all 16 output channels. Sadly, not all synthesizers have a full MIDI implementation and might ignore the *All Sound Off* message.
 
 
@@ -284,7 +283,7 @@ To be clear, these messages are still received/sent, just not displayed in the m
 
 If you'd like to have a case for Midiboy and have access to a 3D printer, you can use one of the stls available in the **cases** folder of this repository.  
 They are also available on [Thingiverse](https://www.thingiverse.com/thing:4878526).  
-There is a basic (named A) and a more advanced case (named B, as seen in the image below).  
+There is a basic case (called A) and a more advanced one (as seen in the image below, called B).  
 Note that the repo also contains some stls to print out a stand to tilt the device.
 
 ![Nice case](images/case.png)
@@ -330,5 +329,5 @@ There is a more technical todo list in docs/Todo.txt
 # Credits and License
 
 - Roudi by Headphone Cairn Software.
-- MIDI libraries and more by [Blokas](https://blokas.io/).
+- MIDI library and more by [Blokas](https://blokas.io/).
 - Released under GNU GENERAL PUBLIC LICENSE Version 2.
