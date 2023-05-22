@@ -1,23 +1,23 @@
 ![ROUDI](screenshots/ROUDI_x2.png)
 
-Roudi is a **ROU**ter for mi**DI** messages, created for the [Blokas midiboy](https://blokas.io/midiboy/).
+Roudi is a **ROU**ter for mi**DI** messages, created for the [Blokas Midiboy](https://blokas.io/midiboy/).
 
-I wrote this to make it easier to use my digital piano as a master keyboard.  
-Without having to go through a computer.  
+I use my digital piano as a master keyboard. Sadly, like many digital pianos, it has very limited MIDI capabilities.  
+So, I wrote Roudi to overcome these issues without having to go through a computer.
 
 Highlights:
 - Easily switch the output channel. Name the channels.
 - Setup splits and layers.
 - Filter out unwanted MIDI messages.
+- Analyse messages using the MIDI monitor.
 - Map pitchbend to aftertouch.
 - Setup a velocity curve for your master keyboard.
-- Auto save of settings.
-- Includes a MIDI monitor.
+- Auto save.
 
 Lowlights:
 - Only DIN MIDI, no USB MIDI.
-- Due to the limitations of the midiboy, Roudi is somewhat limited in functionality and ease of use.  
-  Because most of the program storage space has been used, it will be quite hard to add extra functionality.
+- Due to the limitations of the Midiboy, Roudi is somewhat limited in functionality and ease of use.  
+  Most of the program storage space is used by Roudi, so, it will be quite hard to add extra functionality.
 
 
 # Changelog
@@ -40,20 +40,20 @@ Lowlights:
 # Getting Started
 
 Roudi listens on a single input channel and converts its messages to output messages on other channels.  
-It is probably best to start with setting that *Input channel**. To do this:
+It is probably best to start with setting that *Input channel*. To do this:
 
 1. Connect the DIN MIDI output of your master keyboard to the MIDI IN of your Midiboy.  
 2. Connect the MIDI OUT of your Midiboy to your synths, MIDI thru box, ...
 3. Switch on the Midiboy. You'll see the SINGLE page:  
   ![SINGLE init](screenshots/SINGLE_init_x2.png)
 
-4. Press and release **A+B** to switch to the utility pages.
+4. Press and release **A + B** combined to switch to the utility pages.
 5. Press **B** until you are in the SETTINGS page:  
   ![SETTINGS init](screenshots/SETTINGS_init_x2.png)
 
 6. Using the **left** or **right** buttons, set the *Input channel* to the output channel of your connected master keyboard.
 7. There is no need to save anything. The setting is instantly activated.
-8. Switch back to the SINGLE page by pressing **A+B**.
+8. Switch back to the SINGLE page by pressing and releasing **A + B** combined.
 9. You can now switch the output channel using the **up** and **down** buttons.
 
 
@@ -94,7 +94,7 @@ Use this page if you just want to directly play a single instrument.
   ![CHANNEL NAME](screenshots/CHANNEL_NAME_x2.png)
 
   - Use **left** and **right** to move the cursor.  
-  - Use **up** and **down** on the text field to cycle through possible characters. You can use spaces (keep on pushing **up**). The name ends at the underscore (keep on pushing **down**). 
+  - Use **up** and **down** on the text field to cycle through possible characters. You can use spaces (keep on pushing **up**). The name ends at the first underscore (keep on pushing **down**). 
   - To save the name, push **up** or **down** on the **v**.  
   - To cancel the naming, push **up** or **down** on the **X**.  
   - An interesting feature is that you can change the channel to which you want to save the name. Do this by pushing **up** and **down** on the **ch??** field. This is particularly useful if you are moving a synth to a new channel.
@@ -104,7 +104,7 @@ Use this page if you just want to directly play a single instrument.
 
 Use this page if you want to combine two instruments/sounds at the same time.  
 You can also use it to have more control over a single instrument.  
-As an added benefit, you can save several MULTIs, up to 12 to be exact. This can be useful as you might want to recall specific setup now and then. Every new MULTI becomes a new page. As with the other pages, you use the **A** and **B** buttons to switch between them. All MULTIes have a name and a number.
+As an added benefit, you can save several MULTIs, up to 12 to be exact. This can be useful as you might want to recall a specific setup now and then. Every new MULTI becomes a new page. As with the other pages, you use the **A** and **B** buttons to switch between them. All MULTIes have a name and a number.
 
   ![MULTI](screenshots/MULTI_x2.png)
 
@@ -114,8 +114,8 @@ As an added benefit, you can save several MULTIs, up to 12 to be exact. This can
   - _layer_ sends all notes to both **Left** and **Right** channel.
   - _left_ sends only to the **Left** channel.
   - _right_ sends only to the **Right** channel.
-- **Split at**: Only available when **Mode** is set to _split_, this defines the key on the keyboard where the higher notes start. You can set it by selecting it and changing the value with the **left** and **right** buttons or by pressing a key on the keyboard.
-  NOTE: you cannot play properly when you have selected **Split At**, because Roudi will be constantly updating the value 
+- **Split at**: Only available when **Mode** is set to _split_, this defines the key on the keyboard where the higher notes start. You can set it either by changing the value using the **left** and **right** buttons or by pressing a key on the keyboard.  
+  (Be aware that you cannot play properly when you have selected **Split At**, because Roudi will be constantly updating its value.) 
 - **Left**: The channel known as the left channel.
 - **Right**: The channel known as the right channel. (If you select the same right channel as the left channel when in _layer_ of _split_ mode, only the left channel will be used.)
 - The next fields are all double. The value to the left concerns the left channel, the other one the right channel. 
@@ -123,15 +123,15 @@ As an added benefit, you can save several MULTIs, up to 12 to be exact. This can
   - **Pitch bend**: Enable (_on_) or disable (_off_) routing pitch bend to the channel. Or map pitch bend to channel aftertouch (_at_). The latter is useful when your master keyboard does not send aftertouch, but you want to check the aftertouch functionality of a MIDI device. (Overrides the pitch bend filter in the [SETTINGS](#settings-page).)
   - **Mod wheel**: Enable (_on_) or disable (_off_) routing mod wheel to the channel. (Overrides the mod wheel filter in the [SETTINGS](#settings-page).)
   - **Control change**: Enable (_on_) or disable (_off_) routing control change messages to the channel. (Overrides the cc filter in the [SETTINGS](#settings-page).)
-  - **Min velocity**, **Max velocity**: Specify the velocity interval of the notes that should be routed to the output channels. This is mostly used when **Mode** is set to _layer_, because it allows you to sent "silent" notes to one channel and "louder" notes to the other channel.
+  - **Min velocity**, **Max velocity**: Specify the velocity interval of the notes that should be routed to the output channel. This is mostly used when **Mode** is set to _layer_, because it allows you e.g. to trigger the right channel only for "loud" notes.
 - More to the bottom you'll notice some specific commands that can be activated by pressing **left** or **right** button om them.
-  - **New**: Create an new MULTI called "MULTI" and swith to it.
+  - **New**: Create an new MULTI called "MULTI" and switch to it.
   - **Move left or right**: Is used to change the order of your MULTIes. Press the **left** or **right** button to move the current MULTI up or down in the list. You'll notice its number changes.
   - **Save as ...**: Pops up a new menu that allows you to (a) name the MULTI, (b) copy it to an existing MULTI or (c) copy it to a new MULTI.
 
     ![SAVE MULTI AS](screenshots/SAVE_MULTI_AS_x2.png)
 
-    See [SINGLE](#single-page) on how to edit and save the name. MULTIs cannot contain lowercase characters. 
+    See [SINGLE](#single-page) on how to edit and save the name. MULTIs cannot contain lowercase characters.  
     (b) and (c) are achieved by changing the **mul??** value. If you have a total of four MULTIs, there will be a mul05 value that you can use to save to new slot.
   - **Remove ...**: Pops up a conformation dialogue to allow you to remove the current MULTI. (Note that you cannot remove the last remaining MULTI.)
 - At the bottom, there is a **> Panic!** entry which can be used like a MIDI Panic Button by pushing **left** or **right** on it. If at any time notes get stuck on your equipment, using panic should silence them.

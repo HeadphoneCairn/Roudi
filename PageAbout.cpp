@@ -35,7 +35,7 @@ PSTRING(PSTR_about_04, ROUDI_DATE);
 PSTRING(PSTR_about_05, "");
 PSTRING(PSTR_about_06, "Made by Headphone Cairn");
 PSTRING(PSTR_about_07, "Software for the Blokas");
-PSTRING(PSTR_about_08, "midiboy.");
+PSTRING(PSTR_about_08, "Midiboy.");
 PSTRING(PSTR_about_09, "Libs by Blokas et al.");
 PSTRING(PSTR_about_10, "");
 PSTRING(PSTR_about_11, "SOME HELP:");
