@@ -70,7 +70,7 @@ namespace Pages
 #ifdef ENABLE_LONG_AUTOSAVE_TIMEOUT
     /* 15 minutes */ 900L
 #else
-    /* 5 seconds */ 5L
+    /* 10 seconds */ 10L
 #endif
     * 1000L;
 
