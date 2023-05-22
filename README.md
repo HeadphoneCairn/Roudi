@@ -175,19 +175,19 @@ Changes are immediately active and saved.
   ![VELOCITY CURVE EDIT](screenshots/VELOCITY_CURVE_EDIT_x2_annotated.png)
 
   It has the following elements:
-  1. The name of the curve you are editing.
-  2. X axis representing the input velocity.
-  3. Y axis representing the output velocity.
-  4. The curve representing the mapping from input to output velocity.
-  5. The cursor used to modify the curve. Use **left** and **right** to move to another X position.  
-    Use **up** and **down** to move the curve up and down at that position,...
-  6. ... you'll see the (x, y) value of that position, meaning if you would strike a key at velocity x it will be sent to the output at velocity y.
-  7. The page is interactive in a way that when you strike a key, its input velocity will be drawn with a vertical dotted line ...
-  8. ... and the input velocity and output velocity is shown at the right.
-  9. If you move the cursor further to the right you can use **up** or **down** to
-      - save the curve and exit when on 'v' 
-      - exit without saving (=cancel) when on 'X'
-      - reset the curve to linear, when on '/'
+    1. The name of the curve you are editing.
+    2. X axis representing the input velocity.
+    3. Y axis representing the output velocity.
+    4. The curve representing the mapping from input to output velocity.
+    5. The cursor used to modify the curve. Use **left** and **right** to move to another X position.  
+      Use **up** and **down** to move the curve up and down at that position,...
+    6. ... you'll see the (x, y) value of that position, meaning if you would strike a key at velocity x it will be sent to the output at velocity y.
+    7. The page is interactive in a way that when you strike a key, its input velocity will be drawn with a vertical dotted line ...
+    8. ... and the input velocity and output velocity is shown at the right.
+    9. If you move the cursor further to the right you can use **up** or **down** to
+        - save the curve and exit when on 'v' 
+        - exit without saving (=cancel) when on 'X'
+        - reset the curve to linear, when on '/'
 - **Screen brightness**: By default, Roudi uses full brightness, but you can lower this if so required.
 - **Input channel filter**: Controls whether to route particular types of MIDI messages to the output:
   - _pass_ means that they are send to the output
