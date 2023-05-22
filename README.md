@@ -76,8 +76,9 @@ Inside the pages, you can use:
 
 # Play Pages
 
-These pages are used when you want to play music.  
-Press and release A+B to switch to the utility pages.
+These pages are used when you want to play music.
+
+Press and release A+B to switch to the [*Utility pages*](#utility-pages).
 
 
 # SINGLE page
@@ -140,15 +141,17 @@ As an added benefit, you can save several MULTIs, up to 12 to be exact. This can
 # ABOUT page
 
 Some information about Roudi.  
-And some very basic help.  
+And some very basic help.
+
 On this page, the input channel is blocked. This is the same as "None" on the SINGLE page.
 
 
 # Utility Pages
 
-These pages are used when you want to monitor the MIDI messages or setup Roudi.  
+These pages are used when you want to monitor MIDI messages or setup Roudi.  
 NOTE: When you are in a utility page, the MIDI routing defined by the play page from which you switched stays active.
-Press and release A+B to switch back to the play pages.
+
+Press and release A+B to switch back to the [*Play pages*](#play-pages).
 
 
 # SETTINGS page
@@ -160,7 +163,7 @@ Configure Roudi.
 Changes are immediately active and saved.
 
 - **Input channel**: Select the input channel that will be routed to the output. This is typically the output MIDI channel of you master keyboard connected to the MIDI IN of Midiboy.
-- **Block other input channels**: Specify whether you want to have Roudi block all input channels not set in **Input channel**.    
+- **Block other input channels**: Specify whether you want to have Roudi block all input channels other than the one set in **Input channel**.    
   In both cases, messages on the **Input channel** are routed according to the active SINGLE or MULTI.
   - If set to _no_, incoming MIDI messages on other channels are passed to the output channel with the same number. 
   - If set to _yes_, incoming MIDI messages on other channels are discarded.
@@ -178,16 +181,16 @@ Changes are immediately active and saved.
   4. The curve representing the mapping from input to output velocity.
   5. The cursor used to modify the curve. Use **left** and **right** to move to another X position.  
     Use **up** and **down** to move the curve up and down at that position,...
-  6. .. you'll see the (x, y) value of that position, meaning if you would strike a key at velocity x it will be sent to the output at velocity y.
+  6. ... you'll see the (x, y) value of that position, meaning if you would strike a key at velocity x it will be sent to the output at velocity y.
   7. The page is interactive in a way that when you strike a key, its input velocity will be drawn with a vertical dotted line ...
   8. ... and the input velocity and output velocity is shown at the right.
   9. If you move the cursor further to the right you can use **up** or **down** to
-    - save the curve and exit when on 'v' 
-    - exit without saving (=cancel) when on 'X'
-    - reset the curve to linear, when on '/'
+      - save the curve and exit when on 'v' 
+      - exit without saving (=cancel) when on 'X'
+      - reset the curve to linear, when on '/'
 - **Screen brightness**: By default, Roudi uses full brightness, but you can lower this if so required.
-- **Input channel filter**: Controls whether to send particular types of MIDI messages to the output:
-  - _pass_means that they are send to the output
+- **Input channel filter**: Controls whether to route particular types of MIDI messages to the output:
+  - _pass_ means that they are send to the output
   - _block_ means that they are NOT send to the output
 
   The following messages can be filtered
