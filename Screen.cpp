@@ -14,7 +14,7 @@
  */
 
 
-#include "screen.h"
+#include "Screen.h"
 
 #include "DinMidiboy.h"
 #include <SH1106.h>

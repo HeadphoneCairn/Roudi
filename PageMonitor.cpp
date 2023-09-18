@@ -244,7 +244,7 @@ namespace {
   PSTRING(PSTR_mm_cc,                "CC#%d %s %d");           // 0xb.
   PSTRING(PSTR_mm_program_change,    "program change %d");     // 0xc.
   PSTRING(PSTR_mm_channel_pressure,  "channel pressure %d");   // 0xd.
-  PSTRING(PSTR_mm_pitch_bend,        "pitch bend %ld");        // 0xe.
+  PSTRING(PSTR_mm_pitch_bend,        "pitch bend %d (%ld)");   // 0xe.
 
   PSTRING(PSTR_mm_time_code,         "time code %d");          // 0xf1           
   PSTRING(PSTR_mm_song_position,     "song position %lu");     // 0xf2
@@ -333,7 +333,7 @@ Page::LineResult PageMonitor::LineDecode(const midi_msg_t& msg)
           snprintf(text, text_buflen, GetPString(PSTR_mm_channel_pressure), e.m_data[1]);
           break;
         case 0xe:
-          snprintf(text, text_buflen, GetPString(PSTR_mm_pitch_bend), static_cast<long>(e.m_data[2]) * 128L + static_cast<long>(e.m_data[1]) - 8192L); // LSB, MSB, centered around 0
+          snprintf(text, text_buflen, GetPString(PSTR_mm_pitch_bend), e.m_data[2] - 64, static_cast<long>(e.m_data[2]) * 128L + static_cast<long>(e.m_data[1])); // LSB, MSB
           break;
         default:
           snprintf(text, text_buflen, GetPString(PSTR_mm_unknown));

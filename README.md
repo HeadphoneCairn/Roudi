@@ -22,19 +22,28 @@ Lowlights:
 
 # Changelog
 
-## version 1.0
+## version 1.2.0
 
-- Initial release (private)
+New features:
+- MONITOR - Pitch bend is no longer shown in the [-8192, 8191] range, but in the [-64, 63] range with the raw 14-bit value in between brackets.
 
-## version 1.1
+Bug fixes:
+- Corrected *#include "screen.h"* to *#include "Screen.h"*.
 
-- First public release.
-- Added a page to edit velocity curves in SETTINGS.
+## version 1.1.0
+
+First public release.
+
+New features:
 - Autosave of last used play page. 
-- MULTI:
-  - The split note can now be set using the keyboard.
-  - Pitch bend can now be mapped to channel aftertouch, by setting the "Pitch bend" value to "at".  
-    This is useful if your master keyboard does not send aftertouch.
+- SETTINGS - Added a page to edit velocity curves.
+- MULTI - The split note can now be set using the keyboard.
+- MULTI - Pitch bend can now be mapped to channel aftertouch, by setting the "Pitch bend" value to "at". This is useful if your master keyboard does not send aftertouch.
+
+## version 1.0.0
+
+Initial release (private)
+
 
 
 # Getting Started
